@@ -1,45 +1,61 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/AR7CADm8)
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23526831)
-# :checkered_flag: NOME DO PROJETO
 
-Breve descrição do que o seu projeto faz.
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/AR7CADm8)
+[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23526831)
 
-## :technologist: Membros da equipe
+# Gestão de Doações
 
-Matrícula, nome e curso dos participantes.
+Aplicativo mobile desenvolvido para auxiliar igrejas na organização e controle de doações, permitindo o cadastro, acompanhamento e registro da entrega de itens de forma simples e eficiente.
 
-## :bulb: Objetivo Geral
-Descrever o objetivo de geral do projeto
+## Membros da equipe
 
-## :eyes: Público-Alvo
-Público-alvo do projeto
+* Matrícula: 555497 - Nome: Rubens Rabêlo Soares - Curso: Sistemas de Informação
 
-## :star2: Impacto Esperado
-Descreva o impacto esperado do projeto em relação ao público alvo
+## Objetivo Geral
 
+Desenvolver um aplicativo mobile que permita gerenciar doações em igrejas, facilitando o controle de itens doados, o acompanhamento das entregas e o registro de beneficiários, utilizando boas práticas de desenvolvimento e arquitetura moderna.
 
-## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
+## Público-Alvo
 
-Descreva ou liste brevemente as principais funcionalidades da aplicação que será desenvolvida. 
+O público-alvo são igrejas que realizam ações sociais e necessitam de uma ferramenta para organizar e controlar doações de forma mais eficiente.
+
+## Impacto Esperado
+
+Espera-se que o aplicativo contribua para uma melhor organização das doações dentro da igreja, aumentando a transparência na distribuição dos itens e facilitando o trabalho de voluntários responsáveis pela gestão dessas ações.
+
+## Principais funcionalidades da aplicação
+
+* Cadastro, edição e exclusão de doações
+* Registro de beneficiários
+* Associação de doações a beneficiários
+* Controle de status (pendente ou entregue)
+* Histórico de doações realizadas
+* Adição de imagens às doações (galeria)
+* Interface com suporte a modo claro e escuro
 
 ---
 
 > [!WARNING]
 > Daqui em diante o README.md só deve ser preenchido no momento da entrega final.
 
-##  Tecnologias: 
-Liste aqui as tecnologias e bibliotecas que foram utilizadas no projeto.
+## Tecnologias:
+
+* Kotlin
+* Jetpack Compose
+* Android Studio
+* Material Design 3
 
 ---
 
 ## Instruções para Execução
-[Inclua instruções claras sobre como rodar o projeto localmente. Isso é crucial para que você possa testá-lo nas próximas entregas. **Somente caso haja alguma coisa diferente do usual**
 
 ```bash
 # Clone o repositório
-git clone [https://docs.github.com/pt/repositories/creating-and-managing-repositories/about-repositories](https://docs.github.com/pt/repositories/creating-and-managing-repositories/about-repositories)
+git clone https://github.com/seu-usuario/seu-repositorio.git
 
 # Navegue para o diretório
-cd [nome-do-repositorio]
+cd nome-do-repositorio
 
-# Siga as instruções específicas para a sua tecnologia...
+# Abra o projeto no Android Studio e execute em um emulador ou dispositivo físico
+```
