@@ -46,7 +46,7 @@ fun RegisterScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { }, // Fica vazio para manter o título apenas no formulário
+                title = { },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -66,7 +66,7 @@ fun RegisterScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding) // Aplica o espaçamento seguro da TopAppBar
+                .padding(innerPadding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
