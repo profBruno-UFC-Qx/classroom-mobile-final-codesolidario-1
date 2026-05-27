@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,11 +36,13 @@ fun MainOrganizationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(16.dp)
             ) {
                 Text(
                     text = "Beneficiários",
                     style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -65,16 +68,17 @@ fun MainOrganizationScreen(
                 )
             }
 
+            // Lista rolável: Adicionamos o navigationBars no preenchimento de baixo para que os cards finais
+            // respeitem a barra de navegação virtual do aparelho.
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(
                     start = 16.dp,
                     end = 16.dp,
                     top = 16.dp,
-                    bottom = 88.dp
+                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 88.dp
                 )
-
             ) {
                 items(organizations) { organization ->
                     OrganizationItemCard(organization = organization)
@@ -87,6 +91,7 @@ fun MainOrganizationScreen(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(16.dp)
         ) {
             Icon(
@@ -94,5 +99,13 @@ fun MainOrganizationScreen(
                 contentDescription = "Adicionar Organização"
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MainOrganizationScreenPreview() {
+    MaterialTheme {
+        MainOrganizationScreen(onAddOrganizationClick = {})
     }
 }

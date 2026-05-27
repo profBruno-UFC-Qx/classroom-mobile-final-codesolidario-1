@@ -3,6 +3,7 @@ package com.example.givchurch.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.givchurch.ui.screen.auth.LoginScreen
@@ -11,7 +12,9 @@ import com.example.givchurch.ui.screen.organization.AddOrganizationScreen
 import com.example.givchurch.ui.screen.organization.MainOrganizationScreen
 
 @Composable
-fun SetupNavigation() {
+fun SetupNavigation(
+    modifier: Modifier = Modifier
+) {
 
     val backStack = rememberSaveable{ mutableStateListOf<Screen>(Screen.LoginScreen) }
 
@@ -27,7 +30,8 @@ fun SetupNavigation() {
                     },
                     onCreateAccountClick = {
                         backStack.add(Screen.RegisterScreen)
-                    }
+                    },
+                    modifier = Modifier
                 )
             }
 
@@ -35,7 +39,8 @@ fun SetupNavigation() {
                 RegisterScreen(
                     onNavigateBack = {
                         backStack.removeLastOrNull()
-                    }
+                    },
+                    modifier = Modifier
                 )
             }
 
@@ -43,7 +48,8 @@ fun SetupNavigation() {
                 MainOrganizationScreen(
                     onAddOrganizationClick = {
                         backStack.add(Screen.AddRegisterScreen)
-                    }
+                    },
+                    modifier = Modifier
                 )
             }
 
@@ -51,7 +57,8 @@ fun SetupNavigation() {
                 AddOrganizationScreen(
                     onNavigateBack = {
                         backStack.removeLastOrNull()
-                    }
+                    },
+                    modifier = Modifier
                 )
             }
         }
