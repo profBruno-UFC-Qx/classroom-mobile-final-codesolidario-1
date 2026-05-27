@@ -22,7 +22,7 @@ import com.example.givchurch.viewmodel.organization.MainOrganizationViewModel
 
 @Composable
 fun MainOrganizationScreen(
-    onAddClick: () -> Unit,
+    onAddOrganizationClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainOrganizationViewModel = viewModel()
 ) {
@@ -83,7 +83,7 @@ fun MainOrganizationScreen(
         }
 
         FloatingActionButton(
-            onClick = onAddClick,
+            onClick = onAddOrganizationClick,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -94,13 +94,5 @@ fun MainOrganizationScreen(
                 contentDescription = "Adicionar Organização"
             )
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainOrganizationScreenPreview() {
-    MaterialTheme {
-        MainOrganizationScreen(onAddClick = {})
     }
 }

@@ -83,7 +83,7 @@ fun MainAppContainer(
                 NavigationItem.HOME -> PlaceholderScreen(title = "Tela Inicial")
                 NavigationItem.DONATIONS -> PlaceholderScreen(title = "Tela de Doações")
                 NavigationItem.BENEFICIARIES -> {
-                    MainOrganizationScreen(onAddClick = onAddOrganizationClick)
+                    MainOrganizationScreen(onAddOrganizationClick = onAddOrganizationClick)
                 }
                 NavigationItem.HISTORY -> PlaceholderScreen(title = "Histórico de Atividades")
                 NavigationItem.PROFILE -> PlaceholderScreen(title = "Perfil do Usuário")

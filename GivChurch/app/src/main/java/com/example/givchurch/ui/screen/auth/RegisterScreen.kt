@@ -50,7 +50,7 @@ fun RegisterScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            backStack.add(Screen.Login)
+                            backStack.add(Screen.LoginScreen)
                         }
                     ) {
                         Icon(

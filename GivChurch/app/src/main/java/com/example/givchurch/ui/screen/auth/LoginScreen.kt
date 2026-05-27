@@ -102,7 +102,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                backStack.add(Screen.Register)
+                backStack.add(Screen.RegisterScreen)
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
