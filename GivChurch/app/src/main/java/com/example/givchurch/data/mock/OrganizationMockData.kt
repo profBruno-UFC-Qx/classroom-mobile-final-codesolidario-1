@@ -6,6 +6,7 @@ object OrganizationMockData {
 
     val organizations = mutableListOf(
         Organization(
+            id = 1,
             name = "Igreja Central de Amparo",
             phoneNumber = "(85) 99999-1234",
             address = "Av. da Solidariedade, 123 - Centro",
@@ -13,6 +14,7 @@ object OrganizationMockData {
             createBy = 1
         ),
         Organization(
+            id = 2,
             name = "Ação Social Esperança",
             phoneNumber = "(85) 3412-0000",
             address = "Rua Clarindo de Queiroz, 789 - São João",
@@ -20,6 +22,7 @@ object OrganizationMockData {
             createBy = 1
         ),
         Organization(
+            id = 3,
             name = "Missão Resgate",
             phoneNumber = "(85) 98765-4321",
             address = "Marginal Baturité, Km 2 - Zona Rural",
@@ -28,6 +31,7 @@ object OrganizationMockData {
         ),
 
         Organization(
+            id = 4,
             name = "Instituto Videira",
             phoneNumber = "(85) 98888-5678",
             address = "Rua da Esperança, 456 - Campo Novo",
@@ -35,6 +39,7 @@ object OrganizationMockData {
             createBy = 2
         ),
         Organization(
+            id = 5,
             name = "Lar dos Avós",
             phoneNumber = "(85) 3451-9988",
             address = "Av. Dom Lucas, 1010 - Planalto",
@@ -42,6 +47,7 @@ object OrganizationMockData {
             createBy = 2
         ),
         Organization(
+            id = 6,
             name = "Sopa Solidária",
             phoneNumber = "(85) 99111-2233",
             address = "Praça da Matriz, s/n - Centro",
