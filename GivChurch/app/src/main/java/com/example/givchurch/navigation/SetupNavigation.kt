@@ -18,11 +18,11 @@ fun SetupNavigation() {
         onBack = {backStack.removeLastOrNull()},
         entryProvider = entryProvider {
             entry<Screen.Login>{
-                LoginScreen()
+                LoginScreen(backStack)
             }
 
             entry<Screen.Register>{
-                RegisterScreen()
+                RegisterScreen(backStack)
             }
         }
     )
