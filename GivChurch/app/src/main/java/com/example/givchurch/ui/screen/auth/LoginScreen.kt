@@ -16,7 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,40 +23,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.navigation.Screen
 import com.example.givchurch.viewmodel.auth.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    backStack: SnapshotStateList<Screen>,
+    onLoginSuccess: () -> Unit,
+    onCreateAccountClick: () -> Unit,
+    modifier: Modifier = Modifier,
     vm: LoginViewModel = viewModel()
 ) {
-
     val email by vm.email
     val password by vm.password
     val message by vm.message
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
-            "Bem-vindo de volta",
+            text = "Bem-vindo de volta",
             fontSize = 36.sp,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            "Acesse sua conta para continuar",
+            text = "Acesse sua conta para continuar",
             fontSize = 20.sp,
             style = MaterialTheme.typography.headlineMedium
         )
@@ -92,7 +90,13 @@ fun LoginScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(
-            onClick = vm::login,
+            onClick = {
+                // Se a autenticação der certo, dispara a navegação
+                val loggedUser = vm.login()
+                if (loggedUser != null) {
+                    onLoginSuccess()
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Entrar")
@@ -101,9 +105,7 @@ fun LoginScreen(
         Spacer(Modifier.height(8.dp))
 
         Button(
-            onClick = {
-                backStack.add(Screen.RegisterScreen)
-            },
+            onClick = onCreateAccountClick,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.White,
@@ -116,6 +118,14 @@ fun LoginScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        Text(message)
+        Text(text = message)
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun LoginScreenPreview() {
+    MaterialTheme {
+        LoginScreen(onLoginSuccess = {}, onCreateAccountClick = {})
     }
 }

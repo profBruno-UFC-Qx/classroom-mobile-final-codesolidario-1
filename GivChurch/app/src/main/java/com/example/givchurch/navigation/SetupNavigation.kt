@@ -19,12 +19,24 @@ fun SetupNavigation() {
         backStack = backStack,
         onBack = {backStack.removeLastOrNull()},
         entryProvider = entryProvider {
-            entry<Screen.LoginScreen>{
-                LoginScreen(backStack)
+            entry<Screen.LoginScreen> {
+                LoginScreen(
+                    onLoginSuccess = {
+                        backStack.clear()
+                        backStack.add(Screen.MainOrganizationScreen)
+                    },
+                    onCreateAccountClick = {
+                        backStack.add(Screen.RegisterScreen)
+                    }
+                )
             }
 
             entry<Screen.RegisterScreen>{
-                RegisterScreen(backStack)
+                RegisterScreen(
+                    onNavigateBack = {
+                        backStack.removeLastOrNull()
+                    }
+                )
             }
 
             entry<Screen.MainOrganizationScreen>{

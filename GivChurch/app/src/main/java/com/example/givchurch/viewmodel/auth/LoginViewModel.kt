@@ -2,6 +2,7 @@ package com.example.givchurch.viewmodel.auth
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.givchurch.data.model.User
 import com.example.givchurch.data.repository.AuthRepository
 
 class LoginViewModel : ViewModel() {
@@ -25,17 +26,14 @@ class LoginViewModel : ViewModel() {
         password.value = value
     }
 
-    fun login() {
+    fun login(): User? {
+        val user = repository.login(email.value, password.value)
 
-        val user = repository.login(
-            email.value,
-            password.value
-        )
-
-        message.value =
-            if (user != null)
-                "Bem-vindo ${user.firstname}"
-            else
-                "Credenciais inválidas."
+        message.value = if (user != null) {
+            "Bem-vindo ${user.firstname}"
+        } else {
+            "Credenciais inválidas."
+        }
+        return user
     }
 }

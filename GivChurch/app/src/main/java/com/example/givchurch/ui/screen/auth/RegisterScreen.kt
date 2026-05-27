@@ -34,7 +34,7 @@ import com.example.givchurch.viewmodel.auth.RegisterViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    backStack: SnapshotStateList<Screen>,
+    onNavigateBack: () -> Unit,
     vm: RegisterViewModel = viewModel()
 ) {
     val firstname by vm.firstname
@@ -48,11 +48,7 @@ fun RegisterScreen(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            backStack.add(Screen.LoginScreen)
-                        }
-                    ) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",

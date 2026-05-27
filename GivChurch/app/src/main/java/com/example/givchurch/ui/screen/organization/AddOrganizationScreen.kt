@@ -128,11 +128,3 @@ fun AddOrganizationScreen(
         }
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AddOrganizationScreenPreview() {
-    MaterialTheme {
-        AddOrganizationScreen(onNavigateBack = {})
-    }
-}
