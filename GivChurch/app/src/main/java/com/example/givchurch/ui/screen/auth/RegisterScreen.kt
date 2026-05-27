@@ -1,4 +1,4 @@
-package com.example.givchurch.ui
+package com.example.givchurch.ui.screen.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.*
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.givchurch.viewmodel.auth.RegisterViewModel
 
 @Composable

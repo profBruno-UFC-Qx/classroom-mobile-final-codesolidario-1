@@ -1,4 +1,4 @@
-package com.example.givchurch.viewmodel
+package com.example.givchurch.viewmodel.auth
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
