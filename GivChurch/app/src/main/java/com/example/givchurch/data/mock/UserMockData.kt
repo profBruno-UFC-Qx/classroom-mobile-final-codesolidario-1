@@ -6,6 +6,7 @@ object UserMockData {
 
     val users = mutableListOf(
         User(
+            id = 1,
             firstname = "Rubens",
             lastname = "Rabelo",
             email = "rubens@gmail.com",
@@ -13,6 +14,7 @@ object UserMockData {
         ),
 
         User(
+            id = 2,
             firstname = "Maria",
             lastname = "Silva",
             email = "maria@gmail.com",

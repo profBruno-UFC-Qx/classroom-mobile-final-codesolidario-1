@@ -14,7 +14,10 @@ class AuthRepository {
             return false
         }
 
-        UserMockData.users.add(user)
+        val nextId = (UserMockData.users.maxOfOrNull { it.id } ?: 0) + 1
+        val newUserWithId = user.copy(id = nextId)
+
+        UserMockData.users.add(newUserWithId)
         return true
     }
 
