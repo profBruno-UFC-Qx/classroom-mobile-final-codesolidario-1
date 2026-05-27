@@ -43,6 +43,7 @@ class RegisterViewModel : ViewModel() {
 
         val success = repository.register(
             _root_ide_package_.com.example.givchurch.data.model.User(
+                0,
                 firstname.value,
                 lastname.value,
                 email.value,
