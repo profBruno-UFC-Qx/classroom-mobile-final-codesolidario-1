@@ -30,7 +30,7 @@ import com.example.givchurch.ui.screen.organization.MainOrganizationScreen
 enum class NavigationItem(val title: String, val icon: ImageVector) {
     HOME(title = "Início", Icons.Default.Home),
     DONATIONS(title = "Doações", Icons.Default.CardGiftcard),
-    BENEFICIARIES(title = "Beneficiários", Icons.Default.People),
+    BENEFICIARIES(title = "Atendidos", Icons.Default.People),
     HISTORY(title = "Histórico", Icons.Default.Refresh),
     PROFILE(title = "Perfil", Icons.Default.Person)
 }
