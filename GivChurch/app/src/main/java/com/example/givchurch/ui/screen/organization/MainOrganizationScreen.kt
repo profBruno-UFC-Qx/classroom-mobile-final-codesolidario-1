@@ -36,7 +36,7 @@ fun MainOrganizationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .windowInsetsPadding(WindowInsets.statusBars)
+                    .statusBarsPadding()
                     .padding(16.dp)
             ) {
                 Text(
@@ -68,8 +68,6 @@ fun MainOrganizationScreen(
                 )
             }
 
-            // Lista rolável: Adicionamos o navigationBars no preenchimento de baixo para que os cards finais
-            // respeitem a barra de navegação virtual do aparelho.
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -77,7 +75,7 @@ fun MainOrganizationScreen(
                     start = 16.dp,
                     end = 16.dp,
                     top = 16.dp,
-                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 88.dp
+                    bottom = 88.dp
                 )
             ) {
                 items(organizations) { organization ->
@@ -91,7 +89,6 @@ fun MainOrganizationScreen(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(16.dp)
         ) {
             Icon(
@@ -99,13 +96,5 @@ fun MainOrganizationScreen(
                 contentDescription = "Adicionar Organização"
             )
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainOrganizationScreenPreview() {
-    MaterialTheme {
-        MainOrganizationScreen(onAddOrganizationClick = {})
     }
 }

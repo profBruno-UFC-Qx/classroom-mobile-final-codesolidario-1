@@ -43,8 +43,9 @@ fun SetupNavigation(
             }
 
             entry<Screen.MainOrganizationScreen> {
-                AuthenticatedNavGraph(modifier = Modifier.fillMaxSize())
+                AuthenticatedNavGraph(modifier = Modifier)
             }
-        }
+        },
+        modifier = modifier
     )
 }

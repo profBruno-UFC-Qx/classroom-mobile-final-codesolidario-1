@@ -25,8 +25,7 @@ fun AuthenticatedNavGraph(
                 MainAppContainer(
                     onAddOrganizationClick = {
                         internalBackStack.add(Screen.AddRegisterScreen)
-                    },
-                    modifier = Modifier.fillMaxSize()
+                    }
                 )
             }
 
@@ -34,8 +33,7 @@ fun AuthenticatedNavGraph(
                 AddOrganizationScreen(
                     onNavigateBack = {
                         internalBackStack.removeLastOrNull()
-                    },
-                    modifier = Modifier
+                    }
                 )
             }
         },
