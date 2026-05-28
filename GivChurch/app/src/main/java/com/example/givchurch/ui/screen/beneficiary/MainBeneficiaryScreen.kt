@@ -1,14 +1,26 @@
-package com.example.givchurch.ui.screen.organization
+package com.example.givchurch.ui.screen.beneficiary
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,17 +30,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.ui.component.OrganizationItemCard
-import com.example.givchurch.viewmodel.organization.MainOrganizationViewModel
+import com.example.givchurch.ui.component.BeneficiaryItemCard
+import com.example.givchurch.viewmodel.beneficiary.MainBeneficiaryViewModel
+
 
 @Composable
-fun MainOrganizationScreen(
-    onAddOrganizationClick: () -> Unit,
+fun MainBeneficiaryScreen(
+    onAddBeneficiaryClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainOrganizationViewModel = viewModel()
+    viewModel: MainBeneficiaryViewModel = viewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val organizations by viewModel.organizations.collectAsState()
+    val beneficiaries by viewModel.beneficiaries.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -78,14 +91,14 @@ fun MainOrganizationScreen(
                     bottom = 88.dp
                 )
             ) {
-                items(organizations) { organization ->
-                    OrganizationItemCard(organization = organization)
+                items(beneficiaries) { beneficiary ->
+                    BeneficiaryItemCard(beneficiary = beneficiary)
                 }
             }
         }
 
         FloatingActionButton(
-            onClick = onAddOrganizationClick,
+            onClick = onAddBeneficiaryClick,
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -93,8 +106,16 @@ fun MainOrganizationScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Adicionar Organização"
+                contentDescription = "Adicionar Beneficiário"
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MainBeneficiaryScreenPreview() {
+    MaterialTheme {
+        MainBeneficiaryScreen(onAddBeneficiaryClick = {})
     }
 }

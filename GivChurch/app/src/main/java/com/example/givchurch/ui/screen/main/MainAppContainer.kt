@@ -25,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.givchurch.ui.screen.organization.MainOrganizationScreen
+import com.example.givchurch.ui.screen.beneficiary.MainBeneficiaryScreen
 
 enum class NavigationItem(val title: String, val icon: ImageVector) {
     HOME(title = "Início", Icons.Default.Home),
@@ -37,7 +37,7 @@ enum class NavigationItem(val title: String, val icon: ImageVector) {
 
 @Composable
 fun MainAppContainer(
-    onAddOrganizationClick: () -> Unit,
+    onAddBeneficiaryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedItem by remember { mutableStateOf(NavigationItem.BENEFICIARIES) }
@@ -83,8 +83,8 @@ fun MainAppContainer(
                 NavigationItem.HOME -> PlaceholderScreen(title = "Tela Inicial")
                 NavigationItem.DONATIONS -> PlaceholderScreen(title = "Tela de Doações")
                 NavigationItem.BENEFICIARIES -> {
-                    MainOrganizationScreen(
-                        onAddOrganizationClick = onAddOrganizationClick,
+                    MainBeneficiaryScreen(
+                        onAddBeneficiaryClick = onAddBeneficiaryClick,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

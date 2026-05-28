@@ -1,6 +1,6 @@
 package com.example.givchurch.data.model
 
-data class Organization(
+data class Beneficiary(
     val id: Int = 0,
     val name: String,
     val phoneNumber: String,

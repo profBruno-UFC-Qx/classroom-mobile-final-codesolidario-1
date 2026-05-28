@@ -1,6 +1,5 @@
 package com.example.givchurch.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,7 +23,7 @@ fun SetupNavigation(
                 LoginScreen(
                     onLoginSuccess = {
                         backStack.clear()
-                        backStack.add(Screen.MainOrganizationScreen)
+                        backStack.add(Screen.MainBeneficiaryScreen)
                     },
                     onCreateAccountClick = {
                         backStack.add(Screen.RegisterScreen)
@@ -42,7 +41,7 @@ fun SetupNavigation(
                 )
             }
 
-            entry<Screen.MainOrganizationScreen> {
+            entry<Screen.MainBeneficiaryScreen> {
                 AuthenticatedNavGraph(modifier = Modifier)
             }
         },

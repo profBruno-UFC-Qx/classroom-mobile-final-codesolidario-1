@@ -1,11 +1,11 @@
 package com.example.givchurch.data.mock
 
-import com.example.givchurch.data.model.Organization
+import com.example.givchurch.data.model.Beneficiary
 
-object OrganizationMockData {
+object BeneficiaryMockData {
 
-    val organizations = mutableListOf(
-        Organization(
+    val beneficiaries = mutableListOf(
+        Beneficiary(
             id = 1,
             name = "Igreja Central de Amparo",
             phoneNumber = "(85) 99999-1234",
@@ -13,7 +13,7 @@ object OrganizationMockData {
             observations = "Recebemos alimentos não perecíveis de segunda a sexta.",
             createBy = 1
         ),
-        Organization(
+        Beneficiary(
             id = 2,
             name = "Ação Social Esperança",
             phoneNumber = "(85) 3412-0000",
@@ -21,7 +21,7 @@ object OrganizationMockData {
             observations = "Foco em fraldas geriátricas e leite em pó.",
             createBy = 1
         ),
-        Organization(
+        Beneficiary(
             id = 3,
             name = "Missão Resgate",
             phoneNumber = "(85) 98765-4321",
@@ -30,7 +30,7 @@ object OrganizationMockData {
             createBy = 1
         ),
 
-        Organization(
+        Beneficiary(
             id = 4,
             name = "Instituto Videira",
             phoneNumber = "(85) 98888-5678",
@@ -38,7 +38,7 @@ object OrganizationMockData {
             observations = "Arrecadação de livros e materiais escolares.",
             createBy = 2
         ),
-        Organization(
+        Beneficiary(
             id = 5,
             name = "Lar dos Avós",
             phoneNumber = "(85) 3451-9988",
@@ -46,7 +46,7 @@ object OrganizationMockData {
             observations = "Necessitamos de produtos de higiene e limpeza.",
             createBy = 2
         ),
-        Organization(
+        Beneficiary(
             id = 6,
             name = "Sopa Solidária",
             phoneNumber = "(85) 99111-2233",

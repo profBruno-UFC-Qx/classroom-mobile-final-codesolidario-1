@@ -1,18 +1,18 @@
-package com.example.givchurch.viewmodel.organization
+package com.example.givchurch.viewmodel.beneficiary
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.givchurch.data.model.Organization
-import com.example.givchurch.data.repository.OrganizationRepository
+import com.example.givchurch.data.model.Beneficiary
+import com.example.givchurch.data.repository.BeneficiaryRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class AddOrganizationViewModel(
-    private val repository: OrganizationRepository = OrganizationRepository()
+class AddBeneficiaryViewModel(
+    private val repository: BeneficiaryRepository = BeneficiaryRepository()
 ) : ViewModel() {
 
     var name by mutableStateOf("")
@@ -35,7 +35,7 @@ class AddOrganizationViewModel(
     fun onAddressChanged(newValue: String) { address = newValue }
     fun onObservationsChanged(newValue: String) { observations = newValue }
 
-    fun saveOrganization() {
+    fun saveBeneficiary() {
         if (name.isBlank() || phoneNumber.isBlank() || address.isBlank()) {
             errorMessage = "Por favor, preencha todos os campos obrigatórios."
             return
@@ -44,7 +44,7 @@ class AddOrganizationViewModel(
         errorMessage = null
 
         viewModelScope.launch {
-            val newOrg = Organization(
+            val newBen = Beneficiary(
                 name = name,
                 phoneNumber = phoneNumber,
                 address = address,
@@ -52,12 +52,12 @@ class AddOrganizationViewModel(
                 createBy = 1 // TODO: alterar isso para pegar o id do usuário logado
             )
 
-            val success = repository.create(newOrg)
+            val success = repository.create(newBen)
 
             if (success) {
                 _saveSuccess.emit(true)
             } else {
-                errorMessage = "Já existe uma organização cadastrada com este nome."
+                errorMessage = "Já existe uma beneficiário cadastrada com este nome."
             }
         }
     }

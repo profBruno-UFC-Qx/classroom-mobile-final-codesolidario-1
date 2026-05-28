@@ -24,11 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.givchurch.data.model.Organization
+import com.example.givchurch.data.model.Beneficiary
 
 @Composable
-fun OrganizationItemCard(
-    organization: Organization,
+fun BeneficiaryItemCard(
+    beneficiary: Beneficiary,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -55,7 +55,7 @@ fun OrganizationItemCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = "Organização Ícone",
+                    contentDescription = "Beneficiário Ícone",
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -66,7 +66,7 @@ fun OrganizationItemCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = organization.name,
+                    text = beneficiary.name,
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -79,7 +79,7 @@ fun OrganizationItemCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = organization.phoneNumber,
+                        text = beneficiary.phoneNumber,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -94,7 +94,7 @@ fun OrganizationItemCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = organization.address,
+                        text = beneficiary.address,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

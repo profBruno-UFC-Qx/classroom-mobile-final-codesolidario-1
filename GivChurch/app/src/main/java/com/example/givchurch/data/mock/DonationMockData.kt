@@ -15,7 +15,7 @@ object DonationMockData {
             description = "Contém arroz, feijão, óleo, açúcar e café.",
             quantity = 5,
             organizationId = 1,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.PENDING
         ),
         Donation(
@@ -26,7 +26,7 @@ object DonationMockData {
             description = "Pacotes de espaguete de 500g.",
             quantity = 2,
             organizationId = 1,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.DELIVERED
         ),
 
@@ -38,7 +38,7 @@ object DonationMockData {
             description = "Pacotes fechados para os idosos assistidos.",
             quantity = 10,
             organizationId = 2,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.PENDING
         ),
         Donation(
@@ -49,7 +49,7 @@ object DonationMockData {
             description = "Latas de 400g para o complemento alimentar.",
             quantity = 12,
             organizationId = 2,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.PENDING
         ),
 
@@ -61,7 +61,7 @@ object DonationMockData {
             description = "Casacos e moletons em bom estado.",
             quantity = 15,
             organizationId = 3,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.DELIVERED
         ),
         Donation(
@@ -72,7 +72,7 @@ object DonationMockData {
             description = "Cobertores higienizados para distribuição.",
             quantity = 8,
             organizationId = 3,
-            creatorId = 1,
+            createBy = 1,
             status = DonationStatus.PENDING
         ),
 
@@ -84,7 +84,7 @@ object DonationMockData {
             description = "Livros didáticos e de historinhas para a biblioteca.",
             quantity = 20,
             organizationId = 4,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.PENDING
         ),
         Donation(
@@ -95,7 +95,7 @@ object DonationMockData {
             description = "Cadernos de 10 matérias para os estudantes.",
             quantity = 30,
             organizationId = 4,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.DELIVERED
         ),
 
@@ -107,7 +107,7 @@ object DonationMockData {
             description = "Caixas com unidades para higiene pessoal.",
             quantity = 50,
             organizationId = 5,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.PENDING
         ),
         Donation(
@@ -118,7 +118,7 @@ object DonationMockData {
             description = "Galões de 5 litros para limpeza do ambiente.",
             quantity = 4,
             organizationId = 5,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.DELIVERED
         ),
 
@@ -130,7 +130,7 @@ object DonationMockData {
             description = "Sacos de 10kg para o preparo da sopa.",
             quantity = 3,
             organizationId = 6,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.PENDING
         ),
         Donation(
@@ -141,7 +141,7 @@ object DonationMockData {
             description = "Tiras de copos para servir a sopa.",
             quantity = 10,
             organizationId = 6,
-            creatorId = 2,
+            createBy = 2,
             status = DonationStatus.PENDING
         )
     )

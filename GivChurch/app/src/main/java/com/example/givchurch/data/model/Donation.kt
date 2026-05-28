@@ -11,6 +11,6 @@ data class Donation(
     val description: String,
     val quantity: Int,
     val organizationId: Int,
-    val creatorId: Int,
+    val createBy: Int,
     val status: DonationStatus = DonationStatus.PENDING
 )
