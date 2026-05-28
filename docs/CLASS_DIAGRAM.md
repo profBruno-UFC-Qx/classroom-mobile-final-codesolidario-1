@@ -12,15 +12,6 @@ classDiagram
         +String password
     }
 
-    class Organization {
-        +Int id
-        +String name
-        +String phoneNumber
-        +String address
-        +String observations
-        +Int createBy
-    }
-
     class Donation {
         +Int id
         +String imageUrl
@@ -28,19 +19,18 @@ classDiagram
         +DonationCategory category
         +String description
         +Int quantity
-        +Int organizationId
+        +Int beneficiaryId
         +Int creatorId
         +DonationStatus status
-        +Int beneficiaryId
     }
 
     class Beneficiary {
         +Int id
         +String name
-        +String cpf
         +String phoneNumber
         +String address
-        +Int organizationId
+        +String observations
+        +Int createBy
     }
 
     class DonationStatus {
@@ -59,24 +49,10 @@ classDiagram
         +String value
     }
 
-    class NavigationItem {
-        <<enumeration>>
-        HOME
-        DONATIONS
-        BENEFICIARIES
-        HISTORY
-        PROFILE
-        +String title
-        +ImageVector icon
-    }
-
     %% Relacionamentos e Vínculos
-    User "1" --> "0..*" Organization : cria
+    User "1" --> "0..*" Beneficiary : gerencia
     User "1" --> "0..*" Donation : registra
-    Organization "1" --> "0..*" Donation : possui
-    Organization "1" --> "0..*" Beneficiary : atende
-    Donation "0..*" --> "0..1" Beneficiary : associada a
+    Beneficiary "1" --> "0..*" Donation : recebe
     Donation --> DonationStatus : usa
     Donation --> DonationCategory : usa
-
 ```
