@@ -3,6 +3,7 @@ package com.example.givchurch.data.mock
 import com.example.givchurch.data.model.Donation
 import com.example.givchurch.data.model.enums.DonationCategory
 import com.example.givchurch.data.model.enums.DonationStatus
+import java.time.LocalDateTime
 
 object DonationMockData {
 
@@ -14,9 +15,11 @@ object DonationMockData {
             category = DonationCategory.FOOD,
             description = "Contém arroz, feijão, óleo, açúcar e café.",
             quantity = 5,
-            organizationId = 1,
+            beneficiaryId = 1,
             createBy = 1,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(2),
+            dueDate = LocalDateTime.now().plusDays(1)
         ),
         Donation(
             id = 2,
@@ -25,9 +28,11 @@ object DonationMockData {
             category = DonationCategory.FOOD,
             description = "Pacotes de espaguete de 500g.",
             quantity = 2,
-            organizationId = 1,
+            beneficiaryId = 1,
             createBy = 1,
-            status = DonationStatus.DELIVERED
+            status = DonationStatus.DELIVERED,
+            createdAt = LocalDateTime.now().minusDays(5),
+            dueDate = LocalDateTime.now().minusDays(1)
         ),
 
         Donation(
@@ -37,9 +42,11 @@ object DonationMockData {
             category = DonationCategory.HYGIENE,
             description = "Pacotes fechados para os idosos assistidos.",
             quantity = 10,
-            organizationId = 2,
+            beneficiaryId = 2,
             createBy = 1,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(1),
+            dueDate = LocalDateTime.now().plusDays(5) // Prazo confortável
         ),
         Donation(
             id = 4,
@@ -48,9 +55,11 @@ object DonationMockData {
             category = DonationCategory.FOOD,
             description = "Latas de 400g para o complemento alimentar.",
             quantity = 12,
-            organizationId = 2,
+            beneficiaryId = 2,
             createBy = 1,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusHours(12),
+            dueDate = LocalDateTime.now().plusHours(12)
         ),
 
         Donation(
@@ -60,9 +69,11 @@ object DonationMockData {
             category = DonationCategory.CLOTHING,
             description = "Casacos e moletons em bom estado.",
             quantity = 15,
-            organizationId = 3,
+            beneficiaryId = 3,
             createBy = 1,
-            status = DonationStatus.DELIVERED
+            status = DonationStatus.DELIVERED,
+            createdAt = LocalDateTime.now().minusWeeks(2),
+            dueDate = LocalDateTime.now().minusWeeks(1)
         ),
         Donation(
             id = 6,
@@ -71,9 +82,11 @@ object DonationMockData {
             category = DonationCategory.CLOTHING,
             description = "Cobertores higienizados para distribuição.",
             quantity = 8,
-            organizationId = 3,
+            beneficiaryId = 3,
             createBy = 1,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(3),
+            dueDate = LocalDateTime.now().plusDays(2)
         ),
 
         Donation(
@@ -83,9 +96,11 @@ object DonationMockData {
             category = DonationCategory.FURNITURE_AND_UTENSILS,
             description = "Livros didáticos e de historinhas para a biblioteca.",
             quantity = 20,
-            organizationId = 4,
+            beneficiaryId = 4,
             createBy = 2,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(4),
+            dueDate = LocalDateTime.now().plusDays(10)
         ),
         Donation(
             id = 8,
@@ -94,9 +109,11 @@ object DonationMockData {
             category = DonationCategory.FURNITURE_AND_UTENSILS,
             description = "Cadernos de 10 matérias para os estudantes.",
             quantity = 30,
-            organizationId = 4,
+            beneficiaryId = 4,
             createBy = 2,
-            status = DonationStatus.DELIVERED
+            status = DonationStatus.DELIVERED,
+            createdAt = LocalDateTime.now().minusDays(10),
+            dueDate = LocalDateTime.now().minusDays(3)
         ),
 
         Donation(
@@ -106,9 +123,11 @@ object DonationMockData {
             category = DonationCategory.HYGIENE,
             description = "Caixas com unidades para higiene pessoal.",
             quantity = 50,
-            organizationId = 5,
+            beneficiaryId = 5,
             createBy = 2,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now(),
+            dueDate = LocalDateTime.now().plusDays(7)
         ),
         Donation(
             id = 10,
@@ -117,9 +136,11 @@ object DonationMockData {
             category = DonationCategory.HYGIENE,
             description = "Galões de 5 litros para limpeza do ambiente.",
             quantity = 4,
-            organizationId = 5,
+            beneficiaryId = 5,
             createBy = 2,
-            status = DonationStatus.DELIVERED
+            status = DonationStatus.DELIVERED,
+            createdAt = LocalDateTime.now().minusDays(2),
+            dueDate = LocalDateTime.now().minusDays(1)
         ),
 
         Donation(
@@ -129,9 +150,11 @@ object DonationMockData {
             category = DonationCategory.FOOD,
             description = "Sacos de 10kg para o preparo da sopa.",
             quantity = 3,
-            organizationId = 6,
+            beneficiaryId = 6,
             createBy = 2,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(1),
+            dueDate = LocalDateTime.now().plusHours(6)
         ),
         Donation(
             id = 12,
@@ -140,9 +163,11 @@ object DonationMockData {
             category = DonationCategory.FURNITURE_AND_UTENSILS,
             description = "Tiras de copos para servir a sopa.",
             quantity = 10,
-            organizationId = 6,
+            beneficiaryId = 6,
             createBy = 2,
-            status = DonationStatus.PENDING
+            status = DonationStatus.PENDING,
+            createdAt = LocalDateTime.now().minusDays(2),
+            dueDate = LocalDateTime.now().plusDays(4)
         )
     )
 }
