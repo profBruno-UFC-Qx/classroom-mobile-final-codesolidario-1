@@ -46,7 +46,8 @@ fun MainDonationScreen(
                     text = "Doações",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
 
                 OutlinedTextField(
@@ -55,7 +56,7 @@ fun MainDonationScreen(
                     placeholder = { Text("Buscar doações...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface
