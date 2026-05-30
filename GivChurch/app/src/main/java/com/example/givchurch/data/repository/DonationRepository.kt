@@ -3,12 +3,27 @@ package com.example.givchurch.data.repository
 import com.example.givchurch.data.mock.DonationMockData
 import com.example.givchurch.data.model.Donation
 import com.example.givchurch.data.model.enums.DonationCategory
+import com.example.givchurch.data.repository.enums.SortDirection
 
 class DonationRepository {
 
-    fun getAll(): List<Donation> {
-        return DonationMockData.donations
+    fun getAll(page: Int = 1, pageSize: Int = 3, direction: SortDirection = SortDirection.DESC): List<Donation> {
+        val sortedDonations = when (direction) {
+            SortDirection.ASC -> DonationMockData.donations.sortedBy { it.dueDate }
+            SortDirection.DESC -> DonationMockData.donations.sortedByDescending { it.dueDate }
+        }
+
+        val startIndex = (page - 1) * pageSize
+
+        if (startIndex >= sortedDonations.size || startIndex < 0) {
+            return emptyList()
+        }
+
+        val endIndex = minOf(startIndex + pageSize, sortedDonations.size)
+
+        return sortedDonations.subList(startIndex, endIndex)
     }
+
 
     fun getById(id: Int): Donation? {
         return DonationMockData.donations.find { it.id == id }
