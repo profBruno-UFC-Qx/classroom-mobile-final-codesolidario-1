@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.screen.beneficiary.MainBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.MainDonationScreen
@@ -85,7 +86,7 @@ fun MainAppContainer(
                 NavigationItem.HOME -> PlaceholderScreen(title = "Tela Inicial")
                 NavigationItem.DONATIONS -> {
                     MainDonationScreen(
-                        onAddDonationClick = onAddDonationClick // Agora compila perfeitamente!
+                        onAddDonationClick = onAddDonationClick
                     )
                 }
                 NavigationItem.BENEFICIARIES -> {
@@ -109,5 +110,16 @@ fun PlaceholderScreen(title: String) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = title, style = MaterialTheme.typography.titleLarge)
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MainBeneficiaryScreenPreview() {
+    MaterialTheme {
+        MainAppContainer(
+            onAddBeneficiaryClick = {},
+            onAddDonationClick = {},
+        )
     }
 }

@@ -26,7 +26,9 @@ fun AuthenticatedNavGraph(
                     onAddBeneficiaryClick = {
                         internalBackStack.add(Screen.AddRegisterScreen)
                     },
-                    onAddDonationClick = {}
+                    onAddDonationClick = {
+                        internalBackStack.add(Screen.AddDonationScreen)
+                    }
                 )
             }
 
