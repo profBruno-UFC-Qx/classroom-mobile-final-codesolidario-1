@@ -1,7 +1,21 @@
 package com.example.givchurch.ui.screen.history
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,7 +25,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalShipping
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,15 +52,13 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
-fun HistoryScreen(
-    getBeneficiaryName: (Int) -> String,
+fun MainHistoryScreen(
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
-    // Lógica para detectar scroll infinito / paginação automática
     val shouldLoadMore by remember {
         derivedStateOf {
             val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
@@ -57,7 +75,6 @@ fun HistoryScreen(
 
     Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
-        // Cabeçalho adaptável usando o tema padrão do sistema
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +104,7 @@ fun HistoryScreen(
             itemsIndexed(uiState.historyItems) { index, donation ->
                 TimelineRow(
                     donation = donation,
-                    beneficiaryName = getBeneficiaryName(donation.beneficiaryId),
+                    beneficiaryName = viewModel.getBeneficiaryName(donation.beneficiaryId),
                     isLastItem = index == uiState.historyItems.lastIndex && !uiState.isLoading
                 )
             }
@@ -119,7 +136,6 @@ fun TimelineRow(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
     ) {
-        // Timeline vertical (Indicadores de status baseados no Material 3)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(48.dp)
@@ -154,7 +170,6 @@ fun TimelineRow(
             }
         }
 
-        // Card contendo os dados do repositório
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -226,6 +241,8 @@ fun TimelineRow(
 
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale("pt", "BR"))
                     Text(
+
+
                         text = "🕒 ${donation.dueDate.format(formatter)}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
@@ -235,11 +252,12 @@ fun TimelineRow(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
-fun HistoryScreenPreview() {
+fun MainHistoryScreenPreview() {
     MaterialTheme {
-        HistoryScreen(getBeneficiaryName = { "Maria Silva" })
+        MainHistoryScreen()
     }
 }
+
+

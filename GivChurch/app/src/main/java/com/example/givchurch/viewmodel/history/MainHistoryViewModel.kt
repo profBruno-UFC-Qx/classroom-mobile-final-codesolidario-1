@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.data.model.Donation
 import com.example.givchurch.data.repository.DonationRepository
+import com.example.givchurch.data.repository.BeneficiaryRepository // 👈 Importado aqui
 import com.example.givchurch.data.repository.enums.SortDirection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,31 +19,30 @@ data class HistoryUiState(
 )
 
 class HistoryViewModel(
-    private val repository: DonationRepository = DonationRepository() // Injetando o Repositório
+    private val repository: DonationRepository = DonationRepository(),
+    private val beneficiaryRepository: BeneficiaryRepository = BeneficiaryRepository() // 👈 Injetado aqui
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HistoryUiState())
     val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
 
     private var currentPage = 1
-    private val pageSize = 5 // Ajustado para 5 para uma melhor experiência visual de rolagem
+    private val pageSize = 5
 
     init {
         loadNextPage()
     }
 
     fun loadNextPage() {
-        // Evita chamadas redundantes caso já esteja carregando ou tenha chegado ao fim do banco
         if (_uiState.value.isLoading || _uiState.value.isLastPage) return
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            // Busca os dados paginados diretamente através do Repositório
             val newItems = repository.getAll(
                 page = currentPage,
                 pageSize = pageSize,
-                direction = SortDirection.DESC // Mais recentes primeiro
+                direction = SortDirection.DESC
             )
 
             if (newItems.isEmpty()) {
@@ -58,5 +58,9 @@ class HistoryViewModel(
                 currentPage++
             }
         }
+    }
+
+    fun getBeneficiaryName(id: Int): String {
+        return beneficiaryRepository.getById(id)?.name ?: "Beneficiário Desconhecido"
     }
 }
