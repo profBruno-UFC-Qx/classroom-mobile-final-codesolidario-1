@@ -17,11 +17,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,12 +37,12 @@ enum class NavigationItem(val title: String, val icon: ImageVector) {
 
 @Composable
 fun MainAppContainer(
+    selectedItem: NavigationItem,
+    onTabSelected: (NavigationItem) -> Unit,
     onAddBeneficiaryClick: () -> Unit,
     onAddDonationClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedItem by remember { mutableStateOf(NavigationItem.HOME) }
-
     Scaffold(
         bottomBar = {
             NavigationBar(
@@ -59,7 +54,7 @@ fun MainAppContainer(
 
                     NavigationBarItem(
                         selected = isSelected,
-                        onClick = { selectedItem = item },
+                        onClick = { onTabSelected(item) },
                         label = { Text(text = item.title) },
                         icon = {
                             Icon(
@@ -100,7 +95,6 @@ fun MainAppContainer(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-
                 NavigationItem.HISTORY -> {
                     MainHistoryScreen(modifier = Modifier.fillMaxSize())
                 }
@@ -112,21 +106,13 @@ fun MainAppContainer(
     }
 }
 
-@Composable
-fun PlaceholderScreen(title: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = title, style = MaterialTheme.typography.titleLarge)
-    }
-}
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainBeneficiaryScreenPreview() {
     MaterialTheme {
         MainAppContainer(
+            selectedItem = NavigationItem.HOME,
+            onTabSelected = {},
             onAddBeneficiaryClick = {},
             onAddDonationClick = {},
         )
