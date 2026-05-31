@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.screen.beneficiary.MainBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.MainDonationScreen
 import com.example.givchurch.ui.screen.history.MainHistoryScreen
+import com.example.givchurch.ui.screen.profile.MainProfileScreen
 
 enum class NavigationItem(val title: String, val icon: ImageVector) {
     HOME(title = "Início", Icons.Default.Home),
@@ -98,9 +99,11 @@ fun MainAppContainer(
                 }
 
                 NavigationItem.HISTORY -> {
-                    MainHistoryScreen()
+                    MainHistoryScreen(modifier = Modifier.fillMaxSize())
                 }
-                NavigationItem.PROFILE -> PlaceholderScreen(title = "Perfil do Usuário")
+                NavigationItem.PROFILE -> {
+                    MainProfileScreen(modifier = Modifier.fillMaxSize())
+                }
             }
         }
     }

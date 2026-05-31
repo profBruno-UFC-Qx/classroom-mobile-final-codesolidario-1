@@ -252,6 +252,7 @@ fun TimelineRow(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun MainHistoryScreenPreview() {
