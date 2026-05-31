@@ -4,6 +4,8 @@ import com.example.givchurch.data.mock.DonationMockData
 import com.example.givchurch.data.model.Donation
 import com.example.givchurch.data.model.enums.DonationCategory
 import com.example.givchurch.data.repository.enums.SortDirection
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class DonationRepository {
 
@@ -24,6 +26,12 @@ class DonationRepository {
         return sortedDonations.subList(startIndex, endIndex)
     }
 
+    fun getRecentDonations(): Flow<List<Donation>> = flow {
+        val recent = DonationMockData.donations
+            .sortedByDescending { it.createdAt }
+            .take(3)
+        emit(recent)
+    }
 
     fun getById(id: Int): Donation? {
         return DonationMockData.donations.find { it.id == id }

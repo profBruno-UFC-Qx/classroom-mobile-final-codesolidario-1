@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.screen.beneficiary.MainBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.MainDonationScreen
 import com.example.givchurch.ui.screen.history.MainHistoryScreen
+import com.example.givchurch.ui.screen.home.MainHomeScreen
 import com.example.givchurch.ui.screen.profile.MainProfileScreen
 
 enum class NavigationItem(val title: String, val icon: ImageVector) {
@@ -45,7 +46,7 @@ fun MainAppContainer(
     onAddDonationClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedItem by remember { mutableStateOf(NavigationItem.BENEFICIARIES) }
+    var selectedItem by remember { mutableStateOf(NavigationItem.HOME) }
 
     Scaffold(
         bottomBar = {
@@ -85,7 +86,9 @@ fun MainAppContainer(
                 .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             when (selectedItem) {
-                NavigationItem.HOME -> PlaceholderScreen(title = "Tela Inicial")
+                NavigationItem.HOME -> {
+                    MainHomeScreen(modifier = Modifier.fillMaxSize())
+                }
                 NavigationItem.DONATIONS -> {
                     MainDonationScreen(
                         onAddDonationClick = onAddDonationClick

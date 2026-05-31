@@ -8,60 +8,67 @@ import java.time.LocalDateTime
 object DonationMockData {
 
     val donations = mutableListOf(
+        // JANEIRO
         Donation(
             id = 1,
             imageUrl = null,
             name = "Cesta Básica Completa",
             category = DonationCategory.FOOD,
             description = "Contém arroz, feijão, óleo, açúcar e café.",
-            quantity = 5,
+            quantity = 45,
             beneficiaryId = 1,
             createBy = 1,
             status = DonationStatus.PENDING,
-            createdAt = LocalDateTime.now().minusDays(2),
+            createdAt = LocalDateTime.now().minusMonths(4),
             dueDate = LocalDateTime.now().plusDays(1)
         ),
+
+        // FEVEREIRO
         Donation(
             id = 2,
             imageUrl = null,
             name = "Fardo de Macarrão",
             category = DonationCategory.FOOD,
             description = "Pacotes de espaguete de 500g.",
-            quantity = 2,
+            quantity = 52,
             beneficiaryId = 1,
             createBy = 1,
             status = DonationStatus.DELIVERED,
-            createdAt = LocalDateTime.now().minusDays(5),
+            createdAt = LocalDateTime.now().minusMonths(3),
             dueDate = LocalDateTime.now().minusDays(1)
         ),
 
+        // MARÇO
         Donation(
             id = 3,
             imageUrl = null,
             name = "Fraldas Geriátricas M",
             category = DonationCategory.HYGIENE,
             description = "Pacotes fechados para os idosos assistidos.",
-            quantity = 10,
+            quantity = 38,
             beneficiaryId = 2,
             createBy = 1,
             status = DonationStatus.PENDING,
-            createdAt = LocalDateTime.now().minusDays(1),
-            dueDate = LocalDateTime.now().plusDays(5) // Prazo confortável
+            createdAt = LocalDateTime.now().minusMonths(2),
+            dueDate = LocalDateTime.now().plusDays(5)
         ),
+
+        // ABRIL
         Donation(
             id = 4,
             imageUrl = null,
             name = "Leite em Pó Integral",
             category = DonationCategory.FOOD,
             description = "Latas de 400g para o complemento alimentar.",
-            quantity = 12,
+            quantity = 60,
             beneficiaryId = 2,
             createBy = 1,
             status = DonationStatus.PENDING,
-            createdAt = LocalDateTime.now().minusHours(12),
+            createdAt = LocalDateTime.now().minusMonths(1),
             dueDate = LocalDateTime.now().plusHours(12)
         ),
 
+        // MAIO (Mês Atual)
         Donation(
             id = 5,
             imageUrl = null,
@@ -72,7 +79,7 @@ object DonationMockData {
             beneficiaryId = 3,
             createBy = 1,
             status = DonationStatus.DELIVERED,
-            createdAt = LocalDateTime.now().minusWeeks(2),
+            createdAt = LocalDateTime.now().minusDays(5),
             dueDate = LocalDateTime.now().minusWeeks(1)
         ),
         Donation(
@@ -88,7 +95,6 @@ object DonationMockData {
             createdAt = LocalDateTime.now().minusDays(3),
             dueDate = LocalDateTime.now().plusDays(2)
         ),
-
         Donation(
             id = 7,
             imageUrl = null,
@@ -115,7 +121,6 @@ object DonationMockData {
             createdAt = LocalDateTime.now().minusDays(10),
             dueDate = LocalDateTime.now().minusDays(3)
         ),
-
         Donation(
             id = 9,
             imageUrl = null,
@@ -142,7 +147,6 @@ object DonationMockData {
             createdAt = LocalDateTime.now().minusDays(2),
             dueDate = LocalDateTime.now().minusDays(1)
         ),
-
         Donation(
             id = 11,
             imageUrl = null,
