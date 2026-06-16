@@ -26,6 +26,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
@@ -51,13 +52,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.data.local.model.Beneficiary
-import com.example.givchurch.data.local.model.enums.DonationCategory
-import com.example.givchurch.data.local.model.enums.DonationStatus
+import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.domain.model.enums.DonationCategory
+import com.example.givchurch.domain.model.enums.DonationStatus
 import com.example.givchurch.viewmodel.donation.AddDonationUiState
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -65,7 +67,7 @@ import java.time.format.DateTimeFormatter
 fun AddDonationScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: AddDonationViewModel = viewModel()
+    viewModel: AddDonationViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -109,7 +111,7 @@ fun AddDonationContent(
     onBeneficiaryExpandedChange: (Boolean) -> Unit,
     onStatusSelect: (DonationStatus) -> Unit,
     onStatusExpandedChange: (Boolean) -> Unit,
-    onDateSelect: (java.time.LocalDate) -> Unit,
+    onDateSelect: (LocalDate) -> Unit,
     onDatePickerExpandedChange: (Boolean) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
@@ -122,6 +124,39 @@ fun AddDonationContent(
         contract = ActivityResultContracts.GetContent(),
         onResult = onImageSelect
     )
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = uiState.selectedDate
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+    )
+
+    if (uiState.isDatePickerExpanded) {
+        DatePickerDialog(
+            onDismissRequest = { onDatePickerExpandedChange(false) },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        val date = Instant.ofEpochMilli(millis)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        onDateSelect(date)
+                    }
+                    onDatePickerExpandedChange(false)
+                }) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDatePickerExpandedChange(false) }) {
+                    Text("Cancelar")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -152,6 +187,7 @@ fun AddDonationContent(
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
+
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Foto do item",
@@ -207,6 +243,8 @@ fun AddDonationContent(
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
+
+
                     text = "Categoria",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
@@ -217,12 +255,12 @@ fun AddDonationContent(
                     onExpandedChange = onCategoryExpandedChange
                 ) {
                     OutlinedTextField(
-                        value = uiState.selectedCategory?.value ?: "Selecione uma categoria",
+                        value = uiState.selectedCategory?.name ?: "Selecione uma categoria",
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isCategoryExpanded) },
                         modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -232,14 +270,13 @@ fun AddDonationContent(
                     ) {
                         DonationCategory.entries.forEach { category ->
                             DropdownMenuItem(
-                                text = { Text(category.value) },
+                                text = { Text(category.name) },
                                 onClick = { onCategorySelect(category) }
                             )
                         }
                     }
                 }
             }
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Descrição",
@@ -256,7 +293,6 @@ fun AddDonationContent(
                     shape = RoundedCornerShape(12.dp)
                 )
             }
-
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Quantidade",
@@ -273,8 +309,6 @@ fun AddDonationContent(
                     shape = RoundedCornerShape(12.dp)
                 )
             }
-
-            // 1. Campo Beneficiário
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Beneficiário Destinatário",
@@ -282,7 +316,6 @@ fun AddDonationContent(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 ExposedDropdownMenuBox(
                     expanded = uiState.isBeneficiaryExpanded,
                     onExpandedChange = onBeneficiaryExpandedChange
@@ -293,11 +326,10 @@ fun AddDonationContent(
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isBeneficiaryExpanded) },
                         modifier = Modifier
-                            .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     )
-
                     if (uiState.beneficiaries.isNotEmpty()) {
                         ExposedDropdownMenu(
                             expanded = uiState.isBeneficiaryExpanded,
@@ -313,8 +345,6 @@ fun AddDonationContent(
                     }
                 }
             }
-
-            // 2. Campo Status da Doação
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Status da Doação",
@@ -322,13 +352,12 @@ fun AddDonationContent(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 ExposedDropdownMenuBox(
                     expanded = uiState.isStatusExpanded,
                     onExpandedChange = onStatusExpandedChange
                 ) {
                     OutlinedTextField(
-                        value = uiState.selectedStatus.value,
+                        value = uiState.selectedStatus.name,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isStatusExpanded) },
@@ -337,22 +366,19 @@ fun AddDonationContent(
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     )
-
                     ExposedDropdownMenu(
                         expanded = uiState.isStatusExpanded,
                         onDismissRequest = { onStatusExpandedChange(false) }
                     ) {
                         DonationStatus.entries.forEach { status ->
                             DropdownMenuItem(
-                                text = { Text(status.value) },
+                                text = { Text(status.name) },
                                 onClick = { onStatusSelect(status) }
                             )
                         }
                     }
                 }
             }
-
-            // 3. Campo Prazo Limite
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Prazo limite para entrega",
@@ -360,7 +386,6 @@ fun AddDonationContent(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-
                 OutlinedTextField(
                     value = uiState.selectedDate.format(dateFormatter),
                     onValueChange = {},
@@ -374,42 +399,12 @@ fun AddDonationContent(
                     }
                 )
             }
-
-            // 4. Caixa de Diálogo do Calendário (DatePicker)
-            if (uiState.isDatePickerExpanded) {
-                val datePickerState = rememberDatePickerState(
-                    initialSelectedDateMillis = uiState.selectedDate.atStartOfDay()
-                        .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                )
-
-                DatePickerDialog(
-                    onDismissRequest = { onDatePickerExpandedChange(false) },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            datePickerState.selectedDateMillis?.let { millis ->
-                                onDateSelect(
-                                    Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
-                                        .toLocalDate()
-                                )
-                            }
-                        }) { Text("Confirmar") }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { onDatePickerExpandedChange(false) }) {
-                            Text("Cancelar")
-                        }
-                    }
-                ) {
-                    DatePicker(state = datePickerState)
-                }
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            // 5. Botão de Envio
             Button(
                 onClick = onSaveClick,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
                 enabled = uiState.name.isNotBlank() && uiState.selectedCategory != null && uiState.selectedBeneficiary != null
             ) {
@@ -424,7 +419,7 @@ fun AddDonationContent(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun AddBeneficiaryScreenPreview() {
+fun AddDonationScreenPreview() {
     MaterialTheme {
         AddDonationScreen(onNavigateBack = {})
     }

@@ -29,19 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.givchurch.ui.component.BeneficiaryItemCard
 import com.example.givchurch.viewmodel.beneficiary.MainBeneficiaryViewModel
-
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainBeneficiaryScreen(
     onAddBeneficiaryClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainBeneficiaryViewModel = viewModel()
+    viewModel: MainBeneficiaryViewModel = koinViewModel()
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val beneficiaries by viewModel.beneficiaries.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -61,7 +59,7 @@ fun MainBeneficiaryScreen(
                 )
 
                 OutlinedTextField(
-                    value = searchQuery,
+                    value = uiState.searchQuery,
                     onValueChange = { viewModel.onSearchQueryChanged(it) },
                     placeholder = { Text("Buscar beneficiários...") },
                     leadingIcon = {
@@ -91,7 +89,7 @@ fun MainBeneficiaryScreen(
                     bottom = 88.dp
                 )
             ) {
-                items(beneficiaries) { beneficiary ->
+                items(uiState.beneficiariesList) { beneficiary ->
                     BeneficiaryItemCard(beneficiary = beneficiary)
                 }
             }

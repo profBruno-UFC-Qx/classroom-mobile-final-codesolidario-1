@@ -1,55 +1,68 @@
 package com.example.givchurch.viewmodel.beneficiary
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.givchurch.data.local.model.Beneficiary
-import com.example.givchurch.data.repository.BeneficiaryRepository
+import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.domain.repository.BeneficiaryRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+data class AddBeneficiaryUiState(
+    val name: String = "",
+    val phoneNumber: String = "",
+    val address: String = "",
+    val observations: String = "",
+    val errorMessage: String? = null
+)
+
 class AddBeneficiaryViewModel(
-    private val repository: BeneficiaryRepository = BeneficiaryRepository()
+    private val repository: BeneficiaryRepository
 ) : ViewModel() {
 
-    var name by mutableStateOf("")
-        private set
-    var phoneNumber by mutableStateOf("")
-        private set
-    var address by mutableStateOf("")
-        private set
-    var observations by mutableStateOf("")
-        private set
-
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
+    private val _uiState = MutableStateFlow(AddBeneficiaryUiState())
+    val uiState: StateFlow<AddBeneficiaryUiState> = _uiState.asStateFlow()
 
     private val _saveSuccess = MutableSharedFlow<Boolean>()
     val saveSuccess = _saveSuccess.asSharedFlow()
 
-    fun onNameChanged(newValue: String) { name = newValue }
-    fun onPhoneChanged(newValue: String) { phoneNumber = newValue }
-    fun onAddressChanged(newValue: String) { address = newValue }
-    fun onObservationsChanged(newValue: String) { observations = newValue }
+    fun onNameChanged(newValue: String) {
+        _uiState.update { it.copy(name = newValue) }
+    }
+
+    fun onPhoneChanged(newValue: String) {
+        _uiState.update { it.copy(phoneNumber = newValue) }
+    }
+
+    fun onAddressChanged(newValue: String) {
+        _uiState.update { it.copy(address = newValue) }
+    }
+
+    fun onObservationsChanged(newValue: String) {
+        _uiState.update { it.copy(observations = newValue) }
+    }
 
     fun saveBeneficiary() {
-        if (name.isBlank() || phoneNumber.isBlank() || address.isBlank()) {
-            errorMessage = "Por favor, preencha todos os campos obrigatórios."
+        val currentState = _uiState.value
+
+        if (currentState.name.isBlank() || currentState.phoneNumber.isBlank() || currentState.address.isBlank()) {
+            _uiState.update { it.copy(errorMessage = "Por favor, preencha todos os campos obrigatórios.") }
             return
         }
 
-        errorMessage = null
+        _uiState.update { it.copy(errorMessage = null) }
 
         viewModelScope.launch {
             val newBen = Beneficiary(
-                name = name,
-                phoneNumber = phoneNumber,
-                address = address,
-                observations = observations,
-                createBy = 1 // TODO: alterar isso para pegar o id do usuário logado
+                name = currentState.name,
+                phoneNumber = currentState.phoneNumber,
+                address = currentState.address,
+                observations = currentState.observations,
+                createBy = 1
             )
 
             val success = repository.create(newBen)
@@ -57,7 +70,7 @@ class AddBeneficiaryViewModel(
             if (success) {
                 _saveSuccess.emit(true)
             } else {
-                errorMessage = "Já existe uma beneficiário cadastrada com este nome."
+                _uiState.update { it.copy(errorMessage = "Já existe uma beneficiário cadastrada com este nome.") }
             }
         }
     }

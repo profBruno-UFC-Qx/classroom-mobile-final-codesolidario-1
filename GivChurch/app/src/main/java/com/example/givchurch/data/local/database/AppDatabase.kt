@@ -9,8 +9,8 @@ import com.example.givchurch.data.local.converters.Converters
 import com.example.givchurch.data.local.dao.BeneficiaryDao
 import com.example.givchurch.data.local.dao.DashboardDao
 import com.example.givchurch.data.local.dao.DonationDao
-import com.example.givchurch.domain.model.Beneficiary
-import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.data.local.model.Beneficiary
+import com.example.givchurch.data.local.model.Donation
 
 @Database(
     entities = [Beneficiary::class, Donation::class],

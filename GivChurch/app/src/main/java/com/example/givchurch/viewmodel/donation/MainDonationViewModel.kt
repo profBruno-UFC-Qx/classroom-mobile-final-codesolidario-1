@@ -1,14 +1,20 @@
 package com.example.givchurch.viewmodel.donation
 
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.local.model.Donation
-import com.example.givchurch.data.local.model.enums.DonationCategory
-import com.example.givchurch.data.repository.DonationRepository
-import com.example.givchurch.data.repository.BeneficiaryRepository
+import androidx.lifecycle.viewModelScope
+import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.domain.model.enums.DonationCategory
+import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.repository.DonationRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 data class DonationUiState(
     val searchQuery: String = "",
@@ -16,37 +22,45 @@ data class DonationUiState(
     val donationsList: List<Donation> = emptyList()
 )
 
-class MainDonationViewModel : ViewModel() {
-    private val donationRepository = DonationRepository()
-    private val beneficiaryRepository = BeneficiaryRepository()
+@OptIn(ExperimentalCoroutinesApi::class)
+class MainDonationViewModel(
+    private val donationRepository: DonationRepository,
+    private val beneficiaryRepository: BeneficiaryRepository
+) : ViewModel() {
+    private val _searchQuery = MutableStateFlow("")
+    private val _selectedCategory = MutableStateFlow<DonationCategory?>(null)
 
-    private val _uiState = MutableStateFlow(DonationUiState())
-    val uiState: StateFlow<DonationUiState> = _uiState.asStateFlow()
-
-    init {
-        updateList()
-    }
+    val uiState: StateFlow<DonationUiState> = combine(
+        _searchQuery,
+        _selectedCategory
+    ) { query, category ->
+        Pair(query, category)
+    }.flatMapLatest { (query, category) ->
+        donationRepository.searchAndFilter(name = query, category = category)
+    }.map { list ->
+        DonationUiState(
+            searchQuery = _searchQuery.value,
+            selectedCategory = _selectedCategory.value,
+            donationsList = list
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DonationUiState()
+    )
 
     fun onSearchQueryChanged(newQuery: String) {
-        _uiState.update { it.copy(searchQuery = newQuery) }
-        updateList()
+        _searchQuery.value = newQuery
     }
 
     fun onCategorySelected(category: DonationCategory?) {
-        _uiState.update { it.copy(selectedCategory = category) }
-        updateList()
+        _selectedCategory.value = category
     }
 
-    private fun updateList() {
-        val currentState = _uiState.value
-        val filteredDonations = donationRepository.searchAndFilter(
-            name = currentState.searchQuery,
-            category = currentState.selectedCategory
-        )
-        _uiState.update { it.copy(donationsList = filteredDonations) }
-    }
-
-    fun getBeneficiaryName(id: Int): String {
-        return beneficiaryRepository.getById(id)?.name ?: "Desconhecido"
+    fun loadBeneficiaryName(id: Int, onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val beneficiary = beneficiaryRepository.getById(id)
+            onResult(beneficiary?.name ?: "Desconhecido")
+        }
     }
 }

@@ -35,46 +35,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.data.local.model.Donation
-import com.example.givchurch.data.local.model.enums.DonationStatus
-import com.example.givchurch.viewmodel.history.HistoryViewModel
+import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.domain.model.enums.DonationStatus
+import com.example.givchurch.viewmodel.history.MainHistoryViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @Composable
 fun MainHistoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: HistoryViewModel = viewModel()
+    viewModel: MainHistoryViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
 
-    val shouldLoadMore by remember {
-        derivedStateOf {
-            val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val totalItemsCount = listState.layoutInfo.totalItemsCount
-            lastVisibleItemIndex >= totalItemsCount - 2 && totalItemsCount > 0
-        }
-    }
-
-    LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore) {
-            viewModel.loadNextPage()
-        }
-    }
-
     Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,20 +81,26 @@ fun MainHistoryScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
         }
-
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp)
         ) {
             itemsIndexed(uiState.historyItems) { index, donation ->
+                var beneficiaryName by remember(donation.id) { mutableStateOf("Carregando...") }
+
+                LaunchedEffect(donation.beneficiaryId) {
+                    viewModel.loadBeneficiaryName(donation.beneficiaryId) { name ->
+                        beneficiaryName = name
+                    }
+                }
+
                 TimelineRow(
                     donation = donation,
-                    beneficiaryName = viewModel.getBeneficiaryName(donation.beneficiaryId),
+                    beneficiaryName = beneficiaryName,
                     isLastItem = index == uiState.historyItems.lastIndex && !uiState.isLoading
                 )
             }
-
             if (uiState.isLoading) {
                 item {
                     Box(
@@ -141,7 +133,6 @@ fun TimelineRow(
             modifier = Modifier.width(48.dp)
         ) {
             val isDelivered = donation.status == DonationStatus.DELIVERED
-
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -159,7 +150,6 @@ fun TimelineRow(
                     modifier = Modifier.size(18.dp)
                 )
             }
-
             if (!isLastItem) {
                 Box(
                     modifier = Modifier
@@ -169,7 +159,6 @@ fun TimelineRow(
                 )
             }
         }
-
         Card(
             modifier = Modifier
                 .weight(1f)
@@ -196,9 +185,7 @@ fun TimelineRow(
                         modifier = Modifier.size(20.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.width(12.dp))
-
                 Column(modifier = Modifier.weight(1f)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -212,11 +199,11 @@ fun TimelineRow(
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f)
                         )
-
                         val isDeliveredStatus = donation.status == DonationStatus.DELIVERED
                         Surface(
                             shape = RoundedCornerShape(8.dp),
-                            color = if (isDeliveredStatus) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                            color = if (isDeliveredStatus) MaterialTheme.colorScheme.primaryContainer
+                            else MaterialTheme.colorScheme.errorContainer,
                             modifier = Modifier.padding(start = 8.dp)
                         ) {
                             Text(
@@ -228,22 +215,18 @@ fun TimelineRow(
                             )
                         }
                     }
-
                     Spacer(modifier = Modifier.height(4.dp))
-
                     Text(
                         text = "Para: $beneficiaryName",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale("pt", "BR"))
                     Text(
-
-
                         text = "🕒 ${donation.dueDate.format(formatter)}",
+
+
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
@@ -252,7 +235,6 @@ fun TimelineRow(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun MainHistoryScreenPreview() {

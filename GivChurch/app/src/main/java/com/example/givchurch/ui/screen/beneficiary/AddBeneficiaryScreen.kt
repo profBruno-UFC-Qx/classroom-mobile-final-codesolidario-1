@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -33,17 +35,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryViewModel
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBeneficiaryScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: AddBeneficiaryViewModel = viewModel()
+    viewModel: AddBeneficiaryViewModel = koinViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     LaunchedEffect(key1 = true) {
         viewModel.saveSuccess.collectLatest { success ->
             if (success) {
@@ -91,7 +95,7 @@ fun AddBeneficiaryScreen(
                     textAlign = TextAlign.Center
                 )
 
-                viewModel.errorMessage?.let { error ->
+                uiState.errorMessage?.let { error ->
                     Text(
                         text = error,
                         color = MaterialTheme.colorScheme.error,
@@ -101,7 +105,7 @@ fun AddBeneficiaryScreen(
                 }
 
                 OutlinedTextField(
-                    value = viewModel.name,
+                    value = uiState.name,
                     onValueChange = viewModel::onNameChanged,
                     label = { Text("Nome do Beneficiário *") },
                     modifier = Modifier.fillMaxWidth(),
@@ -114,7 +118,7 @@ fun AddBeneficiaryScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.phoneNumber,
+                    value = uiState.phoneNumber,
                     onValueChange = viewModel::onPhoneChanged,
                     label = { Text("Telefone de Contato *") },
                     modifier = Modifier.fillMaxWidth(),
@@ -127,7 +131,7 @@ fun AddBeneficiaryScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.address,
+                    value = uiState.address,
                     onValueChange = viewModel::onAddressChanged,
                     label = { Text("Endereço Completo *") },
                     modifier = Modifier.fillMaxWidth(),
@@ -140,7 +144,7 @@ fun AddBeneficiaryScreen(
                 )
 
                 OutlinedTextField(
-                    value = viewModel.observations,
+                    value = uiState.observations,
                     onValueChange = viewModel::onObservationsChanged,
                     label = { Text("Observações / Horários de Coleta") },
                     modifier = Modifier
@@ -148,7 +152,6 @@ fun AddBeneficiaryScreen(
                         .height(120.dp),
                     shape = RoundedCornerShape(12.dp),
                     maxLines = 4,
-                    singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done

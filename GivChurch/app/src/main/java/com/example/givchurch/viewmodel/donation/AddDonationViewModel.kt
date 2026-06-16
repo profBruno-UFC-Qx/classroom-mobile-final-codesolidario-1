@@ -1,16 +1,18 @@
 package com.example.givchurch.viewmodel.donation
 
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.local.model.Beneficiary
-import com.example.givchurch.data.local.model.Donation
-import com.example.givchurch.data.local.model.enums.DonationCategory
-import com.example.givchurch.data.local.model.enums.DonationStatus
-import com.example.givchurch.data.repository.BeneficiaryRepository
-import com.example.givchurch.data.repository.DonationRepository
+import androidx.lifecycle.viewModelScope
+import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.domain.model.enums.DonationCategory
+import com.example.givchurch.domain.model.enums.DonationStatus
+import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.repository.DonationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -32,16 +34,20 @@ data class AddDonationUiState(
     val isSaveSuccess: Boolean = false
 )
 
-class AddDonationViewModel : ViewModel() {
-    private val donationRepository = DonationRepository()
-    private val beneficiaryRepository = BeneficiaryRepository()
+class AddDonationViewModel(
+    private val donationRepository: DonationRepository,
+    private val beneficiaryRepository: BeneficiaryRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddDonationUiState())
     val uiState: StateFlow<AddDonationUiState> = _uiState.asStateFlow()
 
     init {
-        val list = beneficiaryRepository.getAll()
-        _uiState.update { it.copy(beneficiaries = list) }
+        viewModelScope.launch {
+            beneficiaryRepository.getAll().collect { list ->
+                _uiState.update { it.copy(beneficiaries = list) }
+            }
+        }
     }
 
     fun onImageSelected(uri: String?) = _uiState.update { it.copy(imageUrl = uri) }
@@ -57,28 +63,30 @@ class AddDonationViewModel : ViewModel() {
     fun onDateSelected(date: LocalDate) = _uiState.update { it.copy(selectedDate = date, isDatePickerExpanded = false) }
     fun onDatePickerExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isDatePickerExpanded = expanded) }
 
-    fun saveDonation(): Boolean {
-        val currentState = _uiState.value
-        val quantity = currentState.quantityString.toIntOrNull() ?: 1
-        val beneficiaryId = currentState.selectedBeneficiary?.id ?: 0
-        val category = currentState.selectedCategory ?: DonationCategory.FOOD
+    fun saveDonation() {
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            val quantity = currentState.quantityString.toIntOrNull() ?: 1
+            val beneficiaryId = currentState.selectedBeneficiary?.id ?: 0
+            val category = currentState.selectedCategory ?: DonationCategory.FOOD
 
-        val donation = Donation(
-            imageUrl = currentState.imageUrl,
-            name = currentState.name,
-            category = category,
-            description = currentState.description,
-            quantity = quantity,
-            beneficiaryId = beneficiaryId,
-            createBy = 1,
-            status = currentState.selectedStatus,
-            dueDate = LocalDateTime.of(currentState.selectedDate, LocalTime.MIDNIGHT)
-        )
+            val donation = Donation(
+                id = 0,
+                imageUrl = currentState.imageUrl,
+                name = currentState.name,
+                category = category,
+                description = currentState.description,
+                quantity = quantity,
+                beneficiaryId = beneficiaryId,
+                createBy = 1,
+                status = currentState.selectedStatus,
+                dueDate = LocalDateTime.of(currentState.selectedDate, LocalTime.MIDNIGHT)
+            )
 
-        val success = donationRepository.create(donation)
-        if (success) {
-            _uiState.update { it.copy(isSaveSuccess = true) }
+            val success = donationRepository.create(donation)
+            if (success) {
+                _uiState.update { it.copy(isSaveSuccess = true) }
+            }
         }
-        return success
     }
 }

@@ -19,16 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.data.local.model.enums.DonationCategory
+import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.ui.component.DonationItemCard
 import com.example.givchurch.viewmodel.donation.MainDonationViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainDonationScreen(
     onAddDonationClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainDonationViewModel = viewModel()
+    viewModel: MainDonationViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -91,7 +91,7 @@ fun MainDonationScreen(
                         FilterChip(
                             selected = uiState.selectedCategory == category,
                             onClick = { viewModel.onCategorySelected(category) },
-                            label = { Text(category.value) }
+                            label = { Text(category.name) }
                         )
                     }
                 }
@@ -105,7 +105,7 @@ fun MainDonationScreen(
                 items(uiState.donationsList) { donation ->
                     DonationItemCard(
                         donation = donation,
-                        beneficiaryName = viewModel.getBeneficiaryName(donation.beneficiaryId)
+                        beneficiaryName = donation.beneficiaryId.toString()
                     )
                 }
             }

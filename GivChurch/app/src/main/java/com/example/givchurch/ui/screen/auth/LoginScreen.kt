@@ -29,15 +29,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.givchurch.viewmodel.auth.LoginViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onCreateAccountClick: () -> Unit,
     modifier: Modifier = Modifier,
-    vm: LoginViewModel = viewModel()
+    vm: LoginViewModel = koinViewModel()
 ) {
     val email by vm.email
     val password by vm.password
