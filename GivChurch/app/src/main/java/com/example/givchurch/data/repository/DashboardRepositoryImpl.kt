@@ -1,76 +1,61 @@
 package com.example.givchurch.data.repository
 
-import com.example.givchurch.data.mock.BeneficiaryMockData
-import com.example.givchurch.data.mock.DonationMockData
-import com.example.givchurch.data.local.model.enums.DonationStatus
+import com.example.givchurch.data.local.dao.DashboardDao
+import com.example.givchurch.domain.model.MonthlyDonation
+import com.example.givchurch.domain.repository.DashboardRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
-data class DashboardMetrics(
-    val totalDonations: Int,
-    val pendingDonations: Int,
-    val deliveredDonations: Int,
-    val totalBeneficiaries: Int
-)
+class DashboardRepositoryImpl(
+    private val dashboardDao: DashboardDao
+) : DashboardRepository {
 
-data class MonthlyDonation(
-    val monthName: String,
-    val totalAmount: Int
-)
-
-class DashboardRepository {
-
-    fun getTotalDonations(): Flow<Int> = flow {
-        val total = DonationMockData.donations.sumOf { it.quantity }
-        emit(total)
+    override fun getTotalDonations(): Flow<Int> {
+        return dashboardDao.getTotalDonations()
     }
 
-    fun getPendingDonations(): Flow<Int> = flow {
-        val pending = DonationMockData.donations
-            .filter { it.status == DonationStatus.PENDING }
-            .sumOf { it.quantity }
-        emit(pending)
+    override fun getPendingDonations(): Flow<Int> {
+        return dashboardDao.getPendingDonations()
     }
 
-    fun getDeliveredDonations(): Flow<Int> = flow {
-        val delivered = DonationMockData.donations
-            .filter { it.status == DonationStatus.DELIVERED }
-            .sumOf { it.quantity }
-        emit(delivered)
+    override fun getDeliveredDonations(): Flow<Int> {
+        return dashboardDao.getDeliveredDonations()
     }
 
-    fun getTotalBeneficiaries(): Flow<Int> = flow {
-        val totalBeneficiaries = BeneficiaryMockData.beneficiaries.size
-        emit(totalBeneficiaries)
+    override fun getTotalBeneficiaries(): Flow<Int> {
+        return dashboardDao.getTotalBeneficiaries()
     }
 
-    fun getMonthlyDonations(): Flow<List<MonthlyDonation>> = flow {
-        val donations = DonationMockData.donations
+    override fun getMonthlyDonations(): Flow<List<MonthlyDonation>> {
+        val now = LocalDateTime.now()
+        val currentYearStr = now.year.toString()
 
-        val currentYear = LocalDateTime.now().year
-        val pastFiveMonths = (4 downTo 0).map {
-            LocalDateTime.now().minusMonths(it.toLong()).month
+        val pastFiveMonths = (4 downTo 0).map { now.minusMonths(it.toLong()) }
+
+        return dashboardDao.getDonationsForYear(currentYearStr).map { donationList ->
+            val groupedByMonth = donationList.groupBy { it.monthStr }
+
+            pastFiveMonths.map { targetDateTime ->
+                val monthKey = String.format(Locale.US, "%02d", targetDateTime.monthValue)
+
+                val totalQuantity = groupedByMonth[monthKey]?.sumOf { it.quantity } ?: 0
+
+                val displayName = targetDateTime.month
+                    .getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.Builder().setLanguage("pt").setRegion("BR").build()
+                    )
+                    .replaceFirstChar { it.uppercase() }
+                    .take(3)
+
+                MonthlyDonation(
+                    monthName = displayName,
+                    totalAmount = totalQuantity
+                )
+            }
         }
-
-        val groupedData = donations
-            .filter { it.createdAt.year == currentYear && it.createdAt.month in pastFiveMonths }
-            .groupBy { it.createdAt.month }
-
-        val monthlyList = pastFiveMonths.map { month ->
-            val totalQuantity = groupedData[month]?.sumOf { it.quantity } ?: 0
-            val displayName = month.getDisplayName(TextStyle.SHORT, Locale("pt", "BR"))
-                .replaceFirstChar { it.uppercase() }
-                .take(3)
-
-            MonthlyDonation(
-                monthName = displayName,
-                totalAmount = totalQuantity
-            )
-        }
-
-        emit(monthlyList)
     }
 }

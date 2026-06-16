@@ -5,8 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.data.local.model.Donation
 import com.example.givchurch.domain.model.enums.DonationCategory
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DonationDao {
@@ -18,20 +19,20 @@ interface DonationDao {
             CASE WHEN :direction = 'DESC' THEN dueDate END DESC
         LIMIT :limit
     """)
-    fun getAll(direction: String, limit: Int): List<Donation>
+    fun getAll(direction: String, limit: Int): Flow<List<Donation>>
 
     @Query("SELECT * FROM donations WHERE id = :id")
-    fun getById(id: Int): Donation?
+    fun getById(id: Int): Flow<Donation?>
 
     @Query("SELECT * FROM donations WHERE createBy = :userId")
-    fun getByCreator(userId: Int): List<Donation>
+    fun getByCreator(userId: Int): Flow<List<Donation>>
 
     @Query("""
         SELECT * FROM donations 
         WHERE (:name = '' OR name LIKE '%' || :name || '%') 
         AND (:category IS NULL OR category = :category)
     """)
-    fun searchAndFilter(name: String, category: DonationCategory?): List<Donation>
+    fun searchAndFilter(name: String, category: DonationCategory?): Flow<List<Donation>>
 
     @Query("""
         SELECT EXISTS(
@@ -42,14 +43,14 @@ interface DonationDao {
             LIMIT 1
         )
     """)
-    fun checkExists(name: String, beneficiaryId: Int, createBy: Int): Boolean
+    suspend fun checkExists(name: String, beneficiaryId: Int, createBy: Int): Boolean
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insert(donation: Donation): Long
+    suspend fun insert(donation: Donation): Long
 
     @Update
-    fun update(donation: Donation): Int
+    suspend fun update(donation: Donation): Int
 
     @Query("DELETE FROM donations WHERE id = :id")
-    fun deleteById(id: Int): Int
+    suspend fun deleteById(id: Int): Int
 }

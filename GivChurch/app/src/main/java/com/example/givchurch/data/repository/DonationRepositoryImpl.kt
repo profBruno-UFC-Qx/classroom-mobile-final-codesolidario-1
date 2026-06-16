@@ -1,60 +1,65 @@
 package com.example.givchurch.data.repository
 
-import com.example.givchurch.data.local.dao.DashboardDao
-import com.example.givchurch.domain.model.MonthlyDonation
-import com.example.givchurch.domain.repository.DashboardRepository
+import com.example.givchurch.data.local.dao.DonationDao
+import com.example.givchurch.data.mapper.toDomain
+import com.example.givchurch.data.mapper.toEntity
+import com.example.givchurch.domain.model.Donation as DonationDomain
+import com.example.givchurch.domain.model.enums.DonationCategory
+import com.example.givchurch.domain.repository.DonationRepository
+import com.example.givchurch.domain.repository.enums.SortDirection
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.Locale
 
-class DashboardRepositoryImpl(
-    private val dashboardDao: DashboardDao
-) : DashboardRepository {
+class DonationRepositoryImpl(
+    private val donationDao: DonationDao
+) : DonationRepository {
 
-    override fun getTotalDonations(): Flow<Int> {
-        return dashboardDao.getTotalDonations()
-    }
-
-    override fun getPendingDonations(): Flow<Flow<Int>> = flow {
-        val roomFlow = dashboardDao.getPendingDonations()
-        emit(roomFlow)
-    }
-
-    override fun getDeliveredDonations(): Flow<Int> {
-        return dashboardDao.getDeliveredDonations()
-    }
-
-    override fun getTotalBeneficiaries(): Flow<Int> {
-        return dashboardDao.getTotalBeneficiaries()
-    }
-
-    override fun getMonthlyDonations(): Flow<List<MonthlyDonation>> {
-        val now = LocalDateTime.now()
-        val currentYearStr = now.year.toString()
-
-        val pastFiveMonths = (4 downTo 0).map { now.minusMonths(it.toLong()) }
-
-        return dashboardDao.getDonationsForYear(currentYearStr).map { donationList ->
-            val groupedByMonth = donationList.groupBy { it.monthStr }
-
-            pastFiveMonths.map { targetDateTime ->
-                val monthKey = String.format(Locale.US, "%02d", targetDateTime.monthValue)
-
-                val totalQuantity = groupedByMonth[monthKey]?.sumOf { it.quantity } ?: 0
-
-                val displayName = targetDateTime.month
-                    .getDisplayName(TextStyle.SHORT, Locale("pt", "BR"))
-                    .replaceFirstChar { it.uppercase() }
-                    .take(3)
-
-                MonthlyDonation(
-                    monthName = displayName,
-                    totalAmount = totalQuantity
-                )
-            }
+    override fun getAll(direction: SortDirection, limit: Int?): Flow<List<DonationDomain>> {
+        val sqlLimit = limit ?: -1
+        return donationDao.getAll(direction.name, sqlLimit).map { list ->
+            list.map { it.toDomain() }
         }
+    }
+
+    override fun getById(id: Int): Flow<DonationDomain?> {
+        return donationDao.getById(id).map { it?.toDomain() }
+    }
+
+    override fun getByCreator(userId: Int): Flow<List<DonationDomain>> {
+        return donationDao.getByCreator(userId).map { list ->
+            list.map { it.toDomain() }
+        }
+    }
+
+    override fun searchAndFilter(name: String, category: DonationCategory?): Flow<List<DonationDomain>> {
+        return donationDao.searchAndFilter(name.trim(), category).map { list ->
+            list.map { it.toDomain() }
+        }
+    }
+
+    override suspend fun create(donation: DonationDomain): Boolean {
+        val entity = donation.toEntity()
+        val donationExists = donationDao.checkExists(
+            name = entity.name,
+            beneficiaryId = entity.beneficiaryId,
+            createBy = entity.createBy
+        )
+
+        if (donationExists) {
+            return false
+        }
+
+        val rowId = donationDao.insert(entity)
+        return rowId > 0
+    }
+
+    override suspend fun update(updatedDonation: DonationDomain): Boolean {
+        val rowsAffected = donationDao.update(updatedDonation.toEntity())
+        return rowsAffected > 0
+    }
+
+    override suspend fun delete(id: Int): Boolean {
+        val rowsDeleted = donationDao.deleteById(id)
+        return rowsDeleted > 0
     }
 }

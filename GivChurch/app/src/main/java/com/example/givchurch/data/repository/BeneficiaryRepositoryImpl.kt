@@ -1,45 +1,57 @@
 package com.example.givchurch.data.repository
 
 import com.example.givchurch.data.local.dao.BeneficiaryDao
-import com.example.givchurch.data.local.model.Beneficiary
+import com.example.givchurch.data.mapper.toDomain
+import com.example.givchurch.data.mapper.toEntity
+import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.model.Beneficiary as BeneficiaryDomain
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class BeneficiaryRepositoryImpl(private val beneficiaryDao: BeneficiaryDao) {
+class BeneficiaryRepositoryImpl(
+    private val beneficiaryDao: BeneficiaryDao
+) : BeneficiaryRepository {
 
-    fun getAll(): Flow<List<Beneficiary>> {
-        return beneficiaryDao.getAll()
+    override fun getAll(): Flow<List<BeneficiaryDomain>> {
+        return beneficiaryDao.getAll().map { list ->
+            list.map { it.toDomain() }
+        }
     }
 
-    suspend fun getById(id: Int): Beneficiary? {
-        return beneficiaryDao.getById(id)
+    override suspend fun getById(id: Int): BeneficiaryDomain? {
+        return beneficiaryDao.getById(id)?.toDomain()
     }
 
-    fun getByName(name: String): Flow<List<Beneficiary>> {
-        if (name.isBlank()) return beneficiaryDao.getAll()
-        return beneficiaryDao.getByName(name)
+    override fun getByName(name: String): Flow<List<BeneficiaryDomain>> {
+        val flowResult = if (name.isBlank()) beneficiaryDao.getAll() else beneficiaryDao.getByName(name)
+        return flowResult.map { list ->
+            list.map { it.toDomain() }
+        }
     }
 
-    fun getByCreator(userId: Int): Flow<List<Beneficiary>> {
-        return beneficiaryDao.getByCreator(userId)
+    override fun getByCreator(userId: Int): Flow<List<BeneficiaryDomain>> {
+        return beneficiaryDao.getByCreator(userId).map { list ->
+            list.map { it.toDomain() }
+        }
     }
 
-    suspend fun create(beneficiary: Beneficiary): Boolean {
+    override suspend fun create(beneficiary: BeneficiaryDomain): Boolean {
         val organizationExists = beneficiaryDao.checkExists(beneficiary.name, beneficiary.createBy)
 
         if (organizationExists) {
             return false
         }
 
-        val rowId = beneficiaryDao.insert(beneficiary)
+        val rowId = beneficiaryDao.insert(beneficiary.toEntity())
         return rowId > 0
     }
 
-    suspend fun update(updatedBeneficiary: Beneficiary): Boolean {
-        val rowsAffected = beneficiaryDao.update(updatedBeneficiary)
+    override suspend fun update(updatedBeneficiary: BeneficiaryDomain): Boolean {
+        val rowsAffected = beneficiaryDao.update(updatedBeneficiary.toEntity())
         return rowsAffected > 0
     }
 
-    suspend fun delete(id: Int): Boolean {
+    override suspend fun delete(id: Int): Boolean {
         val rowsDeleted = beneficiaryDao.deleteById(id)
         return rowsDeleted > 0
     }
