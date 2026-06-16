@@ -12,14 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class AddBeneficiaryUiState(
-    val name: String = "",
-    val phoneNumber: String = "",
-    val address: String = "",
-    val observations: String = "",
-    val errorMessage: String? = null
-)
-
 class AddBeneficiaryViewModel(
     private val repository: BeneficiaryRepository
 ) : ViewModel() {

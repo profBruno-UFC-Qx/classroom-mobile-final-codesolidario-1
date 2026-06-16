@@ -51,12 +51,3 @@ class MainHomeViewModel(
         }
     }
 }
-
-sealed interface DashboardUiState {
-    object Loading : DashboardUiState
-    data class Success(
-        val metrics: DashboardMetrics,
-        val monthlyDonations: List<MonthlyDonation>,
-        val recentDonations: List<Donation>
-    ) : DashboardUiState
-}

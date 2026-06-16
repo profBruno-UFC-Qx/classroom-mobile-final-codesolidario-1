@@ -11,10 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class HistoryUiState(
-    val isLoading: Boolean = false,
-    val historyItems: List<Donation> = emptyList()
-)
 
 class MainHistoryViewModel(
     private val repository: DonationRepository,

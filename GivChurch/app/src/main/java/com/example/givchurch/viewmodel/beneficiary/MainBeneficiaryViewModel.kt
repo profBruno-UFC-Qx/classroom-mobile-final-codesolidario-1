@@ -12,11 +12,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-data class BeneficiaryUiState(
-    val searchQuery: String = "",
-    val beneficiariesList: List<Beneficiary> = emptyList()
-)
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainBeneficiaryViewModel(
     private val repository: BeneficiaryRepository

@@ -16,11 +16,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class DonationUiState(
-    val searchQuery: String = "",
-    val selectedCategory: DonationCategory? = null,
-    val donationsList: List<Donation> = emptyList()
-)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainDonationViewModel(

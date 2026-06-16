@@ -6,31 +6,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+data class ProfileUiState(
+    val isLightTheme: Boolean = false,
+    val isNotificationsEnabled: Boolean = true
+)
+
 class MainProfileViewModel : ViewModel() {
 
-    private val _isLightTheme = MutableStateFlow(false)
-    val isLightTheme: StateFlow<Boolean> = _isLightTheme.asStateFlow()
-
-    private val _isNotificationsEnabled = MutableStateFlow(true)
-    val isNotificationsEnabled: StateFlow<Boolean> = _isNotificationsEnabled.asStateFlow()
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     fun toggleTheme(enabled: Boolean) {
-        _isLightTheme.update { enabled }
+        _uiState.update { it.copy(isLightTheme = enabled) }
     }
 
     fun toggleNotifications(enabled: Boolean) {
-        _isNotificationsEnabled.update { enabled }
+        _uiState.update { it.copy(isNotificationsEnabled = enabled) }
     }
 
     fun onHelpClick() {
-        // TODO: Lógica para abrir ajuda
+        // TODO
     }
 
     fun onPrivacyPolicyClick() {
-        // TODO: Lógica para abrir política de privacidade
+        // TODO
     }
 
     fun onLogoutClick() {
-        // TODO: Lógica para deslogar o usuário
+        // TODO
     }
 }

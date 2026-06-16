@@ -17,23 +17,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-data class AddDonationUiState(
-    val imageUrl: String? = null,
-    val name: String = "",
-    val description: String = "",
-    val quantityString: String = "",
-    val selectedCategory: DonationCategory? = null,
-    val isCategoryExpanded: Boolean = false,
-    val beneficiaries: List<Beneficiary> = emptyList(),
-    val selectedBeneficiary: Beneficiary? = null,
-    val isBeneficiaryExpanded: Boolean = false,
-    val selectedStatus: DonationStatus = DonationStatus.PENDING,
-    val isStatusExpanded: Boolean = false,
-    val selectedDate: LocalDate = LocalDate.now().plusDays(1),
-    val isDatePickerExpanded: Boolean = false,
-    val isSaveSuccess: Boolean = false
-)
-
 class AddDonationViewModel(
     private val donationRepository: DonationRepository,
     private val beneficiaryRepository: BeneficiaryRepository
