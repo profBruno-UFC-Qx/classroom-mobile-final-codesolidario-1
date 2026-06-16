@@ -52,8 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.givchurch.data.mock.BeneficiaryMockData
-import com.example.givchurch.data.model.Donation
-import com.example.givchurch.data.model.enums.DonationStatus
+import com.example.givchurch.data.local.model.Donation
+import com.example.givchurch.data.local.model.enums.DonationStatus
 import com.example.givchurch.data.repository.DashboardMetrics
 import com.example.givchurch.data.repository.MonthlyDonation
 import com.example.givchurch.viewmodel.home.DashboardUiState

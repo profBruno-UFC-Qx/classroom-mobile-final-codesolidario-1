@@ -1,8 +1,8 @@
 package com.example.givchurch.data.mock
 
-import com.example.givchurch.data.model.Donation
-import com.example.givchurch.data.model.enums.DonationCategory
-import com.example.givchurch.data.model.enums.DonationStatus
+import com.example.givchurch.data.local.model.Donation
+import com.example.givchurch.data.local.model.enums.DonationCategory
+import com.example.givchurch.data.local.model.enums.DonationStatus
 import java.time.LocalDateTime
 
 object DonationMockData {

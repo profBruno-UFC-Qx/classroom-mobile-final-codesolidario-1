@@ -1,6 +1,6 @@
 package com.example.givchurch.data.mock
 
-import com.example.givchurch.data.model.User
+import com.example.givchurch.data.remote.firebase.model.User
 
 object UserMockData {
 

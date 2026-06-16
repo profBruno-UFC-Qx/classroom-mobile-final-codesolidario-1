@@ -1,7 +1,7 @@
 package com.example.givchurch.viewmodel.beneficiary
 
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.model.Beneficiary
+import com.example.givchurch.data.local.model.Beneficiary
 import com.example.givchurch.data.repository.BeneficiaryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

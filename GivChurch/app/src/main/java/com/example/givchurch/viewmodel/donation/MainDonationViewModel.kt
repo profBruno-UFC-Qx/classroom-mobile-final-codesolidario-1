@@ -1,8 +1,8 @@
 package com.example.givchurch.viewmodel.donation
 
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.model.Donation
-import com.example.givchurch.data.model.enums.DonationCategory
+import com.example.givchurch.data.local.model.Donation
+import com.example.givchurch.data.local.model.enums.DonationCategory
 import com.example.givchurch.data.repository.DonationRepository
 import com.example.givchurch.data.repository.BeneficiaryRepository
 import kotlinx.coroutines.flow.MutableStateFlow

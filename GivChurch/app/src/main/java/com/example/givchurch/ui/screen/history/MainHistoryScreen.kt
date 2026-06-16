@@ -45,8 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.data.model.Donation
-import com.example.givchurch.data.model.enums.DonationStatus
+import com.example.givchurch.data.local.model.Donation
+import com.example.givchurch.data.local.model.enums.DonationStatus
 import com.example.givchurch.viewmodel.history.HistoryViewModel
 import java.time.format.DateTimeFormatter
 import java.util.Locale

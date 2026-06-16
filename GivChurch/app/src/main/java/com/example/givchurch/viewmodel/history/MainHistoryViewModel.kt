@@ -2,7 +2,7 @@ package com.example.givchurch.viewmodel.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.givchurch.data.model.Donation
+import com.example.givchurch.data.local.model.Donation
 import com.example.givchurch.data.repository.DonationRepository
 import com.example.givchurch.data.repository.BeneficiaryRepository // 👈 Importado aqui
 import com.example.givchurch.data.repository.enums.SortDirection

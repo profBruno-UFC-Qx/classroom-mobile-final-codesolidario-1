@@ -1,6 +1,6 @@
 package com.example.givchurch.data.mock
 
-import com.example.givchurch.data.model.Beneficiary
+import com.example.givchurch.data.local.model.Beneficiary
 
 object BeneficiaryMockData {
 

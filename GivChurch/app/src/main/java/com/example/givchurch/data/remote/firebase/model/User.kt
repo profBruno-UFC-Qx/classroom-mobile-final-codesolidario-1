@@ -1,4 +1,4 @@
-package com.example.givchurch.data.model
+package com.example.givchurch.data.remote.firebase.model
 
 data class User(
     val id: Int = 0,

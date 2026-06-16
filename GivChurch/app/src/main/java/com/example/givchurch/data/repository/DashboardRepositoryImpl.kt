@@ -2,9 +2,10 @@ package com.example.givchurch.data.repository
 
 import com.example.givchurch.data.mock.BeneficiaryMockData
 import com.example.givchurch.data.mock.DonationMockData
-import com.example.givchurch.data.model.enums.DonationStatus
+import com.example.givchurch.data.local.model.enums.DonationStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -49,9 +50,9 @@ class DashboardRepository {
     fun getMonthlyDonations(): Flow<List<MonthlyDonation>> = flow {
         val donations = DonationMockData.donations
 
-        val currentYear = java.time.LocalDateTime.now().year
+        val currentYear = LocalDateTime.now().year
         val pastFiveMonths = (4 downTo 0).map {
-            java.time.LocalDateTime.now().minusMonths(it.toLong()).month
+            LocalDateTime.now().minusMonths(it.toLong()).month
         }
 
         val groupedData = donations

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.givchurch.data.repository.DashboardMetrics
 import com.example.givchurch.data.repository.DashboardRepository
 import com.example.givchurch.data.repository.MonthlyDonation
-import com.example.givchurch.data.model.Donation
+import com.example.givchurch.data.local.model.Donation
 import com.example.givchurch.data.repository.DonationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

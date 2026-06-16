@@ -1,4 +1,4 @@
-package com.example.givchurch.data.model.enums
+package com.example.givchurch.data.local.model.enums
 
 enum class DonationCategory(val value: String) {
     FOOD("Alimentos"),

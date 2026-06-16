@@ -52,9 +52,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.givchurch.data.model.enums.DonationCategory
-import com.example.givchurch.data.model.enums.DonationStatus
-import com.example.givchurch.ui.screen.beneficiary.AddBeneficiaryScreen
+import com.example.givchurch.data.local.model.Beneficiary
+import com.example.givchurch.data.local.model.enums.DonationCategory
+import com.example.givchurch.data.local.model.enums.DonationStatus
 import com.example.givchurch.viewmodel.donation.AddDonationUiState
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
 import java.time.Instant
@@ -105,7 +105,7 @@ fun AddDonationContent(
     onQuantityChange: (String) -> Unit,
     onCategorySelect: (DonationCategory) -> Unit,
     onCategoryExpandedChange: (Boolean) -> Unit,
-    onBeneficiarySelect: (com.example.givchurch.data.model.Beneficiary) -> Unit,
+    onBeneficiarySelect: (Beneficiary) -> Unit,
     onBeneficiaryExpandedChange: (Boolean) -> Unit,
     onStatusSelect: (DonationStatus) -> Unit,
     onStatusExpandedChange: (Boolean) -> Unit,

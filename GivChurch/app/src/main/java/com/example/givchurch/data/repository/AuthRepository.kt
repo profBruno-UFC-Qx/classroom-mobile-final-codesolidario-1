@@ -1,7 +1,7 @@
 package com.example.givchurch.data.repository
 
 import com.example.givchurch.data.mock.UserMockData
-import com.example.givchurch.data.model.User
+import com.example.givchurch.data.remote.firebase.model.User
 
 class AuthRepository {
     fun register(user: User): Boolean {

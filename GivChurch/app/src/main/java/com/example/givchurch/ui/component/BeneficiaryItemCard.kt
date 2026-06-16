@@ -24,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.givchurch.data.model.Beneficiary
+import com.example.givchurch.data.local.model.Beneficiary
 
 @Composable
 fun BeneficiaryItemCard(

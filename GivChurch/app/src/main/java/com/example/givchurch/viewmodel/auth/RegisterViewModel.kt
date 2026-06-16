@@ -2,6 +2,7 @@ package com.example.givchurch.viewmodel.auth
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.givchurch.data.remote.firebase.model.User
 import com.example.givchurch.data.repository.AuthRepository
 
 class RegisterViewModel : ViewModel() {
@@ -42,7 +43,7 @@ class RegisterViewModel : ViewModel() {
     fun register() {
 
         val success = repository.register(
-            _root_ide_package_.com.example.givchurch.data.model.User(
+            User(
                 0,
                 firstname.value,
                 lastname.value,

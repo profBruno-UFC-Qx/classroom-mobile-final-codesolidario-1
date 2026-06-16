@@ -2,7 +2,7 @@ package com.example.givchurch.viewmodel.auth
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.model.User
+import com.example.givchurch.data.remote.firebase.model.User
 import com.example.givchurch.data.repository.AuthRepository
 
 class LoginViewModel : ViewModel() {
