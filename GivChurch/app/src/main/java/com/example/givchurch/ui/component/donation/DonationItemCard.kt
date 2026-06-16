@@ -1,4 +1,4 @@
-package com.example.givchurch.ui.component
+package com.example.givchurch.ui.component.donation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

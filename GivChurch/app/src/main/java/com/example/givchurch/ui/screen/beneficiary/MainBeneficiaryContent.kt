@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.givchurch.ui.component.BeneficiaryItemCard
+import com.example.givchurch.ui.component.beneficiary.BeneficiaryItemCard
 import com.example.givchurch.viewmodel.beneficiary.BeneficiaryUiState
 
 @Composable

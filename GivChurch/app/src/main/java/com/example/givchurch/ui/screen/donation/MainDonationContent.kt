@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.givchurch.domain.model.Donation
 import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
-import com.example.givchurch.ui.component.DonationItemCard
+import com.example.givchurch.ui.component.donation.DonationItemCard
 import com.example.givchurch.viewmodel.donation.DonationUiState
 
 @Composable
