@@ -2,6 +2,7 @@ package com.example.givchurch.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.example.givchurch.data.local.dao.dto.DonationMonthGroup
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,8 +27,3 @@ interface DashboardDao {
     """)
     fun getDonationsForYear(currentYear: String): Flow<List<DonationMonthGroup>>
 }
-
-data class DonationMonthGroup(
-    val monthStr: String,
-    val quantity: Int
-)
