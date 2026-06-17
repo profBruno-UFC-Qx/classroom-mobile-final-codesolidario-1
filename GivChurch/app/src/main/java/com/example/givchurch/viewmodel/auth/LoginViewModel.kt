@@ -1,39 +1,71 @@
 package com.example.givchurch.viewmodel.auth
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.remote.firebase.model.User
-import com.example.givchurch.data.repository.AuthRepositoryImpl
+import androidx.lifecycle.viewModelScope
+import com.example.givchurch.domain.model.User
+import com.example.givchurch.domain.repository.AuthRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val repository: AuthRepository
+) : ViewModel() {
 
-    private val repository = AuthRepositoryImpl()
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    var email = mutableStateOf("")
-        private set
+    private val _loginSuccess = MutableSharedFlow<Boolean>()
+    val loginSuccess = _loginSuccess.asSharedFlow()
 
-    var password = mutableStateOf("")
-        private set
-
-    var message = mutableStateOf("")
-        private set
-
-    fun onEmailChange(value: String) {
-        email.value = value
+    fun onEmailChange(newValue: String) {
+        _uiState.update { it.copy(email = newValue) }
     }
 
-    fun onPasswordChange(value: String) {
-        password.value = value
+    fun onPasswordChange(newValue: String) {
+        _uiState.update { it.copy(password = newValue) }
     }
 
-    fun login(): User? {
-        val user = repository.login(email.value, password.value)
+    fun login() {
+        val currentState = _uiState.value
 
-        message.value = if (user != null) {
-            "Bem-vindo ${user.firstname}"
-        } else {
-            "Credenciais inválidas."
+        if (currentState.email.isBlank() || currentState.password.isBlank()) {
+            _uiState.update { it.copy(message = "Por favor, preencha todos os campos obrigatórios.") }
+            return
         }
-        return user
+
+        _uiState.update { it.copy(isLoading = true, message = "") }
+
+        viewModelScope.launch {
+            val userDomain = User(
+                id = "",
+                firstname = "",
+                lastname = "",
+                email = currentState.email,
+                password = currentState.password
+            )
+
+            val result = repository.login(userDomain)
+
+            result.fold(
+                onSuccess = { successMessage ->
+                    _uiState.update { it.copy(message = successMessage, isSuccess = true, isLoading = false) }
+                    _loginSuccess.emit(true)
+                },
+                onFailure = { exception ->
+                    _uiState.update {
+                        it.copy(
+                            message = exception.localizedMessage ?: "Credenciais inválidas.",
+                            isSuccess = false,
+                            isLoading = false
+                        )
+                    }
+                }
+            )
+        }
     }
 }

@@ -1,61 +1,80 @@
 package com.example.givchurch.viewmodel.auth
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.givchurch.data.remote.firebase.model.User
-import com.example.givchurch.data.repository.AuthRepositoryImpl
+import androidx.lifecycle.viewModelScope
+import com.example.givchurch.domain.model.User
+import com.example.givchurch.domain.repository.AuthRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(
+    private val repository: AuthRepository
+) : ViewModel() {
 
-    private val repository = AuthRepositoryImpl()
+    private val _uiState = MutableStateFlow(RegisterUiState())
+    val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
-    var firstname = mutableStateOf("")
-        private set
+    private val _registerSuccess = MutableSharedFlow<Boolean>()
+    val registerSuccess = _registerSuccess.asSharedFlow()
 
-    var lastname = mutableStateOf("")
-        private set
-
-    var email = _root_ide_package_.androidx.compose.runtime.mutableStateOf("")
-        private set
-
-    var password = _root_ide_package_.androidx.compose.runtime.mutableStateOf("")
-        private set
-
-    var message = _root_ide_package_.androidx.compose.runtime.mutableStateOf("")
-        private set
-
-    fun onFirstnameChange(value: String) {
-        firstname.value = value
+    fun onFirstnameChange(newValue: String) {
+        _uiState.update { it.copy(firstname = newValue) }
     }
 
-    fun onLastnameChange(value: String) {
-        lastname.value = value
+    fun onLastnameChange(newValue: String) {
+        _uiState.update { it.copy(lastname = newValue) }
     }
 
-    fun onEmailChange(value: String) {
-        email.value = value
+    fun onEmailChange(newValue: String) {
+        _uiState.update { it.copy(email = newValue) }
     }
 
-    fun onPasswordChange(value: String) {
-        password.value = value
+    fun onPasswordChange(newValue: String) {
+        _uiState.update { it.copy(password = newValue) }
     }
 
     fun register() {
+        val currentState = _uiState.value
 
-        val success = repository.register(
-            User(
-                0,
-                firstname.value,
-                lastname.value,
-                email.value,
-                password.value
+        if (currentState.firstname.isBlank() || currentState.lastname.isBlank() ||
+            currentState.email.isBlank() || currentState.password.isBlank()) {
+            _uiState.update { it.copy(message = "Por favor, preencha todos os campos obrigatórios.") }
+            return
+        }
+
+        _uiState.update { it.copy(isLoading = true, message = "") }
+
+        viewModelScope.launch {
+            val userDomain = User(
+                id = "",
+                firstname = currentState.firstname,
+                lastname = currentState.lastname,
+                email = currentState.email,
+                password = currentState.password
             )
-        )
 
-        message.value =
-            if (success)
-                "Usuário registrado!"
-            else
-                "E-mail já cadastrado."
+            val result = repository.register(userDomain)
+
+            result.fold(
+                onSuccess = { successMessage ->
+                    _uiState.update { it.copy(message = successMessage, isSuccess = true, isLoading = false) }
+                    _registerSuccess.emit(true)
+                },
+                onFailure = { exception ->
+                    _uiState.update {
+                        it.copy(
+                            message = exception.localizedMessage ?: "Erro ao fazer o cadastro.",
+                            isSuccess = false,
+                            isLoading = false
+                        )
+                    }
+                }
+            )
+        }
     }
 }
