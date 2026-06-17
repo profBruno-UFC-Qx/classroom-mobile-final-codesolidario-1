@@ -3,11 +3,11 @@ package com.example.givchurch.viewmodel.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.givchurch.data.remote.firebase.model.User
-import com.example.givchurch.data.repository.AuthRepository
+import com.example.givchurch.data.repository.AuthRepositoryImpl
 
 class LoginViewModel : ViewModel() {
 
-    private val repository = AuthRepository()
+    private val repository = AuthRepositoryImpl()
 
     var email = mutableStateOf("")
         private set
