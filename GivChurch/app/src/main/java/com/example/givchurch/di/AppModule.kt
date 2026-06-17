@@ -53,7 +53,7 @@ val viewModelModule = module {
     viewModel { MainDonationViewModel(get(), get()) }
     viewModel { MainHistoryViewModel(get(), get()) }
     viewModel { MainHomeViewModel(get(), get()) }
-    viewModel { MainProfileViewModel() }
+    viewModel { MainProfileViewModel(get ()) }
 }
 
 val appModules = listOf(databaseModule, repositoryModule, viewModelModule)

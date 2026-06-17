@@ -16,6 +16,7 @@ import com.example.givchurch.ui.screen.main.NavigationItem
 
 @Composable
 fun AuthenticatedNavGraph(
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val internalBackStack = rememberSaveable { mutableStateListOf<Screen>(Screen.MainBeneficiaryScreen) }
@@ -35,7 +36,8 @@ fun AuthenticatedNavGraph(
                     },
                     onAddDonationClick = {
                         internalBackStack.add(Screen.AddDonationScreen)
-                    }
+                    },
+                    onLogoutSuccess = onLogout
                 )
             }
 

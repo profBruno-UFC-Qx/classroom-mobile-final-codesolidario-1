@@ -41,6 +41,7 @@ fun MainAppContainer(
     onTabSelected: (NavigationItem) -> Unit,
     onAddBeneficiaryClick: () -> Unit,
     onAddDonationClick: () -> Unit,
+    onLogoutSuccess: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -99,7 +100,10 @@ fun MainAppContainer(
                     MainHistoryScreen(modifier = Modifier.fillMaxSize())
                 }
                 NavigationItem.PROFILE -> {
-                    MainProfileScreen(modifier = Modifier.fillMaxSize())
+                    MainProfileScreen(
+                        onLogoutSuccess = onLogoutSuccess,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
@@ -115,6 +119,7 @@ fun MainBeneficiaryScreenPreview() {
             onTabSelected = {},
             onAddBeneficiaryClick = {},
             onAddDonationClick = {},
+            onLogoutSuccess = {}
         )
     }
 }

@@ -8,6 +8,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.givchurch.ui.screen.auth.LoginScreen
 import com.example.givchurch.ui.screen.auth.RegisterScreen
+import com.example.givchurch.viewmodel.auth.LoginViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SetupNavigation(
@@ -42,7 +44,16 @@ fun SetupNavigation(
             }
 
             entry<Screen.MainBeneficiaryScreen> {
-                AuthenticatedNavGraph(modifier = Modifier)
+                val loginVm: LoginViewModel = koinViewModel()
+
+                AuthenticatedNavGraph(
+                    onLogout = {
+                        loginVm.clearFields()
+                        backStack.clear()
+                        backStack.add(Screen.LoginScreen)
+                    },
+                    modifier = Modifier
+                )
             }
         },
         modifier = modifier

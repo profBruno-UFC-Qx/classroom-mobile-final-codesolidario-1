@@ -30,6 +30,10 @@ class LoginViewModel(
         _uiState.update { it.copy(password = newValue) }
     }
 
+    fun clearFields() {
+        _uiState.update { LoginUiState() }
+    }
+
     fun login() {
         val currentState = _uiState.value
 
