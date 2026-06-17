@@ -1,5 +1,6 @@
 package com.example.givchurch.ui.screen.auth
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.RegisterUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,6 +70,7 @@ fun RegisterScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.Center
         ) {
@@ -83,6 +85,7 @@ fun RegisterScreenContent(
                     text = "Preencha os dados para começar a ajudar",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
 
@@ -169,7 +172,7 @@ fun RegisterScreenContent(
                     Text(
                         text = uiState.message,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (uiState.isSuccess) Color.Green else MaterialTheme.colorScheme.error
+                        color = if (uiState.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -180,7 +183,7 @@ fun RegisterScreenContent(
 @Preview(showBackground = true, showSystemUi = true, name = "Cadastro - Padrão")
 @Composable
 fun RegisterScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         RegisterScreenContent(
             uiState = RegisterUiState(firstname = "Maria", lastname = "Oliveira", email = "maria@email.com"),
             onFirstnameChange = {},

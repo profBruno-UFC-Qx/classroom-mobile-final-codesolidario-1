@@ -2,8 +2,11 @@ package com.example.givchurch.ui.component.dashboard
 
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,12 +16,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.domain.model.MonthlyDonation
+import com.example.givchurch.ui.theme.GivChurchTheme
 
 @Composable
 fun DonationsBarChart(data: List<MonthlyDonation>) {
-    val barColor = MaterialTheme.colorScheme.primary
+    val barColor = MaterialTheme.colorScheme.tertiary
     val textColor = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
     val maxVal = (data.maxOfOrNull { it.totalAmount } ?: 0).coerceAtLeast(80)
     Canvas(
@@ -83,6 +88,27 @@ fun DonationsBarChart(data: List<MonthlyDonation>) {
                     }
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Gráfico - Tema Claro")
+@Composable
+fun DonationsBarChartLightPreview() {
+    GivChurchTheme(darkTheme = false) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp)
+        ) {
+            DonationsBarChart(
+                data = listOf(
+                    MonthlyDonation("Jan", 30),
+                    MonthlyDonation("Fev", 55),
+                    MonthlyDonation("Mar", 85)
+                )
+            )
         }
     }
 }

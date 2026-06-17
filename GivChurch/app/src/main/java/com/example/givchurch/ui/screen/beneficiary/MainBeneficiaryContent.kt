@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.component.beneficiary.BeneficiaryItemCard
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.beneficiary.BeneficiaryUiState
 
 @Composable
@@ -37,21 +38,25 @@ fun MainBeneficiaryContent(
     onAddBeneficiaryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(MaterialTheme.colorScheme.primary)
                     .statusBarsPadding()
-                    .padding(16.dp)
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
             ) {
                 Text(
                     text = "Beneficiários",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
 
                 OutlinedTextField(
@@ -65,23 +70,29 @@ fun MainBeneficiaryContent(
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(28.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                        focusedBorderColor = MaterialTheme.colorScheme.surface,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 )
             }
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(
                     start = 16.dp,
                     end = 16.dp,
-                    top = 16.dp,
+                    top = 20.dp,
                     bottom = 88.dp
                 )
             ) {
@@ -93,7 +104,8 @@ fun MainBeneficiaryContent(
 
         FloatingActionButton(
             onClick = onAddBeneficiaryClick,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -109,7 +121,7 @@ fun MainBeneficiaryContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainBeneficiaryScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         val domainMockList = com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.map { entity ->
             com.example.givchurch.domain.model.Beneficiary(
                 id = entity.id,

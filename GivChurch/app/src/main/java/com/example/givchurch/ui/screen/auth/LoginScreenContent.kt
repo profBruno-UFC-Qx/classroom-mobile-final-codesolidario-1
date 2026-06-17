@@ -1,6 +1,7 @@
 package com.example.givchurch.ui.screen.auth
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.LoginUiState
 
 @Composable
@@ -43,6 +45,7 @@ fun LoginScreenContent(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState()),
         contentAlignment = Alignment.Center
     ) {
@@ -57,12 +60,14 @@ fun LoginScreenContent(
                 text = "Bem-vindo de volta",
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
                 text = "Acesse sua conta para continuar",
                 fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -121,10 +126,10 @@ fun LoginScreenContent(
                 enabled = !uiState.isLoading,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color.Black
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary
                 ),
-                border = BorderStroke(2.dp, Color.Black)
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             ) {
                 Text("Criar conta")
             }
@@ -133,7 +138,7 @@ fun LoginScreenContent(
                 Spacer(Modifier.height(16.dp))
                 Text(
                     text = uiState.message,
-                    color = if (uiState.isSuccess) Color.Green else MaterialTheme.colorScheme.error,
+                    color = if (uiState.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -144,7 +149,7 @@ fun LoginScreenContent(
 @Preview(showBackground = true, showSystemUi = true, name = "Login - Padrão")
 @Composable
 fun LoginScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         LoginScreenContent(
             uiState = LoginUiState(email = "usuario@email.com", password = "123"),
             onEmailChange = {},

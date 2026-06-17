@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.givchurch.domain.model.DashboardMetrics
 import com.example.givchurch.domain.model.MonthlyDonation
 import com.example.givchurch.ui.component.dashboard.DashboardContent
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.home.DashboardUiState
 
 @Composable
@@ -44,7 +45,7 @@ fun MainHomeContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
             Row(
@@ -55,19 +56,19 @@ fun MainHomeContent(
                 Column {
                     Text(
                         text = "Olá,",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp
                     )
                     Text(
                         text = "Voluntário",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Continue fazendo a diferença na comunidade",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                         fontSize = 14.sp
                     )
                 }
@@ -75,13 +76,13 @@ fun MainHomeContent(
                     modifier = Modifier
                         .size(56.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)),
+                        .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -93,7 +94,9 @@ fun MainHomeContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
                 }
             }
             is DashboardUiState.Success -> {
@@ -107,11 +110,10 @@ fun MainHomeContent(
     }
 }
 
-
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, name = "Dashboard Principal - Oficial")
 @Composable
 fun MainHomeScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         MainHomeContent(
             uiState = DashboardUiState.Success(
                 metrics = DashboardMetrics(
@@ -130,4 +132,3 @@ fun MainHomeScreenPreview() {
         )
     }
 }
-

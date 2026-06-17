@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.givchurch.ui.component.profile.CardClickableOption
 import com.example.givchurch.ui.component.profile.CardOptionWithSwitch
 import com.example.givchurch.ui.component.profile.SectionTitle
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.profile.ProfileUiState
 
 @Composable
@@ -54,13 +55,13 @@ fun MainProfileContent(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
             Column {
                 Text(
                     text = "Perfil",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -72,13 +73,13 @@ fun MainProfileContent(
                         modifier = Modifier
                             .size(64.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)),
+                            .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Foto de perfil",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(32.dp)
                         )
                     }
@@ -86,13 +87,13 @@ fun MainProfileContent(
                     Column {
                         Text(
                             text = "Voluntário da Igreja",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "voluntario@igreja.com",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             fontSize = 14.sp
                         )
                     }
@@ -148,10 +149,10 @@ fun MainProfileContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, name = "Perfil Principal - Oficial")
 @Composable
 fun MainProfileScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         MainProfileContent(
             uiState = ProfileUiState(),
             onThemeToggle = {},

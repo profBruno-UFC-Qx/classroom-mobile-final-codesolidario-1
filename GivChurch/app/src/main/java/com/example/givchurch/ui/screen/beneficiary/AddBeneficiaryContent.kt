@@ -1,5 +1,6 @@
 package com.example.givchurch.ui.screen.beneficiary
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,6 +69,7 @@ fun AddBeneficiaryContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.Center
         ) {
@@ -81,7 +84,7 @@ fun AddBeneficiaryContent(
                     text = "Cadastrar Beneficiário",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
 
@@ -154,8 +157,8 @@ fun AddBeneficiaryContent(
                     onClick = onSaveClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(14.dp)
                 ) {
                     Text(
                         text = "Salvar Cadastro",
@@ -170,7 +173,7 @@ fun AddBeneficiaryContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AddBeneficiaryScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         val firstMock = com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.first()
 
         AddBeneficiaryContent(
@@ -189,4 +192,3 @@ fun AddBeneficiaryScreenPreview() {
         )
     }
 }
-

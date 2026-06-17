@@ -21,6 +21,7 @@ import com.example.givchurch.domain.model.Donation
 import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
 import com.example.givchurch.ui.component.donation.DonationItemCard
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.donation.DonationUiState
 
 @Composable
@@ -31,22 +32,26 @@ fun MainDonationContent(
     onAddDonationClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(MaterialTheme.colorScheme.primary)
                     .statusBarsPadding()
-                    .padding(16.dp)
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
             ) {
                 Text(
                     text = "Doações",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
 
                 OutlinedTextField(
@@ -55,10 +60,18 @@ fun MainDonationContent(
                     placeholder = { Text("Buscar doações...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(28.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = MaterialTheme.colorScheme.surface,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 )
             }
@@ -66,12 +79,13 @@ fun MainDonationContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
                     contentDescription = "Filtro",
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(end = 8.dp)
                 )
 
@@ -82,7 +96,11 @@ fun MainDonationContent(
                         FilterChip(
                             selected = uiState.selectedCategory == null,
                             onClick = { onCategorySelected(null) },
-                            label = { Text("Todos") }
+                            label = { Text("Todos") },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.tertiary,
+                                selectedLabelColor = MaterialTheme.colorScheme.surface
+                            )
                         )
                     }
 
@@ -90,7 +108,11 @@ fun MainDonationContent(
                         FilterChip(
                             selected = uiState.selectedCategory == category,
                             onClick = { onCategorySelected(category) },
-                            label = { Text(category.name) }
+                            label = { Text(category.name) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.tertiary,
+                                selectedLabelColor = MaterialTheme.colorScheme.surface
+                            )
                         )
                     }
                 }
@@ -99,7 +121,7 @@ fun MainDonationContent(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(uiState.donationsList) { donation ->
                     DonationItemCard(
@@ -112,6 +134,8 @@ fun MainDonationContent(
 
         FloatingActionButton(
             onClick = onAddDonationClick,
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -124,7 +148,7 @@ fun MainDonationContent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainDonationScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         val domainMockItems = com.example.givchurch.data.mock.DonationMockData.donations.map { entity ->
             Donation(
                 id = entity.id,

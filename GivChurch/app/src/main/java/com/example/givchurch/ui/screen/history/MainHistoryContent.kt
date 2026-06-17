@@ -32,6 +32,7 @@ import com.example.givchurch.domain.model.Donation
 import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
 import com.example.givchurch.ui.component.history.TimelineRow
+import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.history.HistoryUiState
 
 @Composable
@@ -46,21 +47,21 @@ fun MainHistoryContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.primary)
                 .statusBarsPadding()
-                .padding(horizontal = 24.dp, vertical = 20.dp)
+                .padding(horizontal = 24.dp, vertical = 24.dp)
         ) {
             Text(
                 text = "Histórico",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Acompanhe todas as entregas",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
             )
         }
         LazyColumn(
@@ -91,7 +92,10 @@ fun MainHistoryContent(
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(32.dp),
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
                     }
                 }
             }
@@ -99,10 +103,10 @@ fun MainHistoryContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, name = "Histórico - Oficial")
 @Composable
 fun MainHistoryScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         val domainMockItems = com.example.givchurch.data.mock.DonationMockData.donations.map { entity ->
             Donation(
                 id = entity.id,
@@ -128,7 +132,3 @@ fun MainHistoryScreenPreview() {
         )
     }
 }
-
-
-
-

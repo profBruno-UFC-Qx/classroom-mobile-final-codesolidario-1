@@ -26,6 +26,7 @@ import com.example.givchurch.ui.screen.donation.MainDonationScreen
 import com.example.givchurch.ui.screen.history.MainHistoryScreen
 import com.example.givchurch.ui.screen.home.MainHomeScreen
 import com.example.givchurch.ui.screen.profile.MainProfileScreen
+import com.example.givchurch.ui.theme.GivChurchTheme
 
 enum class NavigationItem(val title: String, val icon: ImageVector) {
     HOME(title = "Início", Icons.Default.Home),
@@ -64,9 +65,9 @@ fun MainAppContainer(
                             )
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+                            selectedIconColor = MaterialTheme.colorScheme.tertiary,
+                            selectedTextColor = MaterialTheme.colorScheme.tertiary,
+                            indicatorColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
                             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -110,10 +111,10 @@ fun MainAppContainer(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true, name = "Container Principal - Oficial")
 @Composable
 fun MainBeneficiaryScreenPreview() {
-    MaterialTheme {
+    GivChurchTheme(darkTheme = false) {
         MainAppContainer(
             selectedItem = NavigationItem.HOME,
             onTabSelected = {},

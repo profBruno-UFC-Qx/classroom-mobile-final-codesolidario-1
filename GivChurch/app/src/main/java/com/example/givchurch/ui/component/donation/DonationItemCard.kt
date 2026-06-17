@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.domain.model.Donation
+import com.example.givchurch.domain.model.enums.DonationCategory
+import com.example.givchurch.domain.model.enums.DonationStatus
+import com.example.givchurch.ui.theme.GivChurchTheme
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -34,7 +40,10 @@ fun DonationItemCard(
 
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Row(
             modifier = Modifier
@@ -46,15 +55,15 @@ fun DonationItemCard(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        RoundedCornerShape(12.dp)
+                        color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
+                        shape = RoundedCornerShape(12.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Inventory2,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
 
@@ -64,7 +73,8 @@ fun DonationItemCard(
                 Text(
                     text = donation.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "${donation.category.value} • ${donation.quantity} unidade(s)",
@@ -85,7 +95,7 @@ fun DonationItemCard(
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 Text(
@@ -93,9 +103,38 @@ fun DonationItemCard(
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Card Doação Compacto Oficial")
+@Composable
+fun DonationItemCardPreview() {
+    GivChurchTheme(darkTheme = false) {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
+        ) {
+            DonationItemCard(
+                donation = Donation(
+                    id = 1,
+                    imageUrl = "",
+                    name = "Cesta Básica",
+                    category = DonationCategory.FOOD,
+                    description = "Descrição da doação",
+                    quantity = 1,
+                    beneficiaryId = 1,
+                    createBy = 1,
+                    status = DonationStatus.DELIVERED,
+                    createdAt = LocalDateTime.now(),
+                    dueDate = LocalDateTime.now().plusDays(5)
+                ),
+                beneficiaryName = "Maria Silva"
+            )
         }
     }
 }
