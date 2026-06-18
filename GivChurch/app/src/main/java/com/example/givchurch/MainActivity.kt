@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.givchurch.navigation.SetupNavigation
-import com.example.givchurch.ui.component.auth.AppHeader
+import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.theme.GivChurchTheme
 import kotlinx.coroutines.delay
 
