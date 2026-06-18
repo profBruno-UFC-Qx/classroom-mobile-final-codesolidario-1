@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -28,12 +29,16 @@ class MainDonationViewModel(
 
     val uiState: StateFlow<DonationUiState> = combine(
         _searchQuery,
-        _selectedCategory
-    ) { query, category ->
-        Pair(query, category)
-    }.flatMapLatest { (query, category) ->
-        val userId = userRepository.getCurrentUserId()
-        donationRepository.searchAndFilter(name = query, category = category, createBy = userId)
+        _selectedCategory,
+        userRepository.getUserIdFlow()
+    ) { query, category, userId ->
+        Triple(query, category, userId)
+    }.flatMapLatest { (query, category, userId) ->
+        if (userId.isBlank()) {
+            flowOf(emptyList())
+        } else {
+            donationRepository.searchAndFilter(name = query, category = category, createBy = userId)
+        }
     }.map { list ->
         DonationUiState(
             searchQuery = _searchQuery.value,

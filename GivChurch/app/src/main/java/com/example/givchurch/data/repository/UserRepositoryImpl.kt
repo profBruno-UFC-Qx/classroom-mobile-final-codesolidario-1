@@ -5,6 +5,9 @@ import com.example.givchurch.data.mapper.toRemoteUser
 import com.example.givchurch.data.remote.firebase.service.FirebaseUserService
 import com.example.givchurch.domain.model.User
 import com.example.givchurch.domain.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 
 class UserRepositoryImpl(
     private val userService: FirebaseUserService
@@ -12,6 +15,10 @@ class UserRepositoryImpl(
 
     override fun getCurrentUserId(): String {
         return userService.getCurrentUserId()
+    }
+
+    override fun getUserIdFlow(): Flow<String> {
+        return userService.getUserIdFlow()
     }
 
     override suspend fun updateProfile(user: User): Result<String> {

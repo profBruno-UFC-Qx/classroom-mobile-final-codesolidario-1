@@ -24,7 +24,7 @@ fun SetupNavigation(
             entry<Screen.LoginScreen> {
                 LoginScreen(
                     onLoginSuccess = {
-                        backStack.clear()
+                        backStack.removeLastOrNull()
                         backStack.add(Screen.MainBeneficiaryScreen)
                     },
                     onCreateAccountClick = {
@@ -49,7 +49,9 @@ fun SetupNavigation(
                 AuthenticatedNavGraph(
                     onLogout = {
                         loginVm.clearFields()
-                        backStack.clear()
+                        while (backStack.isNotEmpty()) {
+                            backStack.removeLastOrNull()
+                        }
                         backStack.add(Screen.LoginScreen)
                     },
                     modifier = Modifier
