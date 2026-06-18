@@ -121,7 +121,7 @@ fun BeneficiaryItemCardPreview() {
                     phoneNumber = "(11) 98765-4321",
                     address = "Rua das Flores, 123 - Centro",
                     observations = "",
-                    createBy = 1
+                    createBy = "d1e8f2c3-a4b5-4c6d-9e8f-7a6b5c4d3e2f"
                 )
             )
         }

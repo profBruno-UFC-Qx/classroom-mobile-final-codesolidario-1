@@ -14,25 +14,20 @@ class DonationRepositoryImpl(
     private val donationDao: DonationDao
 ) : DonationRepository {
 
-    override fun getAll(direction: SortDirection, limit: Int?): Flow<List<DonationDomain>> {
+    override fun getAll(direction: SortDirection?, limit: Int?, createBy: String): Flow<List<DonationDomain>> {
         val sqlLimit = limit ?: -1
-        return donationDao.getAll(direction.name, sqlLimit).map { list ->
+        val sqlDirection = direction ?: SortDirection.ASC
+        return donationDao.getAll(sqlDirection.name, sqlLimit, createBy).map { list ->
             list.map { it.toDomain() }
         }
     }
 
-    override fun getById(id: Int): Flow<DonationDomain?> {
-        return donationDao.getById(id).map { it?.toDomain() }
+    override fun getById(id: Int, createBy: String): Flow<DonationDomain?> {
+        return donationDao.getById(id, createBy).map { it?.toDomain() }
     }
 
-    override fun getByCreator(userId: Int): Flow<List<DonationDomain>> {
-        return donationDao.getByCreator(userId).map { list ->
-            list.map { it.toDomain() }
-        }
-    }
-
-    override fun searchAndFilter(name: String, category: DonationCategory?): Flow<List<DonationDomain>> {
-        return donationDao.searchAndFilter(name.trim(), category).map { list ->
+    override fun searchAndFilter(name: String, category: DonationCategory?, createBy: String): Flow<List<DonationDomain>> {
+        return donationDao.searchAndFilter(name.trim(), category, createBy).map { list ->
             list.map { it.toDomain() }
         }
     }
@@ -58,8 +53,8 @@ class DonationRepositoryImpl(
         return rowsAffected > 0
     }
 
-    override suspend fun delete(id: Int): Boolean {
-        val rowsDeleted = donationDao.deleteById(id)
+    override suspend fun delete(id: Int, createBy: String): Boolean {
+        val rowsDeleted = donationDao.deleteById(id, createBy)
         return rowsDeleted > 0
     }
 }

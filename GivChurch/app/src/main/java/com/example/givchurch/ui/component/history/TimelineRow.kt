@@ -188,7 +188,7 @@ fun TimelineRowPreview() {
                 TimelineRow(
                     donation = Donation(
                         id = 1, imageUrl = "", name = "Cesta Básica", category = DonationCategory.FOOD,
-                        description = "", quantity = 1, beneficiaryId = 1, createBy = 1,
+                        description = "", quantity = 1, beneficiaryId = 1, createBy = "d1e8f2c3-a4b5-4c6d-9e8f-7a6b5c4d3e2f",
                         status = DonationStatus.DELIVERED, createdAt = LocalDateTime.now(), dueDate = LocalDateTime.of(2026, 5, 22, 14, 30)
                     ),
                     beneficiaryName = "Maria Silva",
@@ -197,7 +197,7 @@ fun TimelineRowPreview() {
                 TimelineRow(
                     donation = Donation(
                         id = 2, imageUrl = "", name = "Roupas de Inverno", category = DonationCategory.CLOTHING,
-                        description = "", quantity = 1, beneficiaryId = 2, createBy = 1,
+                        description = "", quantity = 1, beneficiaryId = 2, createBy = "d1e8f2c3-a4b5-4c6d-9e8f-7a6b5c4d3e2f",
                         status = DonationStatus.PENDING, createdAt = LocalDateTime.now(), dueDate = LocalDateTime.of(2026, 5, 21, 10, 15)
                     ),
                     beneficiaryName = "João Santos",

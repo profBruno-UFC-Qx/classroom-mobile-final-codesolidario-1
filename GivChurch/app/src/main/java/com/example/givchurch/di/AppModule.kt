@@ -50,9 +50,9 @@ val viewModelModule = module {
     viewModel { AddBeneficiaryViewModel(get(), get ()) }
     viewModel { MainBeneficiaryViewModel(get(), get()) }
     viewModel { AddDonationViewModel(get(), get(), get()) }
-    viewModel { MainDonationViewModel(get(), get()) }
-    viewModel { MainHistoryViewModel(get(), get()) }
-    viewModel { MainHomeViewModel(get(), get()) }
+    viewModel { MainDonationViewModel(get(), get(), get()) }
+    viewModel { MainHistoryViewModel(get(), get(), get()) }
+    viewModel { MainHomeViewModel(get(), get(), get()) }
     viewModel { MainProfileViewModel(get ()) }
 }
 

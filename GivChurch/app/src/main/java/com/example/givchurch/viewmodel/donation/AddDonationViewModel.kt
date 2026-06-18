@@ -29,7 +29,8 @@ class AddDonationViewModel(
 
     init {
         viewModelScope.launch {
-            beneficiaryRepository.getAll().collect { list ->
+            val userId = userRepository.getCurrentUserId()
+            beneficiaryRepository.getAll(createBy = userId).collect { list ->
                 _uiState.update { it.copy(beneficiaries = list) }
             }
         }

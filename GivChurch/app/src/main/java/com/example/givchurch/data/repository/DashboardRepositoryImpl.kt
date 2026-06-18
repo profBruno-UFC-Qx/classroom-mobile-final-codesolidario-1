@@ -13,29 +13,29 @@ class DashboardRepositoryImpl(
     private val dashboardDao: DashboardDao
 ) : DashboardRepository {
 
-    override fun getTotalDonations(): Flow<Int> {
-        return dashboardDao.getTotalDonations()
+    override fun getTotalDonations(createBy: String): Flow<Int> {
+        return dashboardDao.getTotalDonations(createBy)
     }
 
-    override fun getPendingDonations(): Flow<Int> {
-        return dashboardDao.getPendingDonations()
+    override fun getPendingDonations(createBy: String): Flow<Int> {
+        return dashboardDao.getPendingDonations(createBy)
     }
 
-    override fun getDeliveredDonations(): Flow<Int> {
-        return dashboardDao.getDeliveredDonations()
+    override fun getDeliveredDonations(createBy: String): Flow<Int> {
+        return dashboardDao.getDeliveredDonations(createBy)
     }
 
-    override fun getTotalBeneficiaries(): Flow<Int> {
-        return dashboardDao.getTotalBeneficiaries()
+    override fun getTotalBeneficiaries(createBy: String): Flow<Int> {
+        return dashboardDao.getTotalBeneficiaries(createBy)
     }
 
-    override fun getMonthlyDonations(): Flow<List<MonthlyDonation>> {
+    override fun getMonthlyDonations(createBy: String): Flow<List<MonthlyDonation>> {
         val now = LocalDateTime.now()
         val currentYearStr = now.year.toString()
 
         val pastFiveMonths = (4 downTo 0).map { now.minusMonths(it.toLong()) }
 
-        return dashboardDao.getDonationsForYear(currentYearStr).map { donationList ->
+        return dashboardDao.getDonationsForYear(currentYearStr, createBy).map { donationList ->
             val groupedByMonth = donationList.groupBy { it.monthStr }
 
             pastFiveMonths.map { targetDateTime ->

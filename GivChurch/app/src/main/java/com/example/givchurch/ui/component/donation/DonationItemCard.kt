@@ -128,7 +128,7 @@ fun DonationItemCardPreview() {
                     description = "Descrição da doação",
                     quantity = 1,
                     beneficiaryId = 1,
-                    createBy = 1,
+                    createBy = "d1e8f2c3-a4b5-4c6d-9e8f-7a6b5c4d3e2f",
                     status = DonationStatus.DELIVERED,
                     createdAt = LocalDateTime.now(),
                     dueDate = LocalDateTime.now().plusDays(5)

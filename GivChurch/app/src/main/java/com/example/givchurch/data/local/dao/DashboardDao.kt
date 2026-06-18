@@ -8,22 +8,22 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DashboardDao {
 
-    @Query("SELECT TOTAL(quantity) FROM donations")
-    fun getTotalDonations(): Flow<Int>
+    @Query("SELECT TOTAL(quantity) FROM donations WHERE createBy = :createBy")
+    fun getTotalDonations(createBy: String): Flow<Int>
 
-    @Query("SELECT TOTAL(quantity) FROM donations WHERE status = 'PENDING'")
-    fun getPendingDonations(): Flow<Int>
+    @Query("SELECT TOTAL(quantity) FROM donations WHERE status = 'PENDING' AND createBy = :createBy")
+    fun getPendingDonations(createBy: String): Flow<Int>
 
-    @Query("SELECT TOTAL(quantity) FROM donations WHERE status = 'DELIVERED'")
-    fun getDeliveredDonations(): Flow<Int>
+    @Query("SELECT TOTAL(quantity) FROM donations WHERE status = 'DELIVERED' AND createBy = :createBy")
+    fun getDeliveredDonations(createBy: String): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM beneficiaries")
-    fun getTotalBeneficiaries(): Flow<Int>
+    @Query("SELECT COUNT(*) FROM beneficiaries WHERE createBy = :createBy")
+    fun getTotalBeneficiaries(createBy: String): Flow<Int>
 
     @Query("""
         SELECT strftime('%m', createdAt) as monthStr, quantity 
         FROM donations 
-        WHERE strftime('%Y', createdAt) = :currentYear
+        WHERE strftime('%Y', createdAt) = :currentYear AND createBy = :createBy
     """)
-    fun getDonationsForYear(currentYear: String): Flow<List<DonationMonthGroup>>
+    fun getDonationsForYear(currentYear: String, createBy: String): Flow<List<DonationMonthGroup>>
 }
