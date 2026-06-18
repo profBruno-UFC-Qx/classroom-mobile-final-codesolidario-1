@@ -47,7 +47,7 @@ class MainDonationViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Eagerly,
         initialValue = DonationUiState()
     )
 
