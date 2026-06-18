@@ -57,7 +57,7 @@ class FirebaseUserService {
                 if (snapshot != null && snapshot.exists()) {
                     trySend(snapshot.toObject(User::class.java))
                 } else {
-                    trySend(null)
+                    trySend(User())
                 }
             }
             awaitClose { listener.remove() }

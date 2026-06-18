@@ -1,5 +1,9 @@
 package com.example.givchurch.ui.screen.profile
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -85,17 +89,29 @@ fun MainProfileContent(
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text(
-                            text = "Voluntário da Igreja",
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "voluntario@igreja.com",
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                            fontSize = 14.sp
-                        )
+                        AnimatedContent(
+                            targetState = uiState.userName,
+                            transitionSpec = { fadeIn().togetherWith(fadeOut()) },
+                            label = "NomePerfilTransicao"
+                        ) { name ->
+                            Text(
+                                text = name,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        AnimatedContent(
+                            targetState = uiState.userEmail,
+                            transitionSpec = { fadeIn().togetherWith(fadeOut()) },
+                            label = "EmailPerfilTransicao"
+                        ) { email ->
+                            Text(
+                                text = email,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                                fontSize = 14.sp
+                            )
+                        }
                     }
                 }
             }
@@ -154,7 +170,10 @@ fun MainProfileContent(
 fun MainProfileScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         MainProfileContent(
-            uiState = ProfileUiState(),
+            uiState = ProfileUiState(
+                userName = "Maria Silva",
+                userEmail = "maria@email.com"
+            ),
             onThemeToggle = {},
             onNotificationsToggle = {},
             onHelpClick = {},
