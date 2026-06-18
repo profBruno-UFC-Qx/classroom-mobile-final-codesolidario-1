@@ -7,6 +7,7 @@ import com.example.givchurch.domain.model.MonthlyDonation
 sealed interface DashboardUiState {
     object Loading : DashboardUiState
     data class Success(
+        val userName: String,
         val metrics: DashboardMetrics,
         val monthlyDonations: List<MonthlyDonation>,
         val recentDonations: List<Donation>

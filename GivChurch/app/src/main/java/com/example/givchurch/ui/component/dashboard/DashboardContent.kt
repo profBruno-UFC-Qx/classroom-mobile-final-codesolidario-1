@@ -68,7 +68,7 @@ fun DashboardContent(
             MetricCard(
                 icon = Icons.Default.Group,
                 value = metrics.totalBeneficiaries.toString(),
-                label = "Beneficiários"
+                label = "Atendidos"
             )
         }
         item(span = { GridItemSpan(maxLineSpan) }) {

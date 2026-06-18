@@ -47,22 +47,20 @@ class FirebaseUserService {
         }
     }
 
-    suspend fun getCurrentUserProfile(): Result<User> {
-        return try {
-            val userId = getCurrentUserId()
-            val document = usersCollection.document(userId).get().await()
-            if (document != null && document.exists()) {
-                val user = document.toObject(User::class.java)
-                if (user != null) {
-                    Result.success(user)
-                } else {
-                    Result.failure(Exception("Error converting user data."))
+    fun getUserProfileFlow(userId: String): Flow<User?> {
+        return callbackFlow {
+            val listener = usersCollection.document(userId).addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(null)
+                    return@addSnapshotListener
                 }
-            } else {
-                Result.failure(Exception("Profile not found."))
+                if (snapshot != null && snapshot.exists()) {
+                    trySend(snapshot.toObject(User::class.java))
+                } else {
+                    trySend(null)
+                }
             }
-        } catch (e: Exception) {
-            Result.failure(e)
+            awaitClose { listener.remove() }
         }
     }
 }

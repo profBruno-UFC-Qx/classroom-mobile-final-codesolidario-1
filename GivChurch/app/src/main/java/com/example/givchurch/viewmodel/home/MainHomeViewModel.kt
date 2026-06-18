@@ -3,8 +3,6 @@ package com.example.givchurch.viewmodel.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.domain.model.DashboardMetrics
-import com.example.givchurch.domain.model.Donation
-import com.example.givchurch.domain.model.MonthlyDonation
 import com.example.givchurch.domain.repository.DashboardRepository
 import com.example.givchurch.domain.repository.DonationRepository
 import com.example.givchurch.domain.repository.UserRepository
@@ -12,9 +10,11 @@ import com.example.givchurch.domain.repository.enums.SortDirection
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -29,22 +29,28 @@ class MainHomeViewModel(
             if (userId.isBlank()) {
                 flowOf(DashboardUiState.Loading)
             } else {
-                combine(
+                val metricsFlow = combine(
                     dashboardRepository.getTotalDonations(createBy = userId),
                     dashboardRepository.getPendingDonations(createBy = userId),
                     dashboardRepository.getDeliveredDonations(createBy = userId),
-                    dashboardRepository.getTotalBeneficiaries(createBy = userId),
-                    dashboardRepository.getMonthlyDonations(createBy = userId)
-                ) { total, pending, delivered, beneficiaries, monthlyDonations ->
-                    Triple(
-                        DashboardMetrics(total, pending, delivered, beneficiaries),
-                        monthlyDonations,
-                        null
-                    )
-                }.combine(donationRepository.getAll(direction = SortDirection.DESC, limit = 5, createBy = userId)) { dashboardData, recentDonations ->
+                    dashboardRepository.getTotalBeneficiaries(createBy = userId)
+                ) { total, pending, delivered, beneficiaries ->
+                    DashboardMetrics(total, pending, delivered, beneficiaries)
+                }
+
+                val userProfileFlow = userRepository.getUserProfileFlow(userId)
+                    .map { user -> user?.firstname ?: "Voluntário" }
+
+                combine(
+                    metricsFlow,
+                    dashboardRepository.getMonthlyDonations(createBy = userId),
+                    donationRepository.getAll(direction = SortDirection.DESC, limit = 5, createBy = userId),
+                    userProfileFlow
+                ) { metrics, monthlyDonations, recentDonations, name ->
                     DashboardUiState.Success(
-                        metrics = dashboardData.first,
-                        monthlyDonations = dashboardData.second,
+                        userName = name,
+                        metrics = metrics,
+                        monthlyDonations = monthlyDonations,
                         recentDonations = recentDonations
                     )
                 }

@@ -7,5 +7,5 @@ interface UserRepository {
     fun getCurrentUserId(): String
     fun getUserIdFlow(): Flow<String>
     suspend fun updateProfile(user: User): Result<String>
-    suspend fun getCurrentUserProfile(): Result<User>
+    fun getUserProfileFlow(userId: String): Flow<User?>
 }

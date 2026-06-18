@@ -6,8 +6,7 @@ import com.example.givchurch.data.remote.firebase.service.FirebaseUserService
 import com.example.givchurch.domain.model.User
 import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
     private val userService: FirebaseUserService
@@ -26,14 +25,10 @@ class UserRepositoryImpl(
         return userService.updateProfile(firebaseUser)
     }
 
-    override suspend fun getCurrentUserProfile(): Result<User> {
-        return userService.getCurrentUserProfile().fold(
-            onSuccess = { firebaseUser ->
-                Result.success(firebaseUser.toRemoteUser())
-            },
-            onFailure = { exception ->
-                Result.failure(exception)
-            }
-        )
+    override fun getUserProfileFlow(userId: String): Flow<User?> {
+        return userService.getUserProfileFlow(userId).map { firebaseUser ->
+            firebaseUser?.toRemoteUser()
+                ?: User(id = userId, firstname = "Voluntário", lastname = "", email = "")
+        }
     }
 }

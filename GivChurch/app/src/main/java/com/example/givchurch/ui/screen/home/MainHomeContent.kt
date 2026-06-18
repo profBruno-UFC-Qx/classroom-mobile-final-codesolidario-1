@@ -1,5 +1,9 @@
 package com.example.givchurch.ui.screen.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +41,8 @@ fun MainHomeContent(
     uiState: DashboardUiState,
     modifier: Modifier = Modifier
 ) {
+    val currentUserName = if (uiState is DashboardUiState.Success) uiState.userName else ""
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -59,12 +65,20 @@ fun MainHomeContent(
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp
                     )
-                    Text(
-                        text = "Voluntário",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    AnimatedContent(
+                        targetState = currentUserName,
+                        transitionSpec = {
+                            fadeIn().togetherWith(fadeOut())
+                        },
+                        label = "NomeTransicao"
+                    ) { targetName ->
+                        Text(
+                            text = targetName,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Continue fazendo a diferença na comunidade",
@@ -116,6 +130,7 @@ fun MainHomeScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         MainHomeContent(
             uiState = DashboardUiState.Success(
+                userName = "Maria",
                 metrics = DashboardMetrics(
                     totalDonations = 120,
                     pendingDonations = 45,
