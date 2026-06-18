@@ -27,13 +27,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.RegisterUiState
 
@@ -81,12 +80,9 @@ fun RegisterScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Preencha os dados para começar a ajudar",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
+                AppHeader(
+                    title = "Crie sua conta",
+                    subtitle = "Preencha os dados para começar a ajudar"
                 )
 
                 Spacer(Modifier.height(16.dp))
