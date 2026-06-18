@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
     // Ícones e Desugaring
     implementation("androidx.compose.material:material-icons-extended")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
