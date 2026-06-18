@@ -10,7 +10,7 @@ class UserRepositoryImpl(
     private val userService: FirebaseUserService
 ) : UserRepository {
 
-    override fun getCurrentUserId(): String? {
+    override fun getCurrentUserId(): String {
         return userService.getCurrentUserId()
     }
 

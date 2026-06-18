@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.domain.model.Beneficiary
 import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddBeneficiaryViewModel(
-    private val repository: BeneficiaryRepository
+    private val repository: BeneficiaryRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddBeneficiaryUiState())
@@ -54,7 +56,7 @@ class AddBeneficiaryViewModel(
                 phoneNumber = currentState.phoneNumber,
                 address = currentState.address,
                 observations = currentState.observations,
-                createBy = 1
+                createBy = userRepository.getCurrentUserId()
             )
 
             val success = repository.create(newBen)

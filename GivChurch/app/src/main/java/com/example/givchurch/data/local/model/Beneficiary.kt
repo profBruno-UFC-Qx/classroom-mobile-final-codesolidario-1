@@ -11,5 +11,5 @@ data class Beneficiary(
     val phoneNumber: String,
     val address: String,
     val observations: String,
-    val createBy: Int,
+    val createBy: String,
 )

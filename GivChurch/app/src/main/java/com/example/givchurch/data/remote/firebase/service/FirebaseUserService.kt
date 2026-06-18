@@ -10,42 +10,39 @@ class FirebaseUserService {
     private val firestore = FirebaseFirestore.getInstance()
     private val usersCollection = firestore.collection("users")
 
-    fun getCurrentUserId(): String? {
-        return auth.currentUser?.uid
+    fun getCurrentUserId(): String {
+        return auth.currentUser?.uid ?: throw IllegalStateException("User is not logged in.")
     }
 
     suspend fun updateProfile(user: User): Result<String> {
-        val userId = getCurrentUserId() ?: return Result.failure(Exception("Usuário não está logado."))
-
-        val userMap = mapOf(
-            "id" to userId,
-            "firstname" to user.firstname,
-            "lastname" to user.lastname,
-            "email" to user.email
-        )
-
         return try {
+            val userId = getCurrentUserId()
+            val userMap = mapOf(
+                "id" to userId,
+                "firstname" to user.firstname,
+                "lastname" to user.lastname,
+                "email" to user.email
+            )
             usersCollection.document(userId).update(userMap).await()
-            Result.success("Perfil atualizado com sucesso!")
+            Result.success("Profile updated successfully!")
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
     suspend fun getCurrentUserProfile(): Result<User> {
-        val userId = getCurrentUserId() ?: return Result.failure(Exception("Usuário não está logado."))
-
         return try {
+            val userId = getCurrentUserId()
             val document = usersCollection.document(userId).get().await()
             if (document != null && document.exists()) {
                 val user = document.toObject(User::class.java)
                 if (user != null) {
                     Result.success(user)
                 } else {
-                    Result.failure(Exception("Erro ao converter dados do usuário."))
+                    Result.failure(Exception("Error converting user data."))
                 }
             } else {
-                Result.failure(Exception("Perfil não encontrado."))
+                Result.failure(Exception("Profile not found."))
             }
         } catch (e: Exception) {
             Result.failure(e)

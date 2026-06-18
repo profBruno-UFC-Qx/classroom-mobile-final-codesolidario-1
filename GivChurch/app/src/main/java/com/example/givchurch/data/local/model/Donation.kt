@@ -29,7 +29,7 @@ data class Donation(
     val description: String,
     val quantity: Int,
     val beneficiaryId: Int,
-    val createBy: Int,
+    val createBy: String,
     val status: DonationStatus = DonationStatus.PENDING,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val dueDate: LocalDateTime

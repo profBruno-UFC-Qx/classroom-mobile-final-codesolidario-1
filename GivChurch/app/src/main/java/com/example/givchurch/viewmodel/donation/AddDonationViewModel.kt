@@ -8,6 +8,7 @@ import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
 import com.example.givchurch.domain.repository.BeneficiaryRepository
 import com.example.givchurch.domain.repository.DonationRepository
+import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,8 @@ import java.time.LocalTime
 
 class AddDonationViewModel(
     private val donationRepository: DonationRepository,
-    private val beneficiaryRepository: BeneficiaryRepository
+    private val beneficiaryRepository: BeneficiaryRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddDonationUiState())
@@ -61,7 +63,7 @@ class AddDonationViewModel(
                 description = currentState.description,
                 quantity = quantity,
                 beneficiaryId = beneficiaryId,
-                createBy = 1,
+                createBy = userRepository.getCurrentUserId(),
                 status = currentState.selectedStatus,
                 dueDate = LocalDateTime.of(currentState.selectedDate, LocalTime.MIDNIGHT)
             )

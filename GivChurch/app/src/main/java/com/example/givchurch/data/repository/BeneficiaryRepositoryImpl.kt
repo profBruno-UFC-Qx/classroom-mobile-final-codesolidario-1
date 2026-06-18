@@ -12,25 +12,23 @@ class BeneficiaryRepositoryImpl(
     private val beneficiaryDao: BeneficiaryDao
 ) : BeneficiaryRepository {
 
-    override fun getAll(): Flow<List<BeneficiaryDomain>> {
-        return beneficiaryDao.getAll().map { list ->
+    override fun getAll(createBy: String): Flow<List<BeneficiaryDomain>> {
+        return beneficiaryDao.getAll(createBy).map { list ->
             list.map { it.toDomain() }
         }
     }
 
-    override suspend fun getById(id: Int): BeneficiaryDomain? {
-        return beneficiaryDao.getById(id)?.toDomain()
+    override suspend fun getById(id: Int, createBy: String): BeneficiaryDomain? {
+        return beneficiaryDao.getById(id, createBy)?.toDomain()
     }
 
-    override fun getByName(name: String): Flow<List<BeneficiaryDomain>> {
-        val flowResult = if (name.isBlank()) beneficiaryDao.getAll() else beneficiaryDao.getByName(name)
+    override fun getByName(name: String, createBy: String): Flow<List<BeneficiaryDomain>> {
+        val flowResult = if (name.isBlank()) {
+            beneficiaryDao.getAll(createBy)
+        } else {
+            beneficiaryDao.getByName(name, createBy)
+        }
         return flowResult.map { list ->
-            list.map { it.toDomain() }
-        }
-    }
-
-    override fun getByCreator(userId: Int): Flow<List<BeneficiaryDomain>> {
-        return beneficiaryDao.getByCreator(userId).map { list ->
             list.map { it.toDomain() }
         }
     }
@@ -51,8 +49,8 @@ class BeneficiaryRepositoryImpl(
         return rowsAffected > 0
     }
 
-    override suspend fun delete(id: Int): Boolean {
-        val rowsDeleted = beneficiaryDao.deleteById(id)
+    override suspend fun delete(id: Int, createBy: String): Boolean {
+        val rowsDeleted = beneficiaryDao.deleteById(id, createBy)
         return rowsDeleted > 0
     }
 }

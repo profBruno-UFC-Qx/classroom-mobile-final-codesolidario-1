@@ -47,9 +47,9 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { AddBeneficiaryViewModel(get()) }
-    viewModel { MainBeneficiaryViewModel(get()) }
-    viewModel { AddDonationViewModel(get(), get()) }
+    viewModel { AddBeneficiaryViewModel(get(), get ()) }
+    viewModel { MainBeneficiaryViewModel(get(), get()) }
+    viewModel { AddDonationViewModel(get(), get(), get()) }
     viewModel { MainDonationViewModel(get(), get()) }
     viewModel { MainHistoryViewModel(get(), get()) }
     viewModel { MainHomeViewModel(get(), get()) }

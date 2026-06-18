@@ -2,8 +2,9 @@ package com.example.givchurch.viewmodel.beneficiary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.data.remote.firebase.service.FirebaseUserService
 import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,17 +15,19 @@ import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainBeneficiaryViewModel(
-    private val repository: BeneficiaryRepository
+    private val repository: BeneficiaryRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
 
     val uiState: StateFlow<BeneficiaryUiState> = _searchQuery
         .flatMapLatest { query ->
+            val userId = userRepository.getCurrentUserId()
             val flowResult = if (query.isBlank()) {
-                repository.getAll()
+                repository.getAll(createBy = userId)
             } else {
-                repository.getByName(query)
+                repository.getByName(name = query, createBy = userId)
             }
             flowResult.map { list ->
                 BeneficiaryUiState(

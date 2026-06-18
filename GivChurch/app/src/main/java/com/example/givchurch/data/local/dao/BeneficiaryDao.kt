@@ -11,20 +11,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BeneficiaryDao {
 
-    @Query("SELECT * FROM beneficiaries ORDER BY name ASC")
-    fun getAll(): Flow<List<Beneficiary>>
+    @Query("SELECT * FROM beneficiaries WHERE createBy = :createBy ORDER BY name ASC")
+    fun getAll(createBy: String): Flow<List<Beneficiary>>
 
-    @Query("SELECT * FROM beneficiaries WHERE id = :id")
-    suspend fun getById(id: Int): Beneficiary?
+    @Query("SELECT * FROM beneficiaries WHERE id = :id AND createBy = :createBy LIMIT 1")
+    suspend fun getById(id: Int, createBy: String): Beneficiary?
 
-    @Query("SELECT * FROM beneficiaries WHERE name LIKE '%' || :name || '%' ORDER BY name ASC")
-    fun getByName(name: String): Flow<List<Beneficiary>>
-
-    @Query("SELECT * FROM beneficiaries WHERE createBy = :userId")
-    fun getByCreator(userId: Int): Flow<List<Beneficiary>>
+    @Query("SELECT * FROM beneficiaries WHERE name LIKE '%' || :name || '%' AND createBy = :createBy ORDER BY name ASC")
+    fun getByName(name: String, createBy: String): Flow<List<Beneficiary>>
 
     @Query("SELECT EXISTS(SELECT 1 FROM beneficiaries WHERE LOWER(name) = LOWER(:name) AND createBy = :createBy LIMIT 1)")
-    suspend fun checkExists(name: String, createBy: Int): Boolean
+    suspend fun checkExists(name: String, createBy: String): Boolean
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(beneficiary: Beneficiary): Long
@@ -32,6 +29,6 @@ interface BeneficiaryDao {
     @Update
     suspend fun update(beneficiary: Beneficiary): Int
 
-    @Query("DELETE FROM beneficiaries WHERE id = :id")
-    suspend fun deleteById(id: Int): Int
+    @Query("DELETE FROM beneficiaries WHERE id = :id AND createBy = :createBy")
+    suspend fun deleteById(id: Int, createBy: String): Int
 }
