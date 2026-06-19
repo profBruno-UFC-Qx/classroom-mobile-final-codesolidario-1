@@ -23,7 +23,7 @@ class MainProfileViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _settingsState = MutableStateFlow(Pair(false, true)) // Pair(isLightTheme, isNotificationsEnabled)
+    private val _settingsState = MutableStateFlow(Pair(false, true))
 
     private val _logoutSuccess = MutableSharedFlow<Boolean>()
     val logoutSuccess = _logoutSuccess.asSharedFlow()
@@ -41,7 +41,8 @@ class MainProfileViewModel(
                         isLightTheme = settings.first,
                         isNotificationsEnabled = settings.second,
                         userName = user?.let { "${it.firstname} ${it.lastname}".trim() } ?: "",
-                        userEmail = user?.email ?: ""
+                        userEmail = user?.email ?: "",
+                        imageUrl = user?.imageUrl ?: ""
                     )
                 }
             }
@@ -61,11 +62,9 @@ class MainProfileViewModel(
     }
 
     fun onHelpClick() {
-        // TODO: Implementar ajuda
     }
 
     fun onPrivacyPolicyClick() {
-        // TODO: Implementar política de privacidade
     }
 
     fun onLogoutClick() {

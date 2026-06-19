@@ -31,10 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.givchurch.ui.component.profile.CardClickableOption
 import com.example.givchurch.ui.component.profile.CardOptionWithSwitch
 import com.example.givchurch.ui.component.profile.SectionTitle
@@ -80,12 +82,21 @@ fun MainProfileContent(
                             .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Foto de perfil",
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(32.dp)
-                        )
+                        if (uiState.imageUrl.isNullOrBlank()) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Foto de perfil padrão",
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        } else {
+                            AsyncImage(
+                                model = uiState.imageUrl,
+                                contentDescription = "Foto de perfil do usuário",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
@@ -172,7 +183,8 @@ fun MainProfileScreenPreview() {
         MainProfileContent(
             uiState = ProfileUiState(
                 userName = "Maria Silva",
-                userEmail = "maria@email.com"
+                userEmail = "maria@email.com",
+                imageUrl = ""
             ),
             onThemeToggle = {},
             onNotificationsToggle = {},

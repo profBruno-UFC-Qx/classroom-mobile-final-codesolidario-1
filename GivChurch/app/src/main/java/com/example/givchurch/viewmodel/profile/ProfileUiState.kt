@@ -4,5 +4,6 @@ data class ProfileUiState(
     val isLightTheme: Boolean = false,
     val isNotificationsEnabled: Boolean = true,
     val userName: String = "",
-    val userEmail: String = ""
+    val userEmail: String = "",
+    val imageUrl: String = ""
 )
