@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.givchurch.ui.component.form.FormSectionLayout
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryUiState
 
@@ -97,59 +99,83 @@ fun AddBeneficiaryContent(
                     )
                 }
 
-                OutlinedTextField(
-                    value = uiState.name,
-                    onValueChange = onNameChanged,
-                    label = { Text("Nome do Beneficiário *") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
+                FormSectionLayout(title = "Nome do Beneficiário *") {
+                    OutlinedTextField(
+                        value = uiState.name,
+                        onValueChange = onNameChanged,
+                        placeholder = { Text("Ex: Maria Silva") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                }
 
-                OutlinedTextField(
-                    value = uiState.phoneNumber,
-                    onValueChange = onPhoneChanged,
-                    label = { Text("Telefone de Contato *") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Next
+                FormSectionLayout(title = "Telefone de Contato *") {
+                    OutlinedTextField(
+                        value = uiState.phoneNumber,
+                        onValueChange = onPhoneChanged,
+                        placeholder = { Text("Ex: (88) 99999-9999") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                }
 
-                OutlinedTextField(
-                    value = uiState.address,
-                    onValueChange = onAddressChanged,
-                    label = { Text("Endereço Completo *") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
+                FormSectionLayout(title = "Endereço Completo *") {
+                    OutlinedTextField(
+                        value = uiState.address,
+                        onValueChange = onAddressChanged,
+                        placeholder = { Text("Rua, Número, Bairro") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                }
 
-                OutlinedTextField(
-                    value = uiState.observations,
-                    onValueChange = onObservationsChanged,
-                    label = { Text("Observações / Horários de Coleta") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    maxLines = 4,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done
+                FormSectionLayout(title = "Observações / Horários de Coleta") {
+                    OutlinedTextField(
+                        value = uiState.observations,
+                        onValueChange = onObservationsChanged,
+                        placeholder = { Text("Ex: Disponível apenas no período da tarde...") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        maxLines = 4,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -162,7 +188,8 @@ fun AddBeneficiaryContent(
                 ) {
                     Text(
                         text = "Salvar Cadastro",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
