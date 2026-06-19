@@ -4,8 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,37 +12,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -53,12 +39,14 @@ import androidx.compose.ui.unit.dp
 import com.example.givchurch.domain.model.Beneficiary
 import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
+import com.example.givchurch.ui.component.form.DonationDatePickerDialog
+import com.example.givchurch.ui.component.form.DonationDatePickerField
+import com.example.givchurch.ui.component.form.DonationDropdownMenu
+import com.example.givchurch.ui.component.form.FormSectionLayout
+import com.example.givchurch.ui.component.form.ImagePickerSelector
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.donation.AddDonationUiState
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,42 +69,17 @@ fun AddDonationContent(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = onImageSelect
     )
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = uiState.selectedDate
-            .atStartOfDay(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli()
-    )
 
     if (uiState.isDatePickerExpanded) {
-        DatePickerDialog(
-            onDismissRequest = { onDatePickerExpandedChange(false) },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val date = Instant.ofEpochMilli(millis)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        onDateSelect(date)
-                    }
-                    onDatePickerExpandedChange(false)
-                }) {
-                    Text("Confirmar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { onDatePickerExpandedChange(false) }) {
-                    Text("Cancelar")
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+        DonationDatePickerDialog(
+            initialDate = uiState.selectedDate,
+            onDateConfirm = onDateSelect,
+            onDismiss = { onDatePickerExpandedChange(false) }
+        )
     }
 
     Scaffold(
@@ -159,52 +122,14 @@ fun AddDonationContent(
                     textAlign = TextAlign.Center
                 )
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Foto do item",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                FormSectionLayout(title = "Foto do item") {
+                    ImagePickerSelector(
+                        imageUrl = uiState.imageUrl,
+                        onPickImage = { galleryLauncher.launch("image/*") }
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(160.dp)
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable { galleryLauncher.launch("image/*") },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                imageVector = Icons.Default.Upload,
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.tertiary
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = if (uiState.imageUrl != null) "Foto selecionada!" else "Toque para adicionar foto",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
                 }
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Nome do item",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+                FormSectionLayout(title = "Nome do item") {
                     OutlinedTextField(
                         value = uiState.name,
                         onValueChange = onNameChange,
@@ -218,55 +143,20 @@ fun AddDonationContent(
                     )
                 }
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Categoria",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                FormSectionLayout(title = "Categoria") {
+                    DonationDropdownMenu(
+                        label = "Categoria",
+                        options = DonationCategory.entries,
+                        selectedOption = uiState.selectedCategory,
+                        optionToString = { it.name },
+                        isExpanded = uiState.isCategoryExpanded,
+                        onExpandedChange = onCategoryExpandedChange,
+                        onOptionSelect = onCategorySelect,
+                        placeholderText = "Selecione uma categoria"
                     )
-
-
-                    ExposedDropdownMenuBox(
-                        expanded = uiState.isCategoryExpanded,
-                        onExpandedChange = onCategoryExpandedChange
-                    ) {
-                        OutlinedTextField(
-                            value = uiState.selectedCategory?.name ?: "Selecione uma categoria",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isCategoryExpanded) },
-                            modifier = Modifier
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                            )
-                        )
-                        ExposedDropdownMenu(
-                            expanded = uiState.isCategoryExpanded,
-                            onDismissRequest = { onCategoryExpandedChange(false) }
-                        ) {
-                            DonationCategory.entries.forEach { category ->
-                                DropdownMenuItem(
-                                    text = { Text(category.name) },
-                                    onClick = { onCategorySelect(category) }
-                                )
-                            }
-                        }
-                    }
                 }
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Descrição",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+
+                FormSectionLayout(title = "Descrição") {
                     OutlinedTextField(
                         value = uiState.description,
                         onValueChange = onDescriptionChange,
@@ -280,14 +170,8 @@ fun AddDonationContent(
                         )
                     )
                 }
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Quantidade",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+
+                FormSectionLayout(title = "Quantidade") {
                     OutlinedTextField(
                         value = uiState.quantityString,
                         onValueChange = onQuantityChange,
@@ -301,109 +185,38 @@ fun AddDonationContent(
                         )
                     )
                 }
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Beneficiário Destinatário",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
+
+                FormSectionLayout(title = "Beneficiário Destinatário") {
+                    DonationDropdownMenu(
+                        label = "Beneficiário",
+                        options = uiState.beneficiaries,
+                        selectedOption = uiState.selectedBeneficiary,
+                        optionToString = { it.name },
+                        isExpanded = uiState.isBeneficiaryExpanded,
+                        onExpandedChange = onBeneficiaryExpandedChange,
+                        onOptionSelect = onBeneficiarySelect,
+                        placeholderText = "Selecione o beneficiário"
                     )
-                    ExposedDropdownMenuBox(
-                        expanded = uiState.isBeneficiaryExpanded,
-                        onExpandedChange = onBeneficiaryExpandedChange
-                    ) {
-                        OutlinedTextField(
-                            value = uiState.selectedBeneficiary?.name ?: "Selecione o beneficiário",
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isBeneficiaryExpanded) },
-                            modifier = Modifier
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                            )
-                        )
-                        if (uiState.beneficiaries.isNotEmpty()) {
-                            ExposedDropdownMenu(
-                                expanded = uiState.isBeneficiaryExpanded,
-                                onDismissRequest = { onBeneficiaryExpandedChange(false) }
-                            ) {
-                                uiState.beneficiaries.forEach { beneficiary ->
-                                    DropdownMenuItem(
-                                        text = { Text(beneficiary.name) },
-                                        onClick = { onBeneficiarySelect(beneficiary) }
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Status da Doação",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
+
+                FormSectionLayout(title = "Status da Doação") {
+                    DonationDropdownMenu(
+                        label = "Status",
+                        options = DonationStatus.entries,
+                        selectedOption = uiState.selectedStatus,
+                        optionToString = { it.name },
+                        isExpanded = uiState.isStatusExpanded,
+                        onExpandedChange = onStatusExpandedChange,
+                        onOptionSelect = onStatusSelect
                     )
-                    ExposedDropdownMenuBox(
-                        expanded = uiState.isStatusExpanded,
-                        onExpandedChange = onStatusExpandedChange
-                    ) {
-                        OutlinedTextField(
-                            value = uiState.selectedStatus.name,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isStatusExpanded) },
-                            modifier = Modifier
-                                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                            )
-                        )
-                        ExposedDropdownMenu(
-                            expanded = uiState.isStatusExpanded,
-                            onDismissRequest = { onStatusExpandedChange(false) }
-                        ) {
-                            DonationStatus.entries.forEach { status ->
-                                DropdownMenuItem(
-                                    text = { Text(status.name) },
-                                    onClick = { onStatusSelect(status) }
-                                )
-                            }
-                        }
-                    }
                 }
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "Prazo limite para entrega",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    OutlinedTextField(
-                        value = uiState.selectedDate.format(dateFormatter),
-                        onValueChange = {},
-                        readOnly = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        trailingIcon = {
-                            TextButton(onClick = { onDatePickerExpandedChange(true) }) {
-                                Text("Alterar", color = MaterialTheme.colorScheme.tertiary)
-                            }
-                        },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                        )
+
+                FormSectionLayout(title = "Prazo limite para entrega") {
+
+
+                    DonationDatePickerField(
+                        selectedDate = uiState.selectedDate,
+                        onCalendarClick = { onDatePickerExpandedChange(true) }
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -413,7 +226,8 @@ fun AddDonationContent(
                         .fillMaxWidth()
                         .height(56.dp),
                     shape = RoundedCornerShape(14.dp),
-                    enabled = uiState.name.isNotBlank() && uiState.selectedCategory != null && uiState.selectedBeneficiary != null
+                    enabled = uiState.name.isNotBlank() && uiState.selectedCategory != null &&
+                            uiState.selectedBeneficiary != null
                 ) {
                     Text(
                         text = "Salvar Doação",
@@ -430,16 +244,17 @@ fun AddDonationContent(
 @Composable
 fun AddDonationScreenPreview() {
     GivChurchTheme(darkTheme = false) {
-        val domainMockBeneficiaries = com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.map { entity ->
-            Beneficiary(
-                id = entity.id,
-                name = entity.name,
-                phoneNumber = entity.phoneNumber,
-                address = entity.address,
-                observations = entity.observations,
-                createBy = entity.createBy
-            )
-        }
+        val domainMockBeneficiaries =
+            com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.map { entity ->
+                Beneficiary(
+                    id = entity.id,
+                    name = entity.name,
+                    phoneNumber = entity.phoneNumber,
+                    address = entity.address,
+                    observations = entity.observations,
+                    createBy = entity.createBy
+                )
+            }
         AddDonationContent(
             uiState = AddDonationUiState(
                 beneficiaries = domainMockBeneficiaries
@@ -461,4 +276,3 @@ fun AddDonationScreenPreview() {
         )
     }
 }
-
