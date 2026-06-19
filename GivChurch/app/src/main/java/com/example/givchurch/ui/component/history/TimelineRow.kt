@@ -47,7 +47,13 @@ fun TimelineRow(
     isLastItem: Boolean
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale("pt", "BR"))
+
     val isDelivered = donation.status == DonationStatus.DELIVERED
+    val statusColor = when (donation.status) {
+        DonationStatus.DELIVERED -> MaterialTheme.colorScheme.onPrimaryContainer
+        DonationStatus.PENDING -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.outline
+    }
 
     Row(
         modifier = Modifier
@@ -141,14 +147,14 @@ fun TimelineRow(
 
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = if (isDelivered) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                            color = statusColor.copy(alpha = 0.15f),
                             modifier = Modifier.padding(start = 8.dp)
                         ) {
                             Text(
-                                text = if (isDelivered) "Entregue" else "Pendente",
+                                text = donation.status.value,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isDelivered) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer,
+                                color = statusColor,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }

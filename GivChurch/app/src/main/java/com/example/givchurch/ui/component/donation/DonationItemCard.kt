@@ -38,6 +38,12 @@ fun DonationItemCard(
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
+    val statusColor = when (donation.status) {
+        DonationStatus.DELIVERED -> MaterialTheme.colorScheme.onPrimaryContainer
+        DonationStatus.PENDING -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.outline
+    }
+
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -95,7 +101,7 @@ fun DonationItemCard(
 
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
+                color = statusColor.copy(alpha = 0.15f),
                 modifier = Modifier.padding(start = 8.dp)
             ) {
                 Text(
@@ -103,7 +109,7 @@ fun DonationItemCard(
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = statusColor
                 )
             }
         }
