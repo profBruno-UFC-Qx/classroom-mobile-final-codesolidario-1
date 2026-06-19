@@ -19,7 +19,8 @@ class FirebaseAuthService {
                     "id" to userId,
                     "firstname" to user.firstname,
                     "lastname" to user.lastname,
-                    "email" to user.email
+                    "email" to user.email,
+                    "imageUrl" to user.imageUrl
                 )
 
                 firestore.collection("users").document(userId).set(userToSave).await()

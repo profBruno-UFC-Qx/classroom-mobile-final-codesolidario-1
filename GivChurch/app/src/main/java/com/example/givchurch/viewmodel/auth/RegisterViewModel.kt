@@ -1,5 +1,7 @@
 package com.example.givchurch.viewmodel.auth
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.domain.model.User
@@ -11,6 +13,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class RegisterViewModel(
     private val repository: AuthRepository
@@ -21,6 +25,24 @@ class RegisterViewModel(
 
     private val _registerSuccess = MutableSharedFlow<Boolean>()
     val registerSuccess = _registerSuccess.asSharedFlow()
+
+    fun onImageSelected(context: Context, uri: Uri?) {
+        if (uri == null) return
+        viewModelScope.launch {
+            try {
+                val fileName = "profile_${System.currentTimeMillis()}.jpg"
+                val destinationFile = File(context.filesDir, fileName)
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    FileOutputStream(destinationFile).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+                _uiState.update { it.copy(imageUrl = destinationFile.absolutePath) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(message = "Erro ao processar imagem de perfil.") }
+            }
+        }
+    }
 
     fun onFirstnameChange(newValue: String) {
         _uiState.update { it.copy(firstname = newValue) }
@@ -36,6 +58,10 @@ class RegisterViewModel(
 
     fun onPasswordChange(newValue: String) {
         _uiState.update { it.copy(password = newValue) }
+    }
+
+    fun resetRegisterStatus() {
+        _uiState.value = RegisterUiState()
     }
 
     fun register() {
@@ -55,7 +81,8 @@ class RegisterViewModel(
                 firstname = currentState.firstname,
                 lastname = currentState.lastname,
                 email = currentState.email,
-                password = currentState.password
+                password = currentState.password,
+                imageUrl = _uiState.value.imageUrl
             )
 
             val result = repository.register(userDomain)

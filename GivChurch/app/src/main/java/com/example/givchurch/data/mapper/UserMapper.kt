@@ -9,7 +9,8 @@ fun UserDomain.toLocalUser(): LocalUser {
         id = this.id,
         firstname = this.firstname,
         lastname = this.lastname,
-        email = this.email
+        email = this.email,
+        imageUrl = this.imageUrl
     )
 }
 
@@ -19,6 +20,7 @@ fun LocalUser.toRemoteUser(password: String = ""): UserDomain {
         firstname = this.firstname,
         lastname = this.lastname,
         email = this.email,
-        password = password
+        password = password,
+        imageUrl = this.imageUrl
     )
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.givchurch.viewmodel.auth.RegisterViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -16,10 +17,12 @@ fun RegisterScreen(
     vm: RegisterViewModel = koinViewModel()
 ) {
     val uiState by vm.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         vm.registerSuccess.collectLatest { success ->
             if (success) {
+                vm.resetRegisterStatus()
                 onNavigateBack()
             }
         }
@@ -27,6 +30,7 @@ fun RegisterScreen(
 
     RegisterScreenContent(
         uiState = uiState,
+        onImageSelect = { uri -> vm.onImageSelected(context, uri) },
         onFirstnameChange = vm::onFirstnameChange,
         onLastnameChange = vm::onLastnameChange,
         onEmailChange = vm::onEmailChange,

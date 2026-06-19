@@ -1,5 +1,8 @@
 package com.example.givchurch.ui.screen.auth
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.component.form.FormSectionLayout
+import com.example.givchurch.ui.component.form.ImagePickerSelector
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.RegisterUiState
 
@@ -45,6 +49,7 @@ import com.example.givchurch.viewmodel.auth.RegisterUiState
 @Composable
 fun RegisterScreenContent(
     uiState: RegisterUiState,
+    onImageSelect: (Uri?) -> Unit,
     onFirstnameChange: (String) -> Unit,
     onLastnameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
@@ -53,6 +58,11 @@ fun RegisterScreenContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = onImageSelect
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -89,6 +99,13 @@ fun RegisterScreenContent(
                     title = "Crie sua conta",
                     subtitle = "Preencha os dados para começar a ajudar"
                 )
+
+                FormSectionLayout(title = "Foto de perfil") {
+                    ImagePickerSelector(
+                        imageUrl = uiState.imageUrl.ifBlank { null },
+                        onPickImage = { galleryLauncher.launch("image/*") }
+                    )
+                }
 
                 FormSectionLayout(title = "Nome") {
                     OutlinedTextField(
@@ -214,6 +231,7 @@ fun RegisterScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         RegisterScreenContent(
             uiState = RegisterUiState(firstname = "Maria", lastname = "Oliveira", email = "maria@email.com"),
+            onImageSelect = {},
             onFirstnameChange = {},
             onLastnameChange = {},
             onEmailChange = {},
@@ -223,3 +241,4 @@ fun RegisterScreenPreview() {
         )
     }
 }
+

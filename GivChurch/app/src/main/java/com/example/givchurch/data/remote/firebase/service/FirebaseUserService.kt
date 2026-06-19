@@ -38,7 +38,8 @@ class FirebaseUserService {
                 "id" to userId,
                 "firstname" to user.firstname,
                 "lastname" to user.lastname,
-                "email" to user.email
+                "email" to user.email,
+                "imageUrl" to user.imageUrl
             )
             usersCollection.document(userId).update(userMap).await()
             Result.success("Profile updated successfully!")
