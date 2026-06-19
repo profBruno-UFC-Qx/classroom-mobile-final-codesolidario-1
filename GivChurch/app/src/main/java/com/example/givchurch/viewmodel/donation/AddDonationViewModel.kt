@@ -1,5 +1,8 @@
 package com.example.givchurch.viewmodel.donation
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.domain.model.Beneficiary
@@ -14,6 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -36,7 +41,29 @@ class AddDonationViewModel(
         }
     }
 
-    fun onImageSelected(uri: String?) = _uiState.update { it.copy(imageUrl = uri) }
+    fun onImageSelected(context: Context, uri: Uri?) {
+        if (uri == null) return
+
+        viewModelScope.launch {
+            try {
+                val fileName = "donation_${System.currentTimeMillis()}.jpg"
+                val destinationFile = File(context.filesDir, fileName)
+
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    FileOutputStream(destinationFile).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+
+                val permanentImagePath = destinationFile.absolutePath
+                _uiState.update { it.copy(imageUrl = permanentImagePath) }
+
+            } catch (e: Exception) {
+                Log.e("AddDonationViewModel", "Erro ao persistir imagem da galeria", e)
+            }
+        }
+    }
+
     fun onNameChanged(newName: String) = _uiState.update { it.copy(name = newName) }
     fun onDescriptionChanged(newDesc: String) = _uiState.update { it.copy(description = newDesc) }
     fun onQuantityChanged(newQty: String) = _uiState.update { it.copy(quantityString = newQty) }
@@ -48,6 +75,15 @@ class AddDonationViewModel(
     fun onStatusExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isStatusExpanded = expanded) }
     fun onDateSelected(date: LocalDate) = _uiState.update { it.copy(selectedDate = date, isDatePickerExpanded = false) }
     fun onDatePickerExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isDatePickerExpanded = expanded) }
+
+    fun resetSaveStatus() {
+        _uiState.update { currentState ->
+            AddDonationUiState(
+                beneficiaries = currentState.beneficiaries
+            )
+        }
+    }
+
 
     fun saveDonation() {
         viewModelScope.launch {

@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -15,16 +16,18 @@ fun AddDonationScreen(
     viewModel: AddDonationViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(uiState.isSaveSuccess) {
         if (uiState.isSaveSuccess) {
+            viewModel.resetSaveStatus()
             onNavigateBack()
         }
     }
 
     AddDonationContent(
         uiState = uiState,
-        onImageSelect = { viewModel.onImageSelected(it?.toString()) },
+        onImageSelect = { uri -> viewModel.onImageSelected(context, uri) },
         onNameChange = viewModel::onNameChanged,
         onDescriptionChange = viewModel::onDescriptionChanged,
         onQuantityChange = viewModel::onQuantityChanged,

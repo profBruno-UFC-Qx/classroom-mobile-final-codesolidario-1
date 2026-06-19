@@ -84,6 +84,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 
+    // Coil para a galeira
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     // Testes e Debug
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
