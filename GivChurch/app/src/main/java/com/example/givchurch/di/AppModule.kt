@@ -13,6 +13,7 @@ import com.example.givchurch.domain.repository.BeneficiaryRepository
 import com.example.givchurch.domain.repository.DashboardRepository
 import com.example.givchurch.domain.repository.DonationRepository
 import com.example.givchurch.domain.repository.UserRepository
+import com.example.givchurch.viewmodel.auth.ForgotPasswordViewModel
 import com.example.givchurch.viewmodel.auth.LoginViewModel
 import com.example.givchurch.viewmodel.auth.RegisterViewModel
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryViewModel
@@ -46,6 +47,7 @@ val repositoryModule = module {
 
 val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { AddBeneficiaryViewModel(get(), get ()) }
     viewModel { MainBeneficiaryViewModel(get(), get()) }

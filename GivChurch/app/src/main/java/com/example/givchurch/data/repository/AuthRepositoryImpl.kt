@@ -19,6 +19,10 @@ class AuthRepositoryImpl(
         return authService.login(firebaseUser)
     }
 
+    override suspend fun resetPassword(email: String): Result<String> {
+        return authService.resetPassword(email)
+    }
+
     override fun logout() {
         authService.logout()
     }

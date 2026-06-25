@@ -5,7 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,23 +28,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.component.form.FormSectionLayout
 import com.example.givchurch.ui.theme.GivChurchTheme
-import com.example.givchurch.viewmodel.auth.LoginUiState
+import com.example.givchurch.viewmodel.auth.ForgotPasswordUiState
 
 @Composable
-fun LoginScreenContent(
-    uiState: LoginUiState,
+fun ForgotPasswordScreenContent(
+    uiState: ForgotPasswordUiState,
     onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
-    onCreateAccountClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
+    onResetClick: () -> Unit,
+    onBackToLoginClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -59,12 +55,12 @@ fun LoginScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppHeader(
-                title = "Bem-vindo de volta",
-                subtitle = "Acesse sua conta para continuar"
+                title = "Recuperar senha",
+                subtitle = "Insira o e-mail cadastrado para redefinir sua credencial"
             )
 
             FormSectionLayout(title = "E-mail") {
@@ -78,27 +74,6 @@ fun LoginScreenContent(
                     shape = RoundedCornerShape(12.dp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-            }
-
-            FormSectionLayout(title = "Senha") {
-                OutlinedTextField(
-                    value = uiState.password,
-                    onValueChange = onPasswordChange,
-                    placeholder = { Text("Digite sua senha") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    enabled = !uiState.isLoading,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -108,25 +83,10 @@ fun LoginScreenContent(
                 )
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(
-                    onClick = onForgotPasswordClick,
-                    enabled = !uiState.isLoading
-                ) {
-                    Text(
-                        text = "Esqueceu a senha?",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
+            Spacer(Modifier.height(8.dp))
 
             Button(
-                onClick = onLoginClick,
+                onClick = onResetClick,
                 enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,7 +100,7 @@ fun LoginScreenContent(
                     )
                 } else {
                     Text(
-                        text = "Entrar",
+                        text = "Enviar link de redefinição",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -148,7 +108,7 @@ fun LoginScreenContent(
             }
 
             Button(
-                onClick = onCreateAccountClick,
+                onClick = onBackToLoginClick,
                 enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -161,7 +121,7 @@ fun LoginScreenContent(
                 border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             ) {
                 Text(
-                    text = "Criar conta",
+                    text = "Voltar para o Login",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -179,17 +139,15 @@ fun LoginScreenContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, name = "Login - Padrão")
+@Preview(showBackground = true, showSystemUi = true, name = "Recuperar Senha - Padrão")
 @Composable
-fun LoginScreenPreview() {
+fun ForgotPasswordScreenPreview() {
     GivChurchTheme(darkTheme = false) {
-        LoginScreenContent(
-            uiState = LoginUiState(email = "usuario@email.com", password = "123"),
+        ForgotPasswordScreenContent(
+            uiState = ForgotPasswordUiState(email = "usuario@email.com"),
             onEmailChange = {},
-            onPasswordChange = {},
-            onLoginClick = {},
-            onCreateAccountClick = {},
-            onForgotPasswordClick = {}
+            onResetClick = {},
+            onBackToLoginClick = {}
         )
     }
 }

@@ -46,6 +46,19 @@ class FirebaseAuthService {
         }
     }
 
+    suspend fun resetPassword(email: String): Result<String> {
+        return if (email.isNotBlank()) {
+            try {
+                auth.sendPasswordResetEmail(email).await()
+                Result.success("E-mail de recuperação enviado com sucesso!")
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        } else {
+            Result.failure(Exception("Por favor, digite o seu e-mail."))
+        }
+    }
+
     fun logout() {
         auth.signOut()
     }

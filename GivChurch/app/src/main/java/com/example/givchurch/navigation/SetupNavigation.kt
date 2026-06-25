@@ -6,6 +6,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.example.givchurch.ui.screen.auth.ForgotPasswordScreen
 import com.example.givchurch.ui.screen.auth.LoginScreen
 import com.example.givchurch.ui.screen.auth.RegisterScreen
 import com.example.givchurch.viewmodel.auth.LoginViewModel
@@ -29,6 +30,21 @@ fun SetupNavigation(
                     },
                     onCreateAccountClick = {
                         backStack.add(Screen.RegisterScreen)
+                    },
+                    onForgotPasswordClick = {
+                        backStack.add(Screen.ForgotPasswordScreen)
+                    },
+                    modifier = Modifier
+                )
+            }
+
+            entry<Screen.ForgotPasswordScreen> {
+                ForgotPasswordScreen(
+                    onResetSuccess = {
+                        backStack.removeLastOrNull()
+                    },
+                    onBackToLoginClick = {
+                        backStack.removeLastOrNull()
                     },
                     modifier = Modifier
                 )
