@@ -134,8 +134,13 @@ fun MainDonationContent(
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 88.dp
+                )
             ) {
                 items(uiState.donationsList) { donation ->
                     var beneficiaryName by remember { mutableStateOf("Carregando...") }

@@ -96,7 +96,8 @@ fun BeneficiaryItemCard(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Box(
+                    // TODO: Quantidade de Doações por Beneficiários
+                    /*Box(
                         modifier = Modifier
                             .background(
                                 color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
@@ -110,7 +111,7 @@ fun BeneficiaryItemCard(
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold
                         )
-                    }
+                    }*/
                 }
             }
 

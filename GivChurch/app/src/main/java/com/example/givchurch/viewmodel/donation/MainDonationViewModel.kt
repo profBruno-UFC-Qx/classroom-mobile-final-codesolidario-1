@@ -50,6 +50,12 @@ class MainDonationViewModel(
             flowOf(emptyList())
         } else {
             donationRepository.searchAndFilter(name = query, category = category, createBy = userId)
+                .map { donations ->
+                    donations.map { donation ->
+                        val beneficiary = beneficiaryRepository.getById(donation.beneficiaryId, createBy = userId)
+                        donation.copy(description = beneficiary?.name ?: "Desconhecido")
+                    }
+                }
         }
     }.map { list ->
         val operation = _operationState.value
