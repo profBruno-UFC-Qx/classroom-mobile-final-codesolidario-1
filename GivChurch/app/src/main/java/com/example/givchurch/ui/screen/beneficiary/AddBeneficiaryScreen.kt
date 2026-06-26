@@ -28,6 +28,7 @@ fun AddBeneficiaryScreen(
     LaunchedEffect(key1 = true) {
         viewModel.saveSuccess.collectLatest { success ->
             if (success) {
+                viewModel.resetForm()
                 onNavigateBack()
             }
         }
@@ -40,7 +41,10 @@ fun AddBeneficiaryScreen(
         onAddressChanged = viewModel::onAddressChanged,
         onObservationsChanged = viewModel::onObservationsChanged,
         onSaveClick = viewModel::saveBeneficiary,
-        onNavigateBack = onNavigateBack,
+        onNavigateBack = {
+            viewModel.resetForm()
+            onNavigateBack()
+        },
         modifier = modifier
     )
 }

@@ -70,7 +70,7 @@ class AddBeneficiaryViewModel(
             val currentUserId = userRepository.getCurrentUserId()
 
             val beneficiaryModel = Beneficiary(
-                id = currentBeneficiaryId?: 0,
+                id = currentBeneficiaryId ?: 0,
                 name = currentState.name,
                 phoneNumber = currentState.phoneNumber,
                 address = currentState.address,
@@ -91,5 +91,11 @@ class AddBeneficiaryViewModel(
                 _uiState.update { it.copy(errorMessage = message) }
             }
         }
+    }
+
+    fun resetForm() {
+        isEditMode = false
+        currentBeneficiaryId = null
+        _uiState.update { AddBeneficiaryUiState() }
     }
 }
