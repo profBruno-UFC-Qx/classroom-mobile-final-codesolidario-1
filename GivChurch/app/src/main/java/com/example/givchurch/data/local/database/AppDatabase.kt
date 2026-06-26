@@ -19,7 +19,6 @@ import com.example.givchurch.data.local.model.Donation
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun beneficiaryDao(): BeneficiaryDao
     abstract fun donationDao(): DonationDao
     abstract fun dashboardDao(): DashboardDao
@@ -36,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "givchurch_database"
                 )
                     .allowMainThreadQueries()
-                    .fallbackToDestructiveMigration(false)
+                    .fallbackToDestructiveMigration(true)
                     .build()
 
                 INSTANCE = instance

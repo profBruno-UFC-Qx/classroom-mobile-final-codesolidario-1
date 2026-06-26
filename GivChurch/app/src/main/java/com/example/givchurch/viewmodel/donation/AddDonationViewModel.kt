@@ -32,12 +32,33 @@ class AddDonationViewModel(
     private val _uiState = MutableStateFlow(AddDonationUiState())
     val uiState: StateFlow<AddDonationUiState> = _uiState.asStateFlow()
 
+    private var currentDonationId: Int = 0
+    private var isEditMode: Boolean = false
+
     init {
         viewModelScope.launch {
             val userId = userRepository.getCurrentUserId()
             beneficiaryRepository.getAll(createBy = userId).collect { list ->
                 _uiState.update { it.copy(beneficiaries = list) }
             }
+        }
+    }
+
+    fun loadDonationData(donation: Donation) {
+        currentDonationId = donation.id
+        isEditMode = true
+        _uiState.update { currentState ->
+            val matchingBeneficiary = currentState.beneficiaries.find { it.id == donation.beneficiaryId }
+            currentState.copy(
+                imageUrl = donation.imageUrl,
+                name = donation.name,
+                description = donation.description,
+                quantityString = donation.quantity.toString(),
+                selectedCategory = donation.category,
+                selectedBeneficiary = matchingBeneficiary,
+                selectedStatus = donation.status,
+                selectedDate = donation.dueDate.toLocalDate()
+            )
         }
     }
 
@@ -77,13 +98,14 @@ class AddDonationViewModel(
     fun onDatePickerExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isDatePickerExpanded = expanded) }
 
     fun resetSaveStatus() {
+        isEditMode = false
+        currentDonationId = 0
         _uiState.update { currentState ->
             AddDonationUiState(
                 beneficiaries = currentState.beneficiaries
             )
         }
     }
-
 
     fun saveDonation() {
         viewModelScope.launch {
@@ -93,7 +115,7 @@ class AddDonationViewModel(
             val category = currentState.selectedCategory ?: DonationCategory.FOOD
 
             val donation = Donation(
-                id = 0,
+                id = currentDonationId,
                 imageUrl = currentState.imageUrl,
                 name = currentState.name,
                 category = category,
@@ -105,7 +127,12 @@ class AddDonationViewModel(
                 dueDate = LocalDateTime.of(currentState.selectedDate, LocalTime.MIDNIGHT)
             )
 
-            val success = donationRepository.create(donation)
+            val success = if (isEditMode) {
+                donationRepository.update(donation)
+            } else {
+                donationRepository.create(donation)
+            }
+
             if (success) {
                 _uiState.update { it.copy(isSaveSuccess = true) }
             }

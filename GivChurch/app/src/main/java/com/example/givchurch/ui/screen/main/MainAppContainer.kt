@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.domain.model.Donation
 import com.example.givchurch.ui.screen.beneficiary.MainBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.MainDonationScreen
 import com.example.givchurch.ui.screen.history.MainHistoryScreen
@@ -46,6 +47,7 @@ fun MainAppContainer(
     onLogoutSuccess: () -> Unit,
     onEditProfileClick: () -> Unit,
     onEditBeneficiaryClick: (Beneficiary) -> Unit,
+    onEditDonationClick: (Donation) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -91,7 +93,8 @@ fun MainAppContainer(
                 }
                 NavigationItem.DONATIONS -> {
                     MainDonationScreen(
-                        onAddDonationClick = onAddDonationClick
+                        onAddDonationClick = onAddDonationClick,
+                        onEditDonationClick = onEditDonationClick
                     )
                 }
                 NavigationItem.BENEFICIARIES -> {
@@ -127,7 +130,8 @@ fun MainBeneficiaryScreenPreview() {
             onAddDonationClick = {},
             onLogoutSuccess = {},
             onEditProfileClick = {},
-            onEditBeneficiaryClick = {}
+            onEditBeneficiaryClick = {},
+            onEditDonationClick = {}
         )
     }
 }

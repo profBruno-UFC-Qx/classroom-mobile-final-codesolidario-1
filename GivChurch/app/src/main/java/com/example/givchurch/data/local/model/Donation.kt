@@ -15,7 +15,7 @@ import java.time.LocalDateTime
             entity = Beneficiary::class,
             parentColumns = ["id"],
             childColumns = ["beneficiaryId"],
-            onDelete = ForeignKey.NO_ACTION
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index(value = ["beneficiaryId"])]

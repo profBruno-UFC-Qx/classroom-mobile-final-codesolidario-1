@@ -6,5 +6,8 @@ import com.example.givchurch.domain.model.enums.DonationCategory
 data class DonationUiState(
     val searchQuery: String = "",
     val selectedCategory: DonationCategory? = null,
-    val donationsList: List<Donation> = emptyList()
+    val donationsList: List<Donation> = emptyList(),
+    val isLoading: Boolean = false,
+    val isSuccess: Boolean = false,
+    val errorMessage: String? = null
 )

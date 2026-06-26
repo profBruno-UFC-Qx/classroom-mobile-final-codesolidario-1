@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -66,6 +67,7 @@ fun AddDonationContent(
     onDatePickerExpandedChange: (Boolean) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
+    isEditMode: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -115,7 +117,7 @@ fun AddDonationContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Adicionar Nova Doação",
+                    text = if (isEditMode) "Editar Doação" else "Adicionar Nova Doação",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -186,16 +188,16 @@ fun AddDonationContent(
                     )
                 }
 
-                FormSectionLayout(title = "Beneficiário Destinatário") {
+                FormSectionLayout(title = "Atendido Destinatário") {
                     DonationDropdownMenu(
-                        label = "Beneficiário",
+                        label = "Atendido",
                         options = uiState.beneficiaries,
                         selectedOption = uiState.selectedBeneficiary,
                         optionToString = { it.name },
                         isExpanded = uiState.isBeneficiaryExpanded,
                         onExpandedChange = onBeneficiaryExpandedChange,
                         onOptionSelect = onBeneficiarySelect,
-                        placeholderText = "Selecione o beneficiário"
+                        placeholderText = "Selecione o atendido"
                     )
                 }
 
@@ -212,15 +214,17 @@ fun AddDonationContent(
                 }
 
                 FormSectionLayout(title = "Prazo limite para entrega") {
-
-
                     DonationDatePickerField(
                         selectedDate = uiState.selectedDate,
                         onCalendarClick = { onDatePickerExpandedChange(true) }
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Button(
+
+
                     onClick = onSaveClick,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -230,7 +234,7 @@ fun AddDonationContent(
                             uiState.selectedBeneficiary != null
                 ) {
                     Text(
-                        text = "Salvar Doação",
+                        text = if (isEditMode) "Salvar Alterações" else "Salvar Doação",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -239,7 +243,6 @@ fun AddDonationContent(
         }
     }
 }
-
 @Preview(showBackground = true, showSystemUi = true, name = "Adicionar Doação - Oficial")
 @Composable
 fun AddDonationScreenPreview() {
@@ -276,3 +279,4 @@ fun AddDonationScreenPreview() {
         )
     }
 }
+

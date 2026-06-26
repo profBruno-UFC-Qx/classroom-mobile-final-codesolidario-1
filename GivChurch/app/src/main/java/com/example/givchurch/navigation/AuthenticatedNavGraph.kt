@@ -33,10 +33,10 @@ fun AuthenticatedNavGraph(
                     selectedItem = currentTab,
                     onTabSelected = { currentTab = it },
                     onAddBeneficiaryClick = {
-                        internalBackStack.add(Screen.AddRegisterScreen())
+                        internalBackStack.add(Screen.AddRegisterScreen(beneficiary = null))
                     },
                     onAddDonationClick = {
-                        internalBackStack.add(Screen.AddDonationScreen)
+                        internalBackStack.add(Screen.AddDonationScreen(donation = null))
                     },
                     onLogoutSuccess = onLogout,
                     onEditProfileClick = {
@@ -44,6 +44,9 @@ fun AuthenticatedNavGraph(
                     },
                     onEditBeneficiaryClick = { beneficiary ->
                         internalBackStack.add(Screen.AddRegisterScreen(beneficiary = beneficiary))
+                    },
+                    onEditDonationClick = { donation ->
+                        internalBackStack.add(Screen.AddDonationScreen(donation = donation))
                     }
                 )
             }
@@ -65,8 +68,9 @@ fun AuthenticatedNavGraph(
                 )
             }
 
-            entry<Screen.AddDonationScreen> {
+            entry<Screen.AddDonationScreen> { screen ->
                 AddDonationScreen(
+                    donation = screen.donation,
                     onNavigateBack = {
                         internalBackStack.removeLastOrNull()
                     }

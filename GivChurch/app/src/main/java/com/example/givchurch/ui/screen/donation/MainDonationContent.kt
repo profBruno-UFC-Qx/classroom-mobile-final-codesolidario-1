@@ -11,7 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +30,9 @@ fun MainDonationContent(
     onSearchQueryChanged: (String) -> Unit,
     onCategorySelected: (DonationCategory?) -> Unit,
     onAddDonationClick: () -> Unit,
+    onEditDonationClick: (Donation) -> Unit,
+    onDeleteDonationClick: (Donation) -> Unit,
+    onLoadBeneficiaryName: (Int, (String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -124,9 +127,19 @@ fun MainDonationContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(uiState.donationsList) { donation ->
+                    var beneficiaryName by remember { mutableStateOf("Carregando...") }
+
+                    LaunchedEffect(key1 = donation.beneficiaryId) {
+                        onLoadBeneficiaryName(donation.beneficiaryId) { name ->
+                            beneficiaryName = name
+                        }
+                    }
+
                     DonationItemCard(
                         donation = donation,
-                        beneficiaryName = donation.beneficiaryId.toString()
+                        beneficiaryName = beneficiaryName,
+                        onEditClick = { onEditDonationClick(donation) },
+                        onDeleteClick = { onDeleteDonationClick(donation) }
                     )
                 }
             }
@@ -173,7 +186,10 @@ fun MainDonationScreenPreview() {
             ),
             onSearchQueryChanged = {},
             onCategorySelected = {},
-            onAddDonationClick = {}
+            onAddDonationClick = {},
+            onEditDonationClick = {},
+            onDeleteDonationClick = {},
+            onLoadBeneficiaryName = { _, onResult -> onResult("Atendido de Teste") }
         )
     }
 }

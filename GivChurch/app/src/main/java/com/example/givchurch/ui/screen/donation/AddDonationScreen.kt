@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.example.givchurch.domain.model.Donation
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -13,10 +14,17 @@ import org.koin.androidx.compose.koinViewModel
 fun AddDonationScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    donation: Donation? = null,
     viewModel: AddDonationViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = donation) {
+        if (donation != null) {
+            viewModel.loadDonationData(donation)
+        }
+    }
 
     LaunchedEffect(uiState.isSaveSuccess) {
         if (uiState.isSaveSuccess) {
@@ -41,6 +49,7 @@ fun AddDonationScreen(
         onDatePickerExpandedChange = viewModel::onDatePickerExpandedChanged,
         onSaveClick = { viewModel.saveDonation() },
         onNavigateBack = onNavigateBack,
+        isEditMode = donation != null,
         modifier = modifier
     )
 }

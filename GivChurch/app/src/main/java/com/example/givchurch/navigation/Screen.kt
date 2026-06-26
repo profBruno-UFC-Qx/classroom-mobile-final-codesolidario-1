@@ -15,5 +15,7 @@ sealed class Screen {
     ) : Screen()
 
     data object MainDonationScreen : Screen()
-    data object AddDonationScreen : Screen()
+    data class AddDonationScreen(
+        val donation: com.example.givchurch.domain.model.Donation? = null
+    ) : Screen()
 }

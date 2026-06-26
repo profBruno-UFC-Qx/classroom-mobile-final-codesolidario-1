@@ -27,23 +27,34 @@ class MainDonationViewModel(
     private val _searchQuery = MutableStateFlow("")
     private val _selectedCategory = MutableStateFlow<DonationCategory?>(null)
 
+    private val _operationState = MutableStateFlow(Triple(false, false, null as String?))
+
     val uiState: StateFlow<DonationUiState> = combine(
         _searchQuery,
         _selectedCategory,
-        userRepository.getUserIdFlow()
-    ) { query, category, userId ->
-        Triple(query, category, userId)
-    }.flatMapLatest { (query, category, userId) ->
+        userRepository.getUserIdFlow(),
+        _operationState
+    ) { query, category, userId, operation ->
+        listOf(query, category, userId, operation)
+    }.flatMapLatest { args ->
+        val query = args[0] as String
+        val category = args[1] as DonationCategory?
+        val userId = args[2] as String
+
         if (userId.isBlank()) {
             flowOf(emptyList())
         } else {
             donationRepository.searchAndFilter(name = query, category = category, createBy = userId)
         }
     }.map { list ->
+        val operation = _operationState.value
         DonationUiState(
             searchQuery = _searchQuery.value,
             selectedCategory = _selectedCategory.value,
-            donationsList = list
+            donationsList = list,
+            isLoading = operation.first,
+            isSuccess = operation.second,
+            errorMessage = operation.third
         )
     }.stateIn(
         scope = viewModelScope,
@@ -65,5 +76,39 @@ class MainDonationViewModel(
             val beneficiary = beneficiaryRepository.getById(id, createBy = userId)
             onResult(beneficiary?.name ?: "Desconhecido")
         }
+    }
+
+    fun updateDonation(donation: Donation) {
+        _operationState.value = Triple(true, false, null)
+        viewModelScope.launch {
+            val isSuccess = donationRepository.update(donation)
+            if (isSuccess) {
+                _operationState.value = Triple(false, true, null)
+            } else {
+                _operationState.value = Triple(false, false, "Erro ao atualizar doação.")
+            }
+        }
+    }
+
+    fun deleteDonation(id: Int) {
+        val currentUserId = userRepository.getCurrentUserId()
+        if (currentUserId.isBlank()) {
+            _operationState.value = Triple(false, false, "Usuário não autenticado.")
+            return
+        }
+
+        _operationState.value = Triple(true, false, null)
+        viewModelScope.launch {
+            val isDeleted = donationRepository.delete(id = id, createBy = currentUserId)
+            if (isDeleted) {
+                _operationState.value = Triple(false, true, null)
+            } else {
+                _operationState.value = Triple(false, false, "Erro ao excluir doação.")
+            }
+        }
+    }
+
+    fun clearOperationStatus() {
+        _operationState.value = Triple(false, false, null)
     }
 }
