@@ -18,6 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,12 +32,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,6 +49,9 @@ import com.example.givchurch.ui.component.form.FormSectionLayout
 import com.example.givchurch.ui.component.form.ImagePickerSelector
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.RegisterUiState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,12 +177,14 @@ fun RegisterScreenContent(
                 }
 
                 if (!isEditMode) {
+                    var registerPasswordVisible by remember { mutableStateOf(false) }
+
                     FormSectionLayout(title = "Senha") {
                         OutlinedTextField(
                             value = uiState.password,
                             onValueChange = onPasswordChange,
                             placeholder = { Text("Mínimo 6 caracteres") },
-                            visualTransformation = PasswordVisualTransformation(),
+                            visualTransformation = if (registerPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             singleLine = true,
                             enabled = !uiState.isLoading,
                             modifier = Modifier.fillMaxWidth(),
@@ -183,6 +193,14 @@ fun RegisterScreenContent(
                                 keyboardType = KeyboardType.Password,
                                 imeAction = ImeAction.Done
                             ),
+                            trailingIcon = {
+                                val image = if (registerPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                                val description = if (registerPasswordVisible) "Ocultar senha" else "Mostrar senha"
+
+                                IconButton(onClick = { registerPasswordVisible = !registerPasswordVisible }) {
+                                    Icon(imageVector = image, contentDescription = description)
+                                }
+                            },
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface
@@ -190,6 +208,7 @@ fun RegisterScreenContent(
                         )
                     }
                 }
+
 
                 Spacer(Modifier.height(8.dp))
 

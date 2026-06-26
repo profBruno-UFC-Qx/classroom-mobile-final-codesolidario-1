@@ -15,12 +15,12 @@ fun LoginScreen(
     onCreateAccountClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
-    vm: LoginViewModel = koinViewModel()
+    loginViewModel: LoginViewModel = koinViewModel()
 ) {
-    val uiState by vm.uiState.collectAsState()
+    val uiState by loginViewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = true) {
-        vm.loginSuccess.collectLatest { success ->
+        loginViewModel.loginSuccess.collectLatest { success ->
             if (success) {
                 onLoginSuccess()
             }
@@ -29,9 +29,9 @@ fun LoginScreen(
 
     LoginScreenContent(
         uiState = uiState,
-        onEmailChange = vm::onEmailChange,
-        onPasswordChange = vm::onPasswordChange,
-        onLoginClick = vm::login,
+        onEmailChange = loginViewModel::onEmailChange,
+        onPasswordChange = loginViewModel::onPasswordChange,
+        onLoginClick = loginViewModel::login,
         onCreateAccountClick = onCreateAccountClick,
         onForgotPasswordClick = onForgotPasswordClick,
         modifier = modifier

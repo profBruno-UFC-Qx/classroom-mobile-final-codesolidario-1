@@ -1,35 +1,44 @@
 package com.example.givchurch.ui.screen.auth
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +57,8 @@ fun LoginScreenContent(
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -58,20 +69,22 @@ fun LoginScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppHeader(
                 title = "Bem-vindo de volta",
-                subtitle = "Acesse sua conta para continuar"
+                subtitle = "Entre com as suas credenciais para continuar"
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             FormSectionLayout(title = "E-mail") {
                 OutlinedTextField(
                     value = uiState.email,
                     onValueChange = onEmailChange,
-                    placeholder = { Text("Ex: seu.usuario@email.com") },
+                    placeholder = { Text("Ex: maria@email.com") },
                     singleLine = true,
                     enabled = !uiState.isLoading,
                     modifier = Modifier.fillMaxWidth(),
@@ -92,15 +105,23 @@ fun LoginScreenContent(
                     value = uiState.password,
                     onValueChange = onPasswordChange,
                     placeholder = { Text("Digite sua senha") },
-                    visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
                     enabled = !uiState.isLoading,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        val description = if (passwordVisible) "Ocultar senha" else "Mostrar senha"
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, contentDescription = description)
+                        }
+                    },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = MaterialTheme.colorScheme.onSurface,
                         unfocusedTextColor = MaterialTheme.colorScheme.onSurface
@@ -112,17 +133,23 @@ fun LoginScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(
-                    onClick = onForgotPasswordClick,
-                    enabled = !uiState.isLoading
-                ) {
-                    Text(
-                        text = "Esqueceu a senha?",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
+                Text(
+                    text = "Esqueceu a senha?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.clickable(onClick = onForgotPasswordClick)
+                )
+            }
+
+            if (uiState.message.isNotBlank()) {
+                Text(
+                    text = uiState.message,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
             Button(
@@ -136,7 +163,7 @@ fun LoginScreenContent(
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.height(24.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 } else {
                     Text(
@@ -147,44 +174,34 @@ fun LoginScreenContent(
                 }
             }
 
-            Button(
-                onClick = onCreateAccountClick,
-                enabled = !uiState.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ),
-                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Criar conta",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            if (uiState.message.isNotBlank()) {
-                Text(
-                    text = uiState.message,
-                    color = if (uiState.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                    text = "Não tem uma conta? ",
                     style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Cadastre-se",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable(onClick = onCreateAccountClick)
                 )
             }
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, name = "Login - Padrão")
+@Preview(showBackground = true, showSystemUi = true, name = "Login - Oficial")
 @Composable
 fun LoginScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         LoginScreenContent(
-            uiState = LoginUiState(email = "usuario@email.com", password = "123"),
+            uiState = LoginUiState(),
             onEmailChange = {},
             onPasswordChange = {},
             onLoginClick = {},
