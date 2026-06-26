@@ -48,6 +48,7 @@ import com.example.givchurch.viewmodel.auth.RegisterUiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreenContent(
+    modifier: Modifier = Modifier,
     uiState: RegisterUiState,
     onImageSelect: (Uri?) -> Unit,
     onFirstnameChange: (String) -> Unit,
@@ -56,7 +57,7 @@ fun RegisterScreenContent(
     onPasswordChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
     onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    isEditMode: Boolean = false,
 ) {
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -96,8 +97,8 @@ fun RegisterScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AppHeader(
-                    title = "Crie sua conta",
-                    subtitle = "Preencha os dados para começar a ajudar"
+                    title = if (isEditMode) "Editar perfil" else "Crie sua conta",
+                    subtitle = if (isEditMode) "Altere seus dados pessoais abaixo" else "Preencha os dados para começar a ajudar"
                 )
 
                 FormSectionLayout(title = "Foto de perfil") {
@@ -153,12 +154,12 @@ fun RegisterScreenContent(
                         onValueChange = onEmailChange,
                         placeholder = { Text("Ex: maria.oliveira@email.com") },
                         singleLine = true,
-                        enabled = !uiState.isLoading,
+                        enabled = !uiState.isLoading && !isEditMode,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Next
+                            imeAction = if (isEditMode) ImeAction.Done else ImeAction.Next
                         ),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -167,25 +168,27 @@ fun RegisterScreenContent(
                     )
                 }
 
-                FormSectionLayout(title = "Senha") {
-                    OutlinedTextField(
-                        value = uiState.password,
-                        onValueChange = onPasswordChange,
-                        placeholder = { Text("Mínimo 6 caracteres") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        singleLine = true,
-                        enabled = !uiState.isLoading,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                if (!isEditMode) {
+                    FormSectionLayout(title = "Senha") {
+                        OutlinedTextField(
+                            value = uiState.password,
+                            onValueChange = onPasswordChange,
+                            placeholder = { Text("Mínimo 6 caracteres") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            singleLine = true,
+                            enabled = !uiState.isLoading,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                            )
                         )
-                    )
+                    }
                 }
 
                 Spacer(Modifier.height(8.dp))
@@ -205,7 +208,7 @@ fun RegisterScreenContent(
                         )
                     } else {
                         Text(
-                            text = "Registrar",
+                            text = if (isEditMode) "Salvar Alterações" else "Registrar",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -216,21 +219,27 @@ fun RegisterScreenContent(
                     Text(
                         text = uiState.message,
                         style = MaterialTheme.typography.bodyMedium,
+
+
                         color = if (uiState.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         }
     }
 }
-
 @Preview(showBackground = true, showSystemUi = true, name = "Cadastro - Padrão")
 @Composable
 fun RegisterScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         RegisterScreenContent(
-            uiState = RegisterUiState(firstname = "Maria", lastname = "Oliveira", email = "maria@email.com"),
+            uiState = RegisterUiState(
+                firstname = "Maria",
+                lastname = "Oliveira",
+                email = "maria@email.com"
+            ),
             onImageSelect = {},
             onFirstnameChange = {},
             onLastnameChange = {},

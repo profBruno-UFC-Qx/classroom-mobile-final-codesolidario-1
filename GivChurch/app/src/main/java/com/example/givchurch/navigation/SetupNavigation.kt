@@ -55,6 +55,7 @@ fun SetupNavigation(
                     onNavigateBack = {
                         backStack.removeLastOrNull()
                     },
+                    isFromLogin = true,
                     modifier = Modifier
                 )
             }

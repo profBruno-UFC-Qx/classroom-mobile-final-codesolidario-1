@@ -55,7 +55,8 @@ fun AuthenticatedNavGraph(
                 RegisterScreen(
                     onNavigateBack = {
                         internalBackStack.removeLastOrNull()
-                    }
+                    },
+                    isFromLogin = false
                 )
             }
 

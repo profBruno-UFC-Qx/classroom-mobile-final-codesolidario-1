@@ -12,12 +12,21 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterScreen(
-    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
+    isFromLogin: Boolean = false,
     vm: RegisterViewModel = koinViewModel()
 ) {
     val uiState by vm.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = isFromLogin) {
+        if (isFromLogin) {
+            vm.resetRegisterStatus()
+        } else {
+            vm.initEditMode()
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         vm.registerSuccess.collectLatest { success ->
@@ -36,7 +45,11 @@ fun RegisterScreen(
         onEmailChange = vm::onEmailChange,
         onPasswordChange = vm::onPasswordChange,
         onRegisterClick = vm::register,
-        onNavigateBack = onNavigateBack,
+        onNavigateBack = {
+            vm.resetRegisterStatus()
+            onNavigateBack()
+        },
+        isEditMode = !isFromLogin,
         modifier = modifier
     )
 }

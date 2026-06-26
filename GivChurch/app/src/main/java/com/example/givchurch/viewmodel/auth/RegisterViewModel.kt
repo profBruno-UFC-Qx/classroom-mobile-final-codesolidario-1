@@ -32,15 +32,25 @@ class RegisterViewModel(
     private var currentUserId: String = ""
     private var isEditMode: Boolean = false
 
-    init {
-        currentUserId = userRepository.getCurrentUserId()
-        if (currentUserId.isNotBlank()) {
-            isEditMode = true
-            loadCurrentUserData()
+    fun initEditMode() {
+        try {
+            currentUserId = userRepository.getCurrentUserId()
+            if (currentUserId.isNotBlank()) {
+                isEditMode = true
+                loadCurrentUserData()
+            } else {
+                isEditMode = false
+                _uiState.value = RegisterUiState()
+            }
+        } catch (e: Exception) {
+            currentUserId = ""
+            isEditMode = false
+            _uiState.value = RegisterUiState()
         }
     }
 
     private fun loadCurrentUserData() {
+        if (currentUserId.isBlank()) return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             userRepository.getUserProfileFlow(currentUserId).take(1).collect { user ->
@@ -94,6 +104,8 @@ class RegisterViewModel(
     }
 
     fun resetRegisterStatus() {
+        isEditMode = false
+        currentUserId = ""
         _uiState.value = RegisterUiState()
     }
 
