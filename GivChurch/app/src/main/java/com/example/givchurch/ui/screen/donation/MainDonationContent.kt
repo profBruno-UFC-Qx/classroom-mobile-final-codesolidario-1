@@ -35,6 +35,14 @@ fun MainDonationContent(
     onLoadBeneficiaryName: (Int, (String) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var localSearchQuery by remember { mutableStateOf(uiState.searchQuery) }
+
+    LaunchedEffect(uiState.searchQuery) {
+        if (localSearchQuery != uiState.searchQuery) {
+            localSearchQuery = uiState.searchQuery
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -58,8 +66,11 @@ fun MainDonationContent(
                 )
 
                 OutlinedTextField(
-                    value = uiState.searchQuery,
-                    onValueChange = onSearchQueryChanged,
+                    value = localSearchQuery,
+                    onValueChange = { newQuery ->
+                        localSearchQuery = newQuery
+                        onSearchQueryChanged(newQuery)
+                    },
                     placeholder = { Text("Buscar doações...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
                     modifier = Modifier.fillMaxWidth(),
@@ -167,12 +178,12 @@ fun MainDonationScreenPreview() {
                 id = entity.id,
                 imageUrl = entity.imageUrl,
                 name = entity.name,
-                category = DonationCategory.valueOf(entity.category.name),
+                category = DonationCategory.FOOD,
                 description = entity.description,
                 quantity = entity.quantity,
                 beneficiaryId = entity.beneficiaryId,
                 createBy = entity.createBy,
-                status = DonationStatus.valueOf(entity.status.name),
+                status = DonationStatus.DELIVERED,
                 createdAt = entity.createdAt,
                 dueDate = entity.dueDate
             )

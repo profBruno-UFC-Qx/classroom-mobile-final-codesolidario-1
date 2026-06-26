@@ -22,6 +22,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +46,14 @@ fun MainBeneficiaryContent(
     onDeleteBeneficiaryClick: (Beneficiary) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var localSearchQuery by remember { mutableStateOf(uiState.searchQuery) }
+
+    LaunchedEffect(uiState.searchQuery) {
+        if (localSearchQuery != uiState.searchQuery) {
+            localSearchQuery = uiState.searchQuery
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -63,8 +76,11 @@ fun MainBeneficiaryContent(
                 )
 
                 OutlinedTextField(
-                    value = uiState.searchQuery,
-                    onValueChange = onSearchQueryChanged,
+                    value = localSearchQuery,
+                    onValueChange = { newQuery ->
+                        localSearchQuery = newQuery
+                        onSearchQueryChanged(newQuery)
+                    },
                     placeholder = { Text("Buscar atendidos...") },
                     leadingIcon = {
                         Icon(
