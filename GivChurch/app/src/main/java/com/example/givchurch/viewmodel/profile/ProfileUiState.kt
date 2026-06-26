@@ -5,5 +5,8 @@ data class ProfileUiState(
     val isNotificationsEnabled: Boolean = true,
     val userName: String = "",
     val userEmail: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val isLoading: Boolean = false,
+    val updateMessage: String? = null,
+    val errorMessage: String? = null
 )

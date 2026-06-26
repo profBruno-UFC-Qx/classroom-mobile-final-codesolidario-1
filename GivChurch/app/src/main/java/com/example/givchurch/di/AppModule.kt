@@ -48,7 +48,7 @@ val repositoryModule = module {
 val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
-    viewModel { RegisterViewModel(get()) }
+    viewModel { RegisterViewModel(get(), get()) }
     viewModel { AddBeneficiaryViewModel(get(), get ()) }
     viewModel { MainBeneficiaryViewModel(get(), get()) }
     viewModel { AddDonationViewModel(get(), get(), get()) }

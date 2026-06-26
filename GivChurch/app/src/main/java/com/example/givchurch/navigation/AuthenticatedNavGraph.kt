@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.example.givchurch.ui.screen.auth.RegisterScreen
 import com.example.givchurch.ui.screen.beneficiary.AddBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.AddDonationScreen
 import com.example.givchurch.ui.screen.main.MainAppContainer
@@ -37,7 +38,18 @@ fun AuthenticatedNavGraph(
                     onAddDonationClick = {
                         internalBackStack.add(Screen.AddDonationScreen)
                     },
-                    onLogoutSuccess = onLogout
+                    onLogoutSuccess = onLogout,
+                    onEditProfileClick = {
+                        internalBackStack.add(Screen.RegisterScreen)
+                    }
+                )
+            }
+
+            entry<Screen.RegisterScreen> {
+                RegisterScreen(
+                    onNavigateBack = {
+                        internalBackStack.removeLastOrNull()
+                    }
                 )
             }
 

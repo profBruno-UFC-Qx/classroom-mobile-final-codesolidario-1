@@ -6,18 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.givchurch.domain.model.User
 import com.example.givchurch.domain.repository.AuthRepository
+import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
 class RegisterViewModel(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -25,6 +28,36 @@ class RegisterViewModel(
 
     private val _registerSuccess = MutableSharedFlow<Boolean>()
     val registerSuccess = _registerSuccess.asSharedFlow()
+
+    private var currentUserId: String = ""
+    private var isEditMode: Boolean = false
+
+    init {
+        currentUserId = userRepository.getCurrentUserId()
+        if (currentUserId.isNotBlank()) {
+            isEditMode = true
+            loadCurrentUserData()
+        }
+    }
+
+    private fun loadCurrentUserData() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            userRepository.getUserProfileFlow(currentUserId).take(1).collect { user ->
+                user?.let { currentUser ->
+                    _uiState.update {
+                        it.copy(
+                            firstname = currentUser.firstname,
+                            lastname = currentUser.lastname,
+                            email = currentUser.email,
+                            imageUrl = currentUser.imageUrl,
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun onImageSelected(context: Context, uri: Uri?) {
         if (uri == null) return
@@ -68,7 +101,7 @@ class RegisterViewModel(
         val currentState = _uiState.value
 
         if (currentState.firstname.isBlank() || currentState.lastname.isBlank() ||
-            currentState.email.isBlank() || currentState.password.isBlank()) {
+            currentState.email.isBlank() || (!isEditMode && currentState.password.isBlank())) {
             _uiState.update { it.copy(message = "Por favor, preencha todos os campos obrigatórios.") }
             return
         }
@@ -77,15 +110,19 @@ class RegisterViewModel(
 
         viewModelScope.launch {
             val userDomain = User(
-                id = "",
+                id = currentUserId,
                 firstname = currentState.firstname,
                 lastname = currentState.lastname,
                 email = currentState.email,
                 password = currentState.password,
-                imageUrl = _uiState.value.imageUrl
+                imageUrl = currentState.imageUrl
             )
 
-            val result = repository.register(userDomain)
+            val result = if (isEditMode) {
+                userRepository.updateProfile(userDomain)
+            } else {
+                repository.register(userDomain)
+            }
 
             result.fold(
                 onSuccess = { successMessage ->
@@ -95,7 +132,7 @@ class RegisterViewModel(
                 onFailure = { exception ->
                     _uiState.update {
                         it.copy(
-                            message = exception.localizedMessage ?: "Erro ao fazer o cadastro.",
+                            message = exception.localizedMessage ?: "Erro ao processar a requisição.",
                             isSuccess = false,
                             isLoading = false
                         )

@@ -12,6 +12,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MainProfileScreen(
     onLogoutSuccess: () -> Unit,
+    onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainProfileViewModel = koinViewModel()
 ) {
@@ -32,6 +33,7 @@ fun MainProfileScreen(
         onHelpClick = viewModel::onHelpClick,
         onPrivacyPolicyClick = viewModel::onPrivacyPolicyClick,
         onLogoutClick = viewModel::onLogoutClick,
+        onEditProfileClick = onEditProfileClick,
         modifier = modifier
     )
 }

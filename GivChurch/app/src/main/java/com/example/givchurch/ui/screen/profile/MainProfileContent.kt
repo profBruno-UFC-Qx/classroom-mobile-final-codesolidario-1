@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +53,7 @@ fun MainProfileContent(
     onHelpClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -82,7 +85,7 @@ fun MainProfileContent(
                             .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (uiState.imageUrl.isNullOrBlank()) {
+                        if (uiState.imageUrl.isBlank()) {
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "Foto de perfil padrão",
@@ -99,7 +102,10 @@ fun MainProfileContent(
                         }
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Column {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
                         AnimatedContent(
                             targetState = uiState.userName,
                             transitionSpec = { fadeIn().togetherWith(fadeOut()) },
@@ -121,6 +127,19 @@ fun MainProfileContent(
                                 text = email,
                                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                                 fontSize = 14.sp
+                            )
+                        }
+
+                        TextButton(
+                            onClick = onEditProfileClick,
+                            contentPadding = PaddingValues(0.dp),
+                            modifier = Modifier.height(24.dp)
+                        ) {
+                            Text(
+                                text = "Editar perfil",
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
                             )
                         }
                     }
@@ -190,7 +209,8 @@ fun MainProfileScreenPreview() {
             onNotificationsToggle = {},
             onHelpClick = {},
             onPrivacyPolicyClick = {},
-            onLogoutClick = {}
+            onLogoutClick = {},
+            onEditProfileClick = {}
         )
     }
 }

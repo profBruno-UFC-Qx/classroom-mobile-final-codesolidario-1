@@ -2,6 +2,7 @@ package com.example.givchurch.viewmodel.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.givchurch.domain.model.User
 import com.example.givchurch.domain.repository.AuthRepository
 import com.example.givchurch.domain.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +25,7 @@ class MainProfileViewModel(
 ) : ViewModel() {
 
     private val _settingsState = MutableStateFlow(Pair(false, true))
+    private val _updateState = MutableStateFlow<Triple<Boolean, String?, String?>>(Triple(false, null, null))
 
     private val _logoutSuccess = MutableSharedFlow<Boolean>()
     val logoutSuccess = _logoutSuccess.asSharedFlow()
@@ -33,16 +35,20 @@ class MainProfileViewModel(
             if (userId.isBlank()) {
                 flowOf(ProfileUiState())
             } else {
-                combine(
+                combine<Pair<Boolean, Boolean>, User?, Triple<Boolean, String?, String?>, ProfileUiState>(
                     _settingsState,
-                    userRepository.getUserProfileFlow(userId)
-                ) { settings, user ->
+                    userRepository.getUserProfileFlow(userId),
+                    _updateState
+                ) { settings, user, update ->
                     ProfileUiState(
                         isLightTheme = settings.first,
                         isNotificationsEnabled = settings.second,
                         userName = user?.let { "${it.firstname} ${it.lastname}".trim() } ?: "",
                         userEmail = user?.email ?: "",
-                        imageUrl = user?.imageUrl ?: ""
+                        imageUrl = user?.imageUrl ?: "",
+                        isLoading = update.first,
+                        updateMessage = update.second,
+                        errorMessage = update.third
                     )
                 }
             }
@@ -61,6 +67,20 @@ class MainProfileViewModel(
         _settingsState.update { it.copy(second = enabled) }
     }
 
+    fun updateUserProfile(user: com.example.givchurch.domain.model.User) {
+        viewModelScope.launch {
+            _updateState.value = Triple(true, null, null)
+
+            userRepository.updateProfile(user)
+                .onSuccess { message ->
+                    _updateState.value = Triple(false, message, null)
+                }
+                .onFailure { exception ->
+                    _updateState.value = Triple(false, null, exception.message ?: "Erro ao atualizar")
+                }
+        }
+    }
+
     fun onHelpClick() {
     }
 
@@ -73,4 +93,9 @@ class MainProfileViewModel(
             _logoutSuccess.emit(true)
         }
     }
+
+    fun clearUpdateMessages() {
+        _updateState.value = Triple(false, null, null)
+    }
+
 }
