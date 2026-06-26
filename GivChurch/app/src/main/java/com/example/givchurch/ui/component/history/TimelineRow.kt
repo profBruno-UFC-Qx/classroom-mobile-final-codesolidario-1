@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Inventory2
@@ -46,13 +47,12 @@ fun TimelineRow(
     beneficiaryName: String,
     isLastItem: Boolean
 ) {
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale("pt", "BR"))
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale.of("pt", "BR"))
 
     val isDelivered = donation.status == DonationStatus.DELIVERED
     val statusColor = when (donation.status) {
         DonationStatus.DELIVERED -> MaterialTheme.colorScheme.onPrimaryContainer
         DonationStatus.PENDING -> MaterialTheme.colorScheme.tertiary
-        else -> MaterialTheme.colorScheme.outline
     }
 
     Row(
@@ -170,11 +170,23 @@ fun TimelineRow(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Text(
-                        text = "🕒 ${donation.dueDate.format(dateFormatter)}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccessTime,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = donation.dueDate.format(dateFormatter),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
+
                 }
             }
         }
