@@ -111,7 +111,7 @@ fun MainDonationContent(
                         FilterChip(
                             selected = uiState.selectedCategory == category,
                             onClick = { onCategorySelected(category) },
-                            label = { Text(category.name) },
+                            label = { Text(category.value) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = MaterialTheme.colorScheme.tertiary,
                                 selectedLabelColor = MaterialTheme.colorScheme.surface

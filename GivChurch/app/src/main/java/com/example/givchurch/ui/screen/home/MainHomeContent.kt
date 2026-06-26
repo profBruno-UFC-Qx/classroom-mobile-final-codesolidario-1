@@ -102,7 +102,7 @@ fun MainHomeContent(
                 }
             }
         }
-        when (val state = uiState) {
+        when (uiState) {
             is DashboardUiState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -115,9 +115,9 @@ fun MainHomeContent(
             }
             is DashboardUiState.Success -> {
                 DashboardContent(
-                    metrics = state.metrics,
-                    monthlyData = state.monthlyDonations,
-                    recentDonations = state.recentDonations
+                    metrics = uiState.metrics,
+                    monthlyData = uiState.monthlyDonations,
+                    recentDonations = uiState.recentDonations
                 )
             }
         }

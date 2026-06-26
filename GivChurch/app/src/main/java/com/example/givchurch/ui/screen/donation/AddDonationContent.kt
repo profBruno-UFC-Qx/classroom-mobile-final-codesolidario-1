@@ -150,7 +150,7 @@ fun AddDonationContent(
                         label = "Categoria",
                         options = DonationCategory.entries,
                         selectedOption = uiState.selectedCategory,
-                        optionToString = { it.name },
+                        optionToString = { it.value },
                         isExpanded = uiState.isCategoryExpanded,
                         onExpandedChange = onCategoryExpandedChange,
                         onOptionSelect = onCategorySelect,
