@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -41,17 +40,19 @@ import com.example.givchurch.domain.model.Beneficiary
 import com.example.givchurch.domain.model.enums.DonationCategory
 import com.example.givchurch.domain.model.enums.DonationStatus
 import com.example.givchurch.ui.component.form.DonationDatePickerDialog
-import com.example.givchurch.ui.component.form.DonationDatePickerField
+import com.example.givchurch.ui.component.form.DonationDateTimePickerField
 import com.example.givchurch.ui.component.form.DonationDropdownMenu
 import com.example.givchurch.ui.component.form.FormSectionLayout
 import com.example.givchurch.ui.component.form.ImagePickerSelector
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.donation.AddDonationUiState
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDonationContent(
+    modifier: Modifier = Modifier,
     uiState: AddDonationUiState,
     onImageSelect: (Uri?) -> Unit,
     onNameChange: (String) -> Unit,
@@ -63,12 +64,11 @@ fun AddDonationContent(
     onBeneficiaryExpandedChange: (Boolean) -> Unit,
     onStatusSelect: (DonationStatus) -> Unit,
     onStatusExpandedChange: (Boolean) -> Unit,
-    onDateSelect: (LocalDate) -> Unit,
+    onDateSelect: (LocalDateTime) -> Unit,
     onDatePickerExpandedChange: (Boolean) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
     isEditMode: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -78,8 +78,8 @@ fun AddDonationContent(
 
     if (uiState.isDatePickerExpanded) {
         DonationDatePickerDialog(
-            initialDate = uiState.selectedDate,
-            onDateConfirm = onDateSelect,
+            initialDateTime = uiState.selectedDateTime,
+            onDateTimeConfirm = onDateSelect,
             onDismiss = { onDatePickerExpandedChange(false) }
         )
     }
@@ -214,9 +214,9 @@ fun AddDonationContent(
                 }
 
                 FormSectionLayout(title = "Prazo limite para entrega") {
-                    DonationDatePickerField(
-                        selectedDate = uiState.selectedDate,
-                        onCalendarClick = { onDatePickerExpandedChange(true) }
+                    DonationDateTimePickerField(
+                        selectedDateTime = uiState.selectedDateTime,
+                        onPickerClick = { onDatePickerExpandedChange(true) }
                     )
                 }
 

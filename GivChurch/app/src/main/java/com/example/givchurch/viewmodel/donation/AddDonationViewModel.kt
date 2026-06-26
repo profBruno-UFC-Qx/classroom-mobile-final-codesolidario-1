@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 class AddDonationViewModel(
     private val donationRepository: DonationRepository,
@@ -57,7 +55,7 @@ class AddDonationViewModel(
                 selectedCategory = donation.category,
                 selectedBeneficiary = matchingBeneficiary,
                 selectedStatus = donation.status,
-                selectedDate = donation.dueDate.toLocalDate()
+                selectedDateTime = donation.dueDate
             )
         }
     }
@@ -94,7 +92,7 @@ class AddDonationViewModel(
     fun onBeneficiaryExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isBeneficiaryExpanded = expanded) }
     fun onStatusSelected(status: DonationStatus) = _uiState.update { it.copy(selectedStatus = status, isStatusExpanded = false) }
     fun onStatusExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isStatusExpanded = expanded) }
-    fun onDateSelected(date: LocalDate) = _uiState.update { it.copy(selectedDate = date, isDatePickerExpanded = false) }
+    fun onDateSelected(dateTime: LocalDateTime) = _uiState.update { it.copy(selectedDateTime = dateTime, isDatePickerExpanded = false) }
     fun onDatePickerExpandedChanged(expanded: Boolean) = _uiState.update { it.copy(isDatePickerExpanded = expanded) }
 
     fun resetSaveStatus() {
@@ -124,7 +122,7 @@ class AddDonationViewModel(
                 beneficiaryId = beneficiaryId,
                 createBy = userRepository.getCurrentUserId(),
                 status = currentState.selectedStatus,
-                dueDate = LocalDateTime.of(currentState.selectedDate, LocalTime.MIDNIGHT)
+                dueDate = currentState.selectedDateTime
             )
 
             val success = if (isEditMode) {

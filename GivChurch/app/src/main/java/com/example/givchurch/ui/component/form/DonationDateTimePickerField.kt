@@ -11,25 +11,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
-fun DonationDatePickerField(
-    selectedDate: LocalDate,
-    onCalendarClick: () -> Unit,
+fun DonationDateTimePickerField(
+    selectedDateTime: LocalDateTime,
+    onPickerClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
+    val dateTimeFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm", Locale.of("pt", "BR")) }
 
     OutlinedTextField(
-        value = selectedDate.format(dateFormatter),
+        value = selectedDateTime.format(dateTimeFormatter),
         onValueChange = {},
         readOnly = true,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         trailingIcon = {
-            TextButton(onClick = onCalendarClick) {
+            TextButton(onClick = onPickerClick) {
                 Text("Alterar", color = MaterialTheme.colorScheme.tertiary)
             }
         },
