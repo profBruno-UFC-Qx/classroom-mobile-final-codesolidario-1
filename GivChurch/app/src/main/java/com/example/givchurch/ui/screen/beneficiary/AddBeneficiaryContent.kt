@@ -41,6 +41,7 @@ import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryUiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBeneficiaryContent(
+    modifier: Modifier = Modifier,
     uiState: AddBeneficiaryUiState,
     onNameChanged: (String) -> Unit,
     onPhoneChanged: (String) -> Unit,
@@ -48,8 +49,7 @@ fun AddBeneficiaryContent(
     onObservationsChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
-    isEditMode: Boolean = false,
-    modifier: Modifier = Modifier
+    isEditMode: Boolean = false
 ) {
     Scaffold(
         topBar = {
@@ -84,7 +84,7 @@ fun AddBeneficiaryContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = if (isEditMode) "Editar Beneficiário" else "Cadastrar Beneficiário",
+                    text = if (isEditMode) "Editar Atendido" else "Cadastrar Atendido",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -100,7 +100,7 @@ fun AddBeneficiaryContent(
                     )
                 }
 
-                FormSectionLayout(title = "Nome do Beneficiário *") {
+                FormSectionLayout(title = "Nome do Atendido *") {
                     OutlinedTextField(
                         value = uiState.name,
                         onValueChange = onNameChanged,
