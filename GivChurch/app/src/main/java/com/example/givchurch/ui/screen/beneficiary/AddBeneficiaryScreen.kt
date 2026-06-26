@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.givchurch.domain.model.Beneficiary
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -13,9 +14,16 @@ import org.koin.androidx.compose.koinViewModel
 fun AddBeneficiaryScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    beneficiary: Beneficiary? = null,
     viewModel: AddBeneficiaryViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = beneficiary) {
+        if (beneficiary != null) {
+            viewModel.loadBeneficiaryData(beneficiary)
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.saveSuccess.collectLatest { success ->

@@ -24,6 +24,22 @@ class AddBeneficiaryViewModel(
     private val _saveSuccess = MutableSharedFlow<Boolean>()
     val saveSuccess = _saveSuccess.asSharedFlow()
 
+    private var currentBeneficiaryId: Int? = null
+    private var isEditMode: Boolean = false
+
+    fun loadBeneficiaryData(beneficiary: Beneficiary) {
+        currentBeneficiaryId = beneficiary.id
+        isEditMode = true
+        _uiState.update {
+            it.copy(
+                name = beneficiary.name,
+                phoneNumber = beneficiary.phoneNumber,
+                address = beneficiary.address,
+                observations = beneficiary.observations
+            )
+        }
+    }
+
     fun onNameChanged(newValue: String) {
         _uiState.update { it.copy(name = newValue) }
     }
@@ -51,20 +67,28 @@ class AddBeneficiaryViewModel(
         _uiState.update { it.copy(errorMessage = null) }
 
         viewModelScope.launch {
-            val newBen = Beneficiary(
+            val currentUserId = userRepository.getCurrentUserId()
+
+            val beneficiaryModel = Beneficiary(
+                id = currentBeneficiaryId?: 0,
                 name = currentState.name,
                 phoneNumber = currentState.phoneNumber,
                 address = currentState.address,
                 observations = currentState.observations,
-                createBy = userRepository.getCurrentUserId()
+                createBy = currentUserId
             )
 
-            val success = repository.create(newBen)
+            val success = if (isEditMode) {
+                repository.update(beneficiaryModel)
+            } else {
+                repository.create(beneficiaryModel)
+            }
 
             if (success) {
                 _saveSuccess.emit(true)
             } else {
-                _uiState.update { it.copy(errorMessage = "Já existe uma beneficiário cadastrada com este nome.") }
+                val message = if (isEditMode) "Erro ao atualizar o beneficiário." else "Já existe um beneficiário cadastrado com este nome."
+                _uiState.update { it.copy(errorMessage = message) }
             }
         }
     }

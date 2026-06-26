@@ -48,6 +48,7 @@ fun AddBeneficiaryContent(
     onObservationsChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
+    isEditMode: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -83,7 +84,7 @@ fun AddBeneficiaryContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Cadastrar Beneficiário",
+                    text = if (isEditMode) "Editar Beneficiário" else "Cadastrar Beneficiário",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -187,7 +188,7 @@ fun AddBeneficiaryContent(
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Text(
-                        text = "Salvar Cadastro",
+                        text = if (isEditMode) "Salvar Alterações" else "Salvar Cadastro",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -202,7 +203,6 @@ fun AddBeneficiaryContent(
 fun AddBeneficiaryScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         val firstMock = com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.first()
-
         AddBeneficiaryContent(
             uiState = AddBeneficiaryUiState(
                 name = firstMock.name,

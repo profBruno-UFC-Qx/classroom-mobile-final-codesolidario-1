@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.givchurch.domain.model.Beneficiary
 import com.example.givchurch.ui.component.beneficiary.BeneficiaryItemCard
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.beneficiary.BeneficiaryUiState
@@ -36,6 +37,8 @@ fun MainBeneficiaryContent(
     uiState: BeneficiaryUiState,
     onSearchQueryChanged: (String) -> Unit,
     onAddBeneficiaryClick: () -> Unit,
+    onEditBeneficiaryClick: (Beneficiary) -> Unit,
+    onDeleteBeneficiaryClick: (Beneficiary) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -52,7 +55,7 @@ fun MainBeneficiaryContent(
                     .padding(horizontal = 24.dp, vertical = 24.dp)
             ) {
                 Text(
-                    text = "Beneficiários",
+                    text = "Atendidos",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary,
@@ -62,7 +65,7 @@ fun MainBeneficiaryContent(
                 OutlinedTextField(
                     value = uiState.searchQuery,
                     onValueChange = onSearchQueryChanged,
-                    placeholder = { Text("Buscar beneficiários...") },
+                    placeholder = { Text("Buscar atendidos...") },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -97,7 +100,11 @@ fun MainBeneficiaryContent(
                 )
             ) {
                 items(uiState.beneficiariesList) { beneficiary ->
-                    BeneficiaryItemCard(beneficiary = beneficiary)
+                    BeneficiaryItemCard(
+                        beneficiary = beneficiary,
+                        onEditClick = { onEditBeneficiaryClick(beneficiary) },
+                        onDeleteClick = { onDeleteBeneficiaryClick(beneficiary) }
+                    )
                 }
             }
         }
@@ -112,7 +119,7 @@ fun MainBeneficiaryContent(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Adicionar Beneficiário"
+                contentDescription = "Adicionar Atendido"
             )
         }
     }
@@ -123,7 +130,7 @@ fun MainBeneficiaryContent(
 fun MainBeneficiaryScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         val domainMockList = com.example.givchurch.data.mock.BeneficiaryMockData.beneficiaries.map { entity ->
-            com.example.givchurch.domain.model.Beneficiary(
+            Beneficiary(
                 id = entity.id,
                 name = entity.name,
                 phoneNumber = entity.phoneNumber,
@@ -139,7 +146,9 @@ fun MainBeneficiaryScreenPreview() {
                 beneficiariesList = domainMockList
             ),
             onSearchQueryChanged = {},
-            onAddBeneficiaryClick = {}
+            onAddBeneficiaryClick = {},
+            onEditBeneficiaryClick = {},
+            onDeleteBeneficiaryClick = {}
         )
     }
 }
