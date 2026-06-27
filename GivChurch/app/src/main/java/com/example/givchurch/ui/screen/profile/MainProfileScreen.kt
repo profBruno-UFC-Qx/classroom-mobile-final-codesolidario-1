@@ -11,6 +11,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainProfileScreen(
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
     onLogoutSuccess: () -> Unit,
     onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -26,9 +28,14 @@ fun MainProfileScreen(
         }
     }
 
+    val updatedUiState = uiState.copy(isLightTheme = !isDarkTheme)
+
     MainProfileContent(
-        uiState = uiState,
-        onThemeToggle = viewModel::toggleTheme,
+        uiState = updatedUiState,
+        onThemeToggle = { isChecked ->
+            viewModel.toggleTheme(isChecked)
+            onThemeToggle(isChecked)
+        },
         onNotificationsToggle = viewModel::toggleNotifications,
         onHelpClick = viewModel::onHelpClick,
         onPrivacyPolicyClick = viewModel::onPrivacyPolicyClick,

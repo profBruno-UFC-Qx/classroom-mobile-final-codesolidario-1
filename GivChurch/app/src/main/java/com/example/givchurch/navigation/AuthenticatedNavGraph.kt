@@ -19,6 +19,8 @@ import com.example.givchurch.ui.screen.main.NavigationItem
 @Composable
 fun AuthenticatedNavGraph(
     onLogout: () -> Unit,
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val internalBackStack = rememberSaveable { mutableStateListOf<Screen>(Screen.MainBeneficiaryScreen) }
@@ -33,6 +35,8 @@ fun AuthenticatedNavGraph(
                 MainAppContainer(
                     selectedItem = currentTab,
                     onTabSelected = { currentTab = it },
+                    isDarkTheme = isDarkTheme,
+                    onThemeToggle = onThemeToggle,
                     onAddBeneficiaryClick = {
                         internalBackStack.add(Screen.AddRegisterScreen(beneficiary = null))
                     },

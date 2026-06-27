@@ -14,7 +14,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SetupNavigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit
 ) {
     val backStack = rememberSaveable { mutableStateListOf<Screen>(Screen.LoginScreen) }
 
@@ -64,6 +66,8 @@ fun SetupNavigation(
                 val loginVm: LoginViewModel = koinViewModel()
 
                 AuthenticatedNavGraph(
+                    isDarkTheme = isDarkTheme,
+                    onThemeToggle = onThemeToggle,
                     onLogout = {
                         loginVm.clearFields()
                         while (backStack.isNotEmpty()) {

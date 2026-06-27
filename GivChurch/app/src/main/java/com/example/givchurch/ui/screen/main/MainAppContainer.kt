@@ -42,6 +42,8 @@ enum class NavigationItem(val title: String, val icon: ImageVector) {
 fun MainAppContainer(
     selectedItem: NavigationItem,
     onTabSelected: (NavigationItem) -> Unit,
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
     onAddBeneficiaryClick: () -> Unit,
     onAddDonationClick: () -> Unit,
     onLogoutSuccess: () -> Unit,
@@ -110,6 +112,8 @@ fun MainAppContainer(
                 }
                 NavigationItem.PROFILE -> {
                     MainProfileScreen(
+                        isDarkTheme = isDarkTheme,
+                        onThemeToggle = onThemeToggle,
                         onLogoutSuccess = onLogoutSuccess,
                         onEditProfileClick = onEditProfileClick,
                         modifier = Modifier.fillMaxSize()
@@ -127,6 +131,8 @@ fun MainBeneficiaryScreenPreview() {
         MainAppContainer(
             selectedItem = NavigationItem.HOME,
             onTabSelected = {},
+            isDarkTheme = false,
+            onThemeToggle = {},
             onAddBeneficiaryClick = {},
             onAddDonationClick = {},
             onLogoutSuccess = {},

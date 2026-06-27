@@ -31,7 +31,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GivChurchTheme(dynamicColor = false) {
+            var isDarkTheme by remember { mutableStateOf(false) }
+
+            GivChurchTheme(darkTheme = isDarkTheme, dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -43,7 +45,13 @@ class MainActivity : ComponentActivity() {
                             onTimeout = { showSplashScreen = false }
                         )
                     } else {
-                        SetupNavigation(modifier = Modifier.fillMaxSize())
+                        SetupNavigation(
+                            modifier = Modifier.fillMaxSize(),
+                            isDarkTheme = isDarkTheme,
+                            onThemeToggle = { isChecked ->
+                                isDarkTheme = !isChecked
+                            }
+                        )
                     }
                 }
             }
