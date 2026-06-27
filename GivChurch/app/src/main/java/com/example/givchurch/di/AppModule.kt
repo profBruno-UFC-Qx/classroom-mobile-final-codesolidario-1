@@ -19,6 +19,7 @@ import com.example.givchurch.viewmodel.auth.RegisterViewModel
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryViewModel
 import com.example.givchurch.viewmodel.beneficiary.MainBeneficiaryViewModel
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
+import com.example.givchurch.viewmodel.donation.DonationDetailViewModel
 import com.example.givchurch.viewmodel.donation.MainDonationViewModel
 import com.example.givchurch.viewmodel.history.MainHistoryViewModel
 import com.example.givchurch.viewmodel.home.MainHomeViewModel
@@ -53,6 +54,7 @@ val viewModelModule = module {
     viewModel { MainBeneficiaryViewModel(get(), get()) }
     viewModel { AddDonationViewModel(get(), get(), get()) }
     viewModel { MainDonationViewModel(get(), get(), get()) }
+    viewModel { DonationDetailViewModel(get(), get(), get()) }
     viewModel { MainHistoryViewModel(get(), get(), get()) }
     viewModel { MainHomeViewModel(get(), get(), get()) }
     viewModel { MainProfileViewModel(get (), get()) }

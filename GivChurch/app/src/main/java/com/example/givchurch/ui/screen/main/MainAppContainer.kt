@@ -48,6 +48,7 @@ fun MainAppContainer(
     onEditProfileClick: () -> Unit,
     onEditBeneficiaryClick: (Beneficiary) -> Unit,
     onEditDonationClick: (Donation) -> Unit,
+    onDonationClick: (Donation) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -94,7 +95,8 @@ fun MainAppContainer(
                 NavigationItem.DONATIONS -> {
                     MainDonationScreen(
                         onAddDonationClick = onAddDonationClick,
-                        onEditDonationClick = onEditDonationClick
+                        onEditDonationClick = onEditDonationClick,
+                        onDonationClick = onDonationClick
                     )
                 }
                 NavigationItem.BENEFICIARIES -> {
@@ -131,7 +133,8 @@ fun MainBeneficiaryScreenPreview() {
             onLogoutSuccess = {},
             onEditProfileClick = {},
             onEditBeneficiaryClick = {},
-            onEditDonationClick = {}
+            onEditDonationClick = {},
+            onDonationClick = {}
         )
     }
 }

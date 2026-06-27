@@ -1,6 +1,7 @@
 package com.example.givchurch.navigation
 
 import com.example.givchurch.domain.model.Beneficiary
+import com.example.givchurch.domain.model.Donation
 
 sealed class Screen {
 
@@ -15,7 +16,12 @@ sealed class Screen {
     ) : Screen()
 
     data object MainDonationScreen : Screen()
+
     data class AddDonationScreen(
-        val donation: com.example.givchurch.domain.model.Donation? = null
+        val donation: Donation? = null
+    ) : Screen()
+
+    data class DonationDetailScreen(
+        val donationId: Int
     ) : Screen()
 }

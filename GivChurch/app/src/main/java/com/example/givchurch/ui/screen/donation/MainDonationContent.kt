@@ -1,6 +1,7 @@
 package com.example.givchurch.ui.screen.donation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -33,6 +34,7 @@ fun MainDonationContent(
     onEditDonationClick: (Donation) -> Unit,
     onDeleteDonationClick: (Donation) -> Unit,
     onLoadBeneficiaryName: (Int, (String) -> Unit) -> Unit,
+    onDonationClick: (Donation) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var localSearchQuery by remember { mutableStateOf(uiState.searchQuery) }
@@ -155,7 +157,8 @@ fun MainDonationContent(
                         donation = donation,
                         beneficiaryName = beneficiaryName,
                         onEditClick = { onEditDonationClick(donation) },
-                        onDeleteClick = { onDeleteDonationClick(donation) }
+                        onDeleteClick = { onDeleteDonationClick(donation) },
+                        modifier = Modifier.clickable { onDonationClick(donation) }
                     )
                 }
             }
@@ -189,8 +192,8 @@ fun MainDonationScreenPreview() {
                 beneficiaryId = entity.beneficiaryId,
                 createBy = entity.createBy,
                 status = DonationStatus.DELIVERED,
-                createdAt = entity.createdAt,
-                dueDate = entity.dueDate
+                createdAt = java.time.LocalDateTime.now(),
+                dueDate = java.time.LocalDateTime.now().plusDays(5)
             )
         }
 
@@ -205,7 +208,8 @@ fun MainDonationScreenPreview() {
             onAddDonationClick = {},
             onEditDonationClick = {},
             onDeleteDonationClick = {},
-            onLoadBeneficiaryName = { _, onResult -> onResult("Atendido de Teste") }
+            onLoadBeneficiaryName = { _, onResult -> onResult("Atendido de Teste") },
+            onDonationClick = {}
         )
     }
 }

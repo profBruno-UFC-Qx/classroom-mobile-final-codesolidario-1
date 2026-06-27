@@ -12,6 +12,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MainDonationScreen(
     onAddDonationClick: () -> Unit,
     onEditDonationClick: (Donation) -> Unit,
+    onDonationClick: (Donation) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainDonationViewModel = koinViewModel()
 ) {
@@ -25,6 +26,7 @@ fun MainDonationScreen(
         onEditDonationClick = onEditDonationClick,
         onDeleteDonationClick = { donation -> viewModel.deleteDonation(donation.id) },
         onLoadBeneficiaryName = viewModel::loadBeneficiaryName,
+        onDonationClick = onDonationClick,
         modifier = modifier
     )
 }

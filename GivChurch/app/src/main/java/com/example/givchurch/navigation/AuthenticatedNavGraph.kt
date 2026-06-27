@@ -12,6 +12,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.givchurch.ui.screen.auth.RegisterScreen
 import com.example.givchurch.ui.screen.beneficiary.AddBeneficiaryScreen
 import com.example.givchurch.ui.screen.donation.AddDonationScreen
+import com.example.givchurch.ui.screen.donation.DonationDetailScreen
 import com.example.givchurch.ui.screen.main.MainAppContainer
 import com.example.givchurch.ui.screen.main.NavigationItem
 
@@ -47,6 +48,9 @@ fun AuthenticatedNavGraph(
                     },
                     onEditDonationClick = { donation ->
                         internalBackStack.add(Screen.AddDonationScreen(donation = donation))
+                    },
+                    onDonationClick = { donation ->
+                        internalBackStack.add(Screen.DonationDetailScreen(donationId = donation.id))
                     }
                 )
             }
@@ -74,6 +78,19 @@ fun AuthenticatedNavGraph(
                     donation = screen.donation,
                     onNavigateBack = {
                         internalBackStack.removeLastOrNull()
+                    }
+                )
+            }
+
+            entry<Screen.DonationDetailScreen> { screen ->
+                DonationDetailScreen(
+                    donationId = screen.donationId,
+                    onNavigateBack = {
+                        internalBackStack.removeLastOrNull()
+                    },
+                    onEditDonationClick = { targetDonation ->
+                        internalBackStack.removeLastOrNull() // Remove os detalhes
+                        internalBackStack.add(Screen.AddDonationScreen(donation = targetDonation)) // Abre o formulário preenchido
                     }
                 )
             }
