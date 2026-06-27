@@ -40,6 +40,8 @@ fun BeneficiaryItemCard(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val formattedPhone = formatDisplayPhone(beneficiary.phoneNumber)
+
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -75,7 +77,8 @@ fun BeneficiaryItemCard(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
                         text = beneficiary.name,
@@ -84,7 +87,7 @@ fun BeneficiaryItemCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = beneficiary.phoneNumber,
+                        text = formattedPhone,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -94,24 +97,14 @@ fun BeneficiaryItemCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    // TODO: Quantidade de Doações por Beneficiários
-                    /*Box(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
+                    if (beneficiary.observations.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "12 doações recebidas",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold
+                            text = "Obs: ${beneficiary.observations}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                         )
-                    }*/
+                    }
                 }
             }
 
@@ -160,6 +153,12 @@ fun BeneficiaryItemCard(
     }
 }
 
+private fun formatDisplayPhone(phone: String): String {
+    val digits = phone.filter { it.isDigit() }
+    if (digits.length != 11) return phone
+    return "(${digits.substring(0, 2)}) ${digits.substring(2, 3)} ${digits.substring(3, 7)}-${digits.substring(7)}"
+}
+
 @Preview(showBackground = true, name = "Card Atendido Oficial")
 @Composable
 fun BeneficiaryItemCardPreview() {
@@ -173,9 +172,9 @@ fun BeneficiaryItemCardPreview() {
                 beneficiary = Beneficiary(
                     id = 1,
                     name = "Maria Silva",
-                    phoneNumber = "(11) 98765-4321",
+                    phoneNumber = "85999991234",
                     address = "Rua das Flores, 123 - Centro",
-                    observations = "",
+                    observations = "Necessita de acompanhamento mensal e fraldas.",
                     createBy = "d1e8f2c3-a4b5-4c6d-9e8f-7a6b5c4d3e2f"
                 ),
                 onEditClick = {},

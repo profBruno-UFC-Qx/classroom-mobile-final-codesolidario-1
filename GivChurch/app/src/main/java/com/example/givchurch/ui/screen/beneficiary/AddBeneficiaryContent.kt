@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.givchurch.ui.component.form.FormSectionLayout
+import com.example.givchurch.ui.utils.PhoneVisualTransformation
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryUiState
 
@@ -122,11 +123,17 @@ fun AddBeneficiaryContent(
                 FormSectionLayout(title = "Telefone de Contato *") {
                     OutlinedTextField(
                         value = uiState.phoneNumber,
-                        onValueChange = onPhoneChanged,
-                        placeholder = { Text("Ex: (88) 99999-9999") },
+                        onValueChange = { input ->
+                            val digitsOnly = input.filter { it.isDigit() }
+                            if (digitsOnly.length <= 11) {
+                                onPhoneChanged(digitsOnly)
+                            }
+                        },
+                        placeholder = { Text("Ex: (88) 9 9999-9999") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
+                        visualTransformation = PhoneVisualTransformation(),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
                             imeAction = ImeAction.Next
@@ -142,7 +149,7 @@ fun AddBeneficiaryContent(
                     OutlinedTextField(
                         value = uiState.address,
                         onValueChange = onAddressChanged,
-                        placeholder = { Text("Rua, Número, Bairro") },
+                        placeholder = { Text("Rua, Número - Bairro") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
