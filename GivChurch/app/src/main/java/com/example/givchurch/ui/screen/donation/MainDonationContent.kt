@@ -31,8 +31,6 @@ fun MainDonationContent(
     onSearchQueryChanged: (String) -> Unit,
     onCategorySelected: (DonationCategory?) -> Unit,
     onAddDonationClick: () -> Unit,
-    onEditDonationClick: (Donation) -> Unit,
-    onDeleteDonationClick: (Donation) -> Unit,
     onLoadBeneficiaryName: (Int, (String) -> Unit) -> Unit,
     onDonationClick: (Donation) -> Unit,
     modifier: Modifier = Modifier
@@ -156,8 +154,6 @@ fun MainDonationContent(
                     DonationItemCard(
                         donation = donation,
                         beneficiaryName = beneficiaryName,
-                        onEditClick = { onEditDonationClick(donation) },
-                        onDeleteClick = { onDeleteDonationClick(donation) },
                         modifier = Modifier.clickable { onDonationClick(donation) }
                     )
                 }
@@ -206,8 +202,6 @@ fun MainDonationScreenPreview() {
             onSearchQueryChanged = {},
             onCategorySelected = {},
             onAddDonationClick = {},
-            onEditDonationClick = {},
-            onDeleteDonationClick = {},
             onLoadBeneficiaryName = { _, onResult -> onResult("Atendido de Teste") },
             onDonationClick = {}
         )

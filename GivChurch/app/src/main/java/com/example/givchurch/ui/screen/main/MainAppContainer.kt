@@ -95,7 +95,6 @@ fun MainAppContainer(
                 NavigationItem.DONATIONS -> {
                     MainDonationScreen(
                         onAddDonationClick = onAddDonationClick,
-                        onEditDonationClick = onEditDonationClick,
                         onDonationClick = onDonationClick
                     )
                 }

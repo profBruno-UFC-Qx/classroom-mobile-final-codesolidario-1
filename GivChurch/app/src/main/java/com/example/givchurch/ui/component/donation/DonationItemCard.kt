@@ -43,8 +43,6 @@ import java.time.format.DateTimeFormatter
 fun DonationItemCard(
     donation: Donation,
     beneficiaryName: String,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -143,47 +141,7 @@ fun DonationItemCard(
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 16.dp, bottom = 12.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    onClick = onDeleteClick,
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Excluir")
-                }
 
-                Spacer(modifier = Modifier.width(4.dp))
-
-                TextButton(
-                    onClick = onEditClick,
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Editar")
-                }
-            }
         }
     }
 }
@@ -211,9 +169,7 @@ fun DonationItemCardPreview() {
                     createdAt = LocalDateTime.now(),
                     dueDate = LocalDateTime.now().plusDays(5)
                 ),
-                beneficiaryName = "Maria Silva",
-                onEditClick = {},
-                onDeleteClick = {}
+                beneficiaryName = "Maria Silva"
             )
         }
     }

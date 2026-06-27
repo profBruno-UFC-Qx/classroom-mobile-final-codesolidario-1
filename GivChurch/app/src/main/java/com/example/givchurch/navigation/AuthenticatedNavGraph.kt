@@ -89,9 +89,8 @@ fun AuthenticatedNavGraph(
                         internalBackStack.removeLastOrNull()
                     },
                     onEditDonationClick = { targetDonation ->
-                        internalBackStack.removeLastOrNull() // Remove os detalhes
-                        internalBackStack.add(Screen.AddDonationScreen(donation = targetDonation)) // Abre o formulário preenchido
-                    }
+                        internalBackStack.removeLastOrNull()
+                        internalBackStack.add(Screen.AddDonationScreen(donation = targetDonation))                    }
                 )
             }
         },
