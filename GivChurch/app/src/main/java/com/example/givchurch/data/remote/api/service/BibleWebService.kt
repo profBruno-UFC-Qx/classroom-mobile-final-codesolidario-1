@@ -23,7 +23,7 @@ class BibleWebService(private val client: HttpClient) {
                 return validation
             }
 
-            throw Exception("Text exceeds the allowed limit")
+            throw Exception("Text length out of allowed range")
         } catch (e: Exception) {
             throw e
         }
