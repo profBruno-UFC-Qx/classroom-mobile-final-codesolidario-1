@@ -1,58 +1,85 @@
-## Diagrama de classes
+## Diagrama de Classes
+
+O diagrama abaixo apresenta os principais modelos de domínio e seus relacionamentos.
 
 ```mermaid
 classDiagram
-    direction LR
+direction LR
 
-    class User {
-        +Int id
-        +String firstname
-        +String lastname
-        +String email
-        +String password
-    }
+class User {
+    +String id
+    +String firstname
+    +String lastname
+    +String email
+    +String imageUrl
+}
 
-    class Donation {
-        +Int id
-        +String imageUrl
-        +String name
-        +DonationCategory category
-        +String description
-        +Int quantity
-        +Int beneficiaryId
-        +Int creatorId
-        +DonationStatus status
-    }
+class Beneficiary {
+    +Long id
+    +String name
+    +String phoneNumber
+    +String address
+    +String observations
+    +String createdBy
+}
 
-    class Beneficiary {
-        +Int id
-        +String name
-        +String phoneNumber
-        +String address
-        +String observations
-        +Int createBy
-    }
+class Donation {
+    +Long id
+    +String name
+    +String description
+    +Int quantity
+    +String imageUrl
+    +LocalDateTime createdAt
+    +LocalDateTime dueDate
+    +DonationCategory category
+    +DonationStatus status
+    +Long beneficiaryId
+    +String createdBy
+}
 
-    class DonationStatus {
-        <<enumeration>>
-        PENDING
-        DELIVERED
-        +String value
-    }
+class DashboardMetrics {
+    +Int totalDonations
+    +Int pendingDonations
+    +Int deliveredDonations
+}
 
-    class DonationCategory {
-        <<enumeration>>
-        FOOD
-        CLOTHING
-        HYGIENE
-        FURNITURE_AND_UTENSILS
-        +String value
-    }
+class MonthlyDonation {
+    +String month
+    +Int total
+}
 
-    %% Relacionamentos e Vínculos
-    User "1" --> "0..*" Beneficiary : gerencia
-    User "1" --> "0..*" Donation : registra
-    Beneficiary "1" --> "0..*" Donation : recebe
-    Donation --> DonationStatus : usa
-    Donation --> DonationCategory : usa
+class Verse {
+    +String reference
+    +String text
+}
+
+class DonationStatus {
+    <<enumeration>>
+    PENDING
+    DELIVERED
+}
+
+class DonationCategory {
+    <<enumeration>>
+    FOOD
+    CLOTHING
+    HYGIENE
+    FURNITURE_AND_UTENSILS
+}
+
+User "1" --> "0..*" Beneficiary : cadastra
+
+User "1" --> "0..*" Donation : registra
+
+Beneficiary "1" --> "0..*" Donation : recebe
+
+Donation --> DonationStatus
+
+Donation --> DonationCategory
+
+DashboardMetrics ..> Donation : calcula métricas
+
+MonthlyDonation ..> Donation : agrupa
+
+Verse ..> User : exibido no login
 ```
