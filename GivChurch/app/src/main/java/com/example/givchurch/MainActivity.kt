@@ -24,6 +24,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.givchurch.navigation.SetupNavigation
 import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.theme.GivChurchTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DonationManagementScreen(onTimeout: () -> Unit) {
     LaunchedEffect(Unit) {
+        delay(2000)
         onTimeout()
     }
 
