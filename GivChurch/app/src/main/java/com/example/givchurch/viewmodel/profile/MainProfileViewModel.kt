@@ -67,7 +67,7 @@ class MainProfileViewModel(
         _settingsState.update { it.copy(second = enabled) }
     }
 
-    fun updateUserProfile(user: com.example.givchurch.domain.model.User) {
+    fun updateUserProfile(user: User) {
         viewModelScope.launch {
             _updateState.value = Triple(true, null, null)
 
