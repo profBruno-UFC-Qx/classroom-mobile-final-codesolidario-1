@@ -157,8 +157,8 @@ fun MainProfileContent(
 
             CardOptionWithSwitch(
                 icon = Icons.Default.WbSunny,
-                title = "Tema Claro",
-                checked = uiState.isLightTheme,
+                title = "Tema Escuro",
+                checked = !uiState.isLightTheme,
                 onCheckedChange = onThemeToggle
             )
 
@@ -201,9 +201,9 @@ fun MainProfileScreenPreview() {
     GivChurchTheme(darkTheme = false) {
         MainProfileContent(
             uiState = ProfileUiState(
-                userName = "Maria Silva",
-                userEmail = "maria@email.com",
-                imageUrl = ""
+                userName = "Rubens Rabelo",
+                userEmail = "rubens@email.com",
+                isLightTheme = false
             ),
             onThemeToggle = {},
             onNotificationsToggle = {},

@@ -32,9 +32,9 @@ fun MainProfileScreen(
 
     MainProfileContent(
         uiState = updatedUiState,
-        onThemeToggle = { isChecked ->
-            viewModel.toggleTheme(isChecked)
-            onThemeToggle(isChecked)
+        onThemeToggle = { isDarkSelected ->
+            viewModel.toggleTheme(!isDarkSelected)
+            onThemeToggle(!isDarkSelected)
         },
         onNotificationsToggle = viewModel::toggleNotifications,
         onHelpClick = viewModel::onHelpClick,
