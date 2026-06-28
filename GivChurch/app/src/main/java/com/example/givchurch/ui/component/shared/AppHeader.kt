@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +33,8 @@ import com.example.givchurch.ui.theme.GivChurchTheme
 fun AppHeader(
     title: String,
     modifier: Modifier = Modifier,
-    subtitle: String? = null
+    subtitle: String? = null,
+    verse: String? = null
 ) {
     Column(
         modifier = modifier
@@ -80,6 +82,19 @@ fun AppHeader(
                 textAlign = TextAlign.Center
             )
         }
+
+        if (!verse.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = verse,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
     }
 }
 
@@ -94,9 +109,9 @@ fun AppHeaderLightPreview() {
         ) {
             AppHeader(
                 title = "Bem-vindo de volta",
-                subtitle = "Acesse sua conta para continuar"
+                subtitle = "Acesse sua conta para continuar",
+                verse = "\"O Senhor é o meu pastor, nada me faltará.\" Salmos 23:1"
             )
         }
     }
 }
-

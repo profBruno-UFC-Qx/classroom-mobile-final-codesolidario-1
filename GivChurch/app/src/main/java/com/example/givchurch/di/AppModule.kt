@@ -1,15 +1,18 @@
 package com.example.givchurch.di
 
 import com.example.givchurch.data.local.database.AppDatabase
+import com.example.givchurch.data.remote.api.service.BibleWebService
 import com.example.givchurch.data.remote.firebase.service.FirebaseAuthService
 import com.example.givchurch.data.remote.firebase.service.FirebaseUserService
 import com.example.givchurch.data.repository.AuthRepositoryImpl
 import com.example.givchurch.data.repository.BeneficiaryRepositoryImpl
+import com.example.givchurch.data.repository.BibleRepositoryImpl
 import com.example.givchurch.data.repository.DashboardRepositoryImpl
 import com.example.givchurch.data.repository.DonationRepositoryImpl
 import com.example.givchurch.data.repository.UserRepositoryImpl
 import com.example.givchurch.domain.repository.AuthRepository
 import com.example.givchurch.domain.repository.BeneficiaryRepository
+import com.example.givchurch.domain.repository.BibleRepository
 import com.example.givchurch.domain.repository.DashboardRepository
 import com.example.givchurch.domain.repository.DonationRepository
 import com.example.givchurch.domain.repository.UserRepository
@@ -18,15 +21,21 @@ import com.example.givchurch.viewmodel.auth.LoginViewModel
 import com.example.givchurch.viewmodel.auth.RegisterViewModel
 import com.example.givchurch.viewmodel.beneficiary.AddBeneficiaryViewModel
 import com.example.givchurch.viewmodel.beneficiary.MainBeneficiaryViewModel
+import com.example.givchurch.viewmodel.bible.BibleViewModel
 import com.example.givchurch.viewmodel.donation.AddDonationViewModel
 import com.example.givchurch.viewmodel.donation.DonationDetailViewModel
 import com.example.givchurch.viewmodel.donation.MainDonationViewModel
 import com.example.givchurch.viewmodel.history.MainHistoryViewModel
 import com.example.givchurch.viewmodel.home.MainHomeViewModel
 import com.example.givchurch.viewmodel.profile.MainProfileViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 val databaseModule = module {
     single { AppDatabase.getDatabase(androidContext()) }
@@ -36,6 +45,14 @@ val databaseModule = module {
     single { get<AppDatabase>().dashboardDao() }
     single { FirebaseAuthService() }
     single { FirebaseUserService() }
+    single {
+        HttpClient(Android) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
+    }
+    single { BibleWebService(client = get()) }
 }
 
 val repositoryModule = module {
@@ -44,6 +61,7 @@ val repositoryModule = module {
     single<DashboardRepository> { DashboardRepositoryImpl(get()) }
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
+    single<BibleRepository> { BibleRepositoryImpl(webService = get()) }
 }
 
 val viewModelModule = module {
@@ -58,6 +76,7 @@ val viewModelModule = module {
     viewModel { MainHistoryViewModel(get(), get(), get()) }
     viewModel { MainHomeViewModel(get(), get(), get()) }
     viewModel { MainProfileViewModel(get (), get()) }
+    viewModel { BibleViewModel(get()) }
 }
 
 val appModules = listOf(databaseModule, repositoryModule, viewModelModule)

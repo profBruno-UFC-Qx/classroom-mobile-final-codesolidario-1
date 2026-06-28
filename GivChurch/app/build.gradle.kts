@@ -87,6 +87,13 @@ dependencies {
     // Coil para a galeira
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.ktor.serialization.kotlinx.json)
+
     // Testes e Debug
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

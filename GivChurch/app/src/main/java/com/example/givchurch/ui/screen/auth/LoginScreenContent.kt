@@ -46,10 +46,12 @@ import com.example.givchurch.ui.component.AppHeader
 import com.example.givchurch.ui.component.form.FormSectionLayout
 import com.example.givchurch.ui.theme.GivChurchTheme
 import com.example.givchurch.viewmodel.auth.LoginUiState
+import com.example.givchurch.viewmodel.bible.BibleUiState
 
 @Composable
 fun LoginScreenContent(
     uiState: LoginUiState,
+    bibleUiState: BibleUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -58,6 +60,12 @@ fun LoginScreenContent(
     modifier: Modifier = Modifier
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val verseText = when (bibleUiState) {
+        is BibleUiState.Loading -> "Carregando palavra do dia..."
+        is BibleUiState.Success -> "${bibleUiState.verse.text.trim()}\n— ${bibleUiState.verse.reference}"
+        is BibleUiState.Error -> bibleUiState.fallbackVerse
+    }
 
     Box(
         modifier = modifier
@@ -68,129 +76,141 @@ fun LoginScreenContent(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 32.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AppHeader(
-                title = "Bem-vindo de volta",
-                subtitle = "Entre com as suas credenciais para continuar"
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            FormSectionLayout(title = "E-mail") {
-                OutlinedTextField(
-                    value = uiState.email,
-                    onValueChange = onEmailChange,
-                    placeholder = { Text("Ex: maria@email.com") },
-                    singleLine = true,
-                    enabled = !uiState.isLoading,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-            }
-
-            FormSectionLayout(title = "Senha") {
-                OutlinedTextField(
-                    value = uiState.password,
-                    onValueChange = onPasswordChange,
-                    placeholder = { Text("Digite sua senha") },
-                    singleLine = true,
-                    enabled = !uiState.isLoading,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    trailingIcon = {
-                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                        val description = if (passwordVisible) "Ocultar senha" else "Mostrar senha"
-
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, contentDescription = description)
-                        }
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-            }
-
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Esqueceu a senha?",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable(onClick = onForgotPasswordClick)
+                AppHeader(
+                    title = "Bem-vindo de volta",
+                    subtitle = "Entre com as suas credenciais para continuar",
+                    verse = verseText
                 )
-            }
 
-            if (uiState.message.isNotBlank()) {
-                Text(
-                    text = uiState.message,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            Button(
-                onClick = onLoginClick,
-                enabled = !uiState.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
+                FormSectionLayout(title = "E-mail") {
+                    OutlinedTextField(
+                        value = uiState.email,
+                        onValueChange = onEmailChange,
+                        placeholder = { Text("Ex: maria@email.com") },
+                        singleLine = true,
+                        enabled = !uiState.isLoading,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                } else {
+                }
+
+                FormSectionLayout(title = "Senha") {
+                    OutlinedTextField(
+                        value = uiState.password,
+                        onValueChange = onPasswordChange,
+                        placeholder = { Text("Digite sua senha") },
+                        singleLine = true,
+                        enabled = !uiState.isLoading,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done
+                        ),
+                        trailingIcon = {
+                            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                            val description = if (passwordVisible) "Ocultar senha" else "Mostrar senha"
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(imageVector = image, contentDescription = description)
+                            }
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     Text(
-                        text = "Entrar",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        text = "Esqueceu a senha?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickable(onClick = onForgotPasswordClick)
+                    )
+                }
+
+                if (uiState.message.isNotBlank()) {
+                    Text(
+                        text = uiState.message,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
 
-            Row(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Não tem uma conta? ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "Cadastre-se",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable(onClick = onCreateAccountClick)
-                )
+                Button(
+                    onClick = onLoginClick,
+                    enabled = !uiState.isLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Entrar",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Não tem uma conta? ",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "Cadastre-se",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable(onClick = onCreateAccountClick)
+                    )
+                }
             }
         }
     }
@@ -200,8 +220,11 @@ fun LoginScreenContent(
 @Composable
 fun LoginScreenPreview() {
     GivChurchTheme(darkTheme = false) {
+
+
         LoginScreenContent(
             uiState = LoginUiState(),
+            bibleUiState = BibleUiState.Error("O Senhor é o meu pastor, nada me faltará. Salmos 23:1"),
             onEmailChange = {},
             onPasswordChange = {},
             onLoginClick = {},
