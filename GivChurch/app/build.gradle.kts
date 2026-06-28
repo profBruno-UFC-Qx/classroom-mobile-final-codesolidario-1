@@ -105,4 +105,9 @@ dependencies {
 
     implementation(libs.io.koin.android)
     implementation(libs.io.koin.androidx.compose)
+
+    // Testes e Debug
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
 }
