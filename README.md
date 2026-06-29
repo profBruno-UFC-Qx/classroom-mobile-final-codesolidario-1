@@ -35,7 +35,8 @@ O aplicativo busca facilitar a gestão de ações sociais por meio da digitaliza
 
 * Cadastro de doações
 * Edição e exclusão de doações
-* Cadastro de imagens pela galeria
+* Seleção de imagens da galeria do dispositivo
+* Armazenamento local das imagens selecionadas
 * Visualização detalhada da doação
 * Histórico de doações
 * Filtros por categoria
@@ -56,7 +57,8 @@ O aplicativo busca facilitar a gestão de ações sociais por meio da digitaliza
 ### Perfil
 
 * Atualização dos dados do usuário
-* Alteração da foto de perfil
+* Seleção da foto de perfil pela galeria do dispositivo
+* Persistência local da imagem de perfil
 * Alternância entre tema claro e escuro
 
 ### Arquitetura
@@ -108,6 +110,12 @@ O aplicativo busca facilitar a gestão de ações sociais por meio da digitaliza
 ### Injeção de Dependência
 
 * Koin
+
+### Recursos Android
+
+* Activity Result API
+* Media Picker (Galeria do dispositivo)
+* Armazenamento local de arquivos
 
 ### Testes
 
