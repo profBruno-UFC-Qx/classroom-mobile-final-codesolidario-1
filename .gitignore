@@ -1,0 +1,66 @@
+# ==========================================
+# FIREBASE & CONFIGURAÇÕES LOCAIS
+# ==========================================
+# Logs e arquivos temporários do Firebase
+.firebase/
+firebase-debug.log*
+.runtime/
+google-services.json
+
+# Chaves privadas e senhas (NUNCA envie para o Git)
+*.keystore
+*.jks
+*.p12
+*.pem
+service-account.json
+local.properties
+secrets.properties
+
+# Arquivos de ambiente
+.env
+.env.*
+
+
+# ==========================================
+# ANDROID & KOTLIN (GRADLE)
+# ==========================================
+# Arquivos de compilação
+build/
+.gradle/
+/captures/
+
+# Cache do Kotlin
+.kotlin/
+
+# Arquivos gerados pelo Gradle e pelo sistema
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aar
+*.jar
+
+
+# ==========================================
+# ANDROID STUDIO (IDE)
+# ==========================================
+# Configurações do editor (podem variar por máquina)
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries/
+.idea/caches/
+
+# Arquivos locais do Android Studio
+.navigation/
+captures/
+.snapshots/
+
+
+# ==========================================
+# SISTEMA OPERACIONAL (OPCIONAL)
+# ==========================================
+# Arquivos temporários do Mac e Windows
+.DS_Store
+Thumbs.db
