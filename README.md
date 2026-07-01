@@ -150,7 +150,6 @@ Além deste README, o projeto possui documentação complementar organizada na p
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | **[CLIENT_PRESENTATION.md](./docs/CLIENT_PRESENTATION.md)** | Relatório da apresentação do projeto ao cliente, contendo o levantamento inicial dos requisitos, demonstração da versão final, aprovação da solução e sugestões de evolução do sistema. |
 
-Essa documentação complementa este README, detalhando a evolução do projeto, sua arquitetura, organização interna e o processo de validação da aplicação junto ao cliente.
 
 ---
 
