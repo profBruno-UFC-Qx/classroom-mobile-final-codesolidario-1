@@ -127,7 +127,7 @@ O aplicativo busca facilitar a gestão de ações sociais por meio da digitaliza
 
 ## Documentação
 
-Além deste README, o projeto possui documentação complementar organizada na pasta `docs/`, reunindo as entregas da disciplina, diagramas e documentação técnica.
+Além deste README, o projeto possui documentação complementar organizada na pasta `docs/`, reunindo as entregas da disciplina, documentação técnica e o relatório da apresentação realizada ao cliente.
 
 ### Entregas
 
@@ -144,7 +144,13 @@ Além deste README, o projeto possui documentação complementar organizada na p
 | **[CLASS_DIAGRAM.md](./docs/CLASS_DIAGRAM.md)**       | Diagrama de classes do domínio da aplicação.                           |
 | **[FOLDER_STRUCTURE.md](./docs/FOLDER_STRUCTURE.md)** | Organização das pastas e arquivos do projeto.                          |
 
-Essa documentação complementa este README e apresenta em maior nível de detalhe a evolução do projeto, sua arquitetura e organização interna.
+### Relatórios
+
+| Documento                                                         | Descrição                                                                                                     |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **[CLIENT_PRESENTATION.md](./docs/CLIENT_PRESENTATION.md)** | Relatório da apresentação do projeto ao cliente, contendo o levantamento inicial dos requisitos, demonstração da versão final, aprovação da solução e sugestões de evolução do sistema. |
+
+Essa documentação complementa este README, detalhando a evolução do projeto, sua arquitetura, organização interna e o processo de validação da aplicação junto ao cliente.
 
 ---
 
