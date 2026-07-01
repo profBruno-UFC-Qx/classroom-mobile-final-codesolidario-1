@@ -18,6 +18,12 @@ O documento descreve o levantamento inicial dos requisitos realizado junto a um 
 
 ---
 
+# Perfil do Usuário Consultado
+
+O levantamento dos requisitos e a validação da aplicação foram realizados com **Alexandre Fialho**, jovem participante da liderança da Pastoral da Juventude da Igreja Católica. Alexandre participa de ações sociais e auxilia na organização e distribuição de doações, além de conviver com familiares e voluntários envolvidos nesse processo. Sua experiência contribuiu para a definição dos requisitos da aplicação, validação das funcionalidades implementadas e sugestão de melhorias para futuras versões do sistema.
+
+---
+
 # 2. Levantamento Inicial dos Requisitos
 
 Antes do início do desenvolvimento, foi realizada uma conversa com um possível usuário da aplicação, participante de ações sociais promovidas por uma igreja.
